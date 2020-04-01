@@ -1,7 +1,5 @@
-# 20191205150200
-
-<script src="../js/index.js"></script>
-<div id="content"></div>
+# Android 文件存储方式
+ 
 
 
 ## SDcard

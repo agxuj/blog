@@ -1,7 +1,5 @@
-# 20160504200600
-
-<script src="../js/index.js"></script>
-<div id="content"></div>
+# Android 音视频开发参考资料
+ 
 
 
 

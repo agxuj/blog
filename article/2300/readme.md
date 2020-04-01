@@ -1,7 +1,5 @@
-# 20170523080100
-
-<script src="../js/index.js"></script>
-<div id="content"></div>
+# Git Rebase
+ 
 
 
  

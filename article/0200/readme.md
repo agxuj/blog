@@ -1,7 +1,5 @@
-# 20170222124500
-
-<script src="../js/index.js"></script>
-<div id="content"></div>
+# Android 屏幕适配的策略，方案和备注
+ 
 
 
 

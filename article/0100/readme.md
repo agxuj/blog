@@ -1,7 +1,5 @@
-# 20170226221400
-
-<script src="../js/index.js"></script>
-<div id="content"></div>
+# Android 横竖屏处理
+ 
 
 
 

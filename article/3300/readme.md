@@ -1,77 +1,101 @@
-# 20200108135100
-
-<script src="../js/index.js"></script>
-<div id="content"></div>
-
-## Android 微信登陆排错记录
-
-### 现象一: 登陆跳转到 WXEntryActivity，返回到 MainAtivity 的 LoginFragment 后，mActivity 为空。相同的第二次操作出现
-
-    排除没有执行 onAttach, 排除执行 onAttach 时赋值为空, 排除执行了 onDetach
+# 网站建设 --- 设计
  
 
-### 现象二: fragment.toString()返回的值与之前的值不一致。（第二次操作内
 
-    怀疑前后的LoginFragment不是同一个对象。
+
+
+最近建设了3个网站，对设计有一些思考，在这里总结一下。
+
+外观很重要，不论是用户还是网站所有者，会对设计不错的网站有好感。我需要让设计更丰富一些，
+
+华丽而实用也是追求之一。不要为了漂亮而添加无用的元素。
+
+
+## 网站布局总结
+
+[Bootstrap 优站精选](http://www.youzhan.org)上有很多优秀和知名的网站可做参考。
+
+[模版之家](http://www.cssmoban.com/)
+
+开发模式：
+
+1.先选定模版，再套入相关的内容呢。适合小白客户。
+
+2.先确定内容，再寻找模版。适合已经有所准备，已经知道自己要展示什么内容的客户。
+
+
+## 主题（Theme）设计：
+
+* [Apple Design - iOS Human Interface Guildeline](https://developer.apple.com/design/)
+
+* [Material Design - Google](https://www.material.io)
+
+* [Bootstrap](https://v3.bootcss.com/) 首选使用Bootstrap
+
+## 网站图片素材
+
+图片，背景，图标，icon，矢量图...
+
+分辨率高的背景素材可以在网上找。
+
+用户提供真实素材会让网站内容更贴近实际，实用。但拍摄效果会直接影响整体美观。
+
+如果网站需要的小图标和icon并不多，可以在网上寻找。
+
+如果需要大量的小图标和icon，很有可能就需要自己动手。制作了。
+
+这些小图标和icon的制作需要设计风格以保持整体性。
  
 
-### 现象三:返回后执行onStart及后续方法。（第二次操作内）
+[unsplash](https://unsplash.com/)
 
-    如果不是同一个对象，为什么没有从onAttach开始执行
- 
+[觅元素](http://www.51yuansu.com)
 
-### 现象四: LoginFragment这个对象竟然是第一次操作是的对象。
+[Flat Icon](https://www.flaticon.com/)
 
-    解释：第一次操作的LoginFragment被保留在不知道哪里，连onAttach等方法都省的执行，直接onStart走起。
-    第二次操作时被复用了。
-    但mActivity(Context)这个值没了。id和tag也没有了。
-    我在里面赋了个long类型的变量却一直存在
- 
+[Easy Icon](https://www.easyicon.net/)
 
-### 现象五: MainActivity一直都是同一个对象
- 
+Reference:[Topbook 免费图片素材网站分享](https://www.zhihu.com/question/21757507/answer/288387063)
 
-### 现象六：两次放回MainActivity的生命周期也没有从onCreate开始走。
+## 色彩选择
 
-    猜测：是否是微信支付WXEntryActivity做了某些操作呢？
+* [Material Design 色彩](https://www.materialpalette.com/colors)
 
- 
+* [Bootstrap 色彩](https://v3.bootcss.com/css/#less-variables)
 
-### 现象七: 如果直接从AppContext中获取当前Activity，fragment的id和tag是没有的。
+* <a href="color_test.html">Color Test</a>
 
- 
-<br/>
+## 尺寸
 
-### 结论: 上一个LoginFragment所注册的本地广播接收器没有清除，导致这个接收器在第二次操作时依然能收到消息并调用其中已经被destroy的第一次使用的LoginFragment
+黄金分割 : 0.382 : 0.618
 
-<br/>
-<br/>
+<a href="color_test.html">计算工具</a>
 
-## 微信支付，支付宝支付相关信息获取途径
+## 工具
+<table>
+<thead>
+<tr>
+<td>name</td>
+<td>note</td>
+</tr>
+</thead>
 
-### 微信小程序支付
-[微信支付商户](https://pay.weixin.qq.com)
-
-    mchId,apiKey,apiv3Key,p12File
-
-[小程序管理端](https://mp.weixin.qq.com)
-
-    appId,appSecret
-
-### IOS，Android应用微信支付
-[微信支付商户](https://pay.weixin.qq.com)
-
-    mchId,apiKey,apiv3Key,p12File
-
-[微信开放平台](https://open.weixin.qq.com)
-
-    appId,appSecret
-
-
-### IOS，Android应用支付宝支付
-[支付宝 商家中心](https://mrchportalweb.alipay.com)
-
-[支付宝 开发者中心](https://developers.alipay.com/)
-
-    appId,privateKey,publicKey,serverPublicKey
-
+<tbody>
+<tr>
+<td>PhotoShop CC</td>
+<td></td>
+</tr>
+<tr>
+<td>Adobe XD</td>
+<td>画原型图</td>
+</tr>
+<tr>
+<td>Sketch</td>
+<td></td>
+</tr>
+<tr>
+<td>InVision</td>
+<td></td>
+</tr>
+</tbody>
+</table>

@@ -1,7 +1,5 @@
-# 20190702171700
-
-<script src="../js/index.js"></script>
-<div id="content"></div>
+# Linux 下 Nginx的安装
+ 
 
 
 建议安装最新版本

@@ -1,7 +1,5 @@
-# 20170320084300
-
-<script src="../js/index.js"></script>
-<div id="content"></div>
+# Android Dialog 全屏设置
+ 
 
 
 

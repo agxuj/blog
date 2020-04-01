@@ -1,7 +1,5 @@
-# 20180404171630
-
-<script src="../js/index.js"></script>
-<div id="content"></div>
+# Android 终端命令集合
+ 
 
 
  

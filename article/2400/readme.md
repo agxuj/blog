@@ -1,7 +1,5 @@
-# 20200314112000
-
-<script src="../js/index.js"></script>
-<div id="content"></div>
+# Git 本地账号设置
+ 
 
 ## 配置全局的 name 和 email
 git config --global user.name  "username"  

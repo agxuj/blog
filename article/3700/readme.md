@@ -1,184 +1,46 @@
-# 20191031102242
-
-<script src="../js/index.js"></script>
-<div id="content"></div>
+# H5 标签 Audio 兼容总结
+ 
 
 
 
-## 代码
-`````
-var gulp = require('gulp');
-var babel = require('gulp-babel');//把es6语法解析成es5
-var concat = require('gulp-concat');//合并
-var uglify = require('gulp-uglify');//压缩
-var rev = require('gulp-rev');//对文件名加MD5后缀
-var revCollector = require('gulp-rev-collector');//替换路径
-var htmlmin = require('gulp-htmlmin'); //压缩html里面的js，css，去除空格
-var del = require('del');//删除文件
-var connect = require('gulp-connect');
-var open = require('open');
+移动端的浏览器是 不支持autoplay属性，不支持自动播放的。桌面端的浏览器也逐渐不支持了。
 
+除非添加 muted 属性(静音播放)。此外，chrome浏览器有[MEI的策略](https://developers.google.com/web/updates/2017/09/autoplay-policy-changes#mei)
 
-let host = "192.168.101.23";
-let port = 8088;
+开发的时候要分2种情况，一种是可以自动播放，另一种是不可以自动播放
 
-var app = {
-  srcPath: 'src/',
-  devPath: 'build/',  //打包后的原始数据存放处
-  prdPath: 'dist/'    //打包后的压缩数据存放处
-};
+判断是否可以自动播放的代码如下：
+``````
+function testAutoPlay () {
+    // 返回一个promise以告诉调用者检测结果
+    return new Promise(resolve => {
+        let audio = document.createElement('audio');
+        // require一个本地文件，会变成base64格式
+        audio.src = require('@/assets/empty-audio.mp3');
+        document.body.appendChild(audio);
+        let autoplay = true;
+        // play返回的是一个promise
+        audio.play().then(() => {
+            // 支持自动播放
+            autoplay = true;
+        }).catch(err => {
+            // 不支持自动播放
+            autoplay = false;
+        }).finally(() => {
+            audio.remove();
+            // 告诉调用者结果
+            resolve(autoplay);
+        });
+    });
+}
+``````
 
+## Audio 支持 的音频格式
 
-gulp.task('js', function () {
-  return gulp.src(app.srcPath + '/**/*.js')
-    .pipe(babel())
-    //.pipe(uglify())
-    .pipe(rev())
-    .pipe(gulp.dest(app.devPath))
-    .pipe(rev.manifest('js-map.json'))
-    .pipe(gulp.dest(app.devPath));
-});
-
-
-var autoprefix = require('gulp-autoprefixer');//兼容处理
-var minifyCss = require('gulp-minify-css');//压缩
-gulp.task('style', function () {
-  return gulp.src(app.srcPath + '/**/*.css')
-    .pipe(autoprefix({
-      //browsers: ['last 2 versions'],
-      cascade: false
-    }))
-    .pipe(minifyCss())
-    .pipe(rev())
-    .pipe(gulp.dest(app.devPath))
-    .pipe(rev.manifest('css-map.json'))
-    .pipe(gulp.dest(app.devPath));
-});
-
-gulp.task('image', function () {
-  return gulp.src([
-    app.srcPath + '/**/*.jpg',
-    app.srcPath + '/**/*.jpeg',
-    app.srcPath + '/**/*.png',
-    app.srcPath + '/**/*.gif',
-    app.srcPath + '/**/*.svg'])
-    .pipe(rev())//文件名加MD5后缀
-    .pipe(gulp.dest(app.devPath))
-    .pipe(rev.manifest('image-map.json'))//生成一个rev-manifest.json
-    .pipe(gulp.dest(app.devPath));//将 rev-manifest.json 保存到 rev 目录内
-});
-
-
-gulp.task('audio', function () {
-  return gulp.src([
-    app.srcPath + '/**/*.mp3',
-    app.srcPath + '/**/*.ogg'])
-    .pipe(rev())//文件名加MD5后缀
-    .pipe(gulp.dest(app.devPath))
-    .pipe(rev.manifest('audio-map.json'))//生成一个rev-manifest.json
-    .pipe(gulp.dest(app.devPath));//将 rev-manifest.json 保存到 rev 目录内
-});
-
-gulp.task('other', function () {
-  return gulp.src([
-    app.srcPath + '/**/*.txt'])
-    .pipe(gulp.dest(app.devPath))
-});
-
-gulp.task('zip-html', function () {
-  var options = {
-    removeComments: true,//清除HTML注释
-    collapseWhitespace: true,//压缩HTML
-    //collapseBooleanAttributes: true,//省略布尔属性的值 <input checked="true"/> ==> <input />
-    //removeEmptyAttributes: true,//删除所有空格作属性值 <input id="" /> ==> <input />
-    //removeScriptTypeAttributes: true,//删除<script>的type="text/javascript"
-    //removeStyleLinkTypeAttributes: true,//删除<style>和<link>的type="text/css"
-    minifyJS: true,//压缩页面JS
-    minifyCSS: true,//压缩页面CSS
-    babel: true
-  };
-  return gulp.src(app.srcPath + '/**/*.html')
-    .pipe(htmlmin(options))
-    .pipe(gulp.dest(app.devPath))
-});
-
-
-gulp.task('rewrite-css', function () {
-  return gulp.src([app.devPath + '*.json', app.devPath + '/**/*.css'])
-    .pipe(revCollector({
-      replaceReved: true
-    }))
-    .pipe(gulp.dest(app.devPath));
-});
-
-gulp.task('rewrite-js', function () {
-  return gulp.src([app.devPath + '*.json', app.devPath + '/**/*.js'])
-    .pipe(revCollector({
-      replaceReved: true,
-    }))
-    .pipe(gulp.dest(app.devPath));
-});
-
-gulp.task('rewrite-html', function () {
-  return gulp.src([app.devPath + '*.json', app.devPath + '/**/*.html'])
-    .pipe(revCollector({
-      replaceReved: true
-    }))
-    .pipe(gulp.dest(app.devPath));
-});
-
-//删除Build文件
-gulp.task('clean', function () {
-  return del([
-    app.devPath,
-    app.prdPath
-  ]);
-});
-
-
-gulp.task('build', gulp.series(gulp.parallel('js', 'style', 'image', 'audio', 'other'), 'zip-html', 'rewrite-css', 'rewrite-js', 'rewrite-html', function () {
-  return del([
-    app.devPath + '*.json',
-  ]);
-}));
-
-gulp.task('generate', gulp.series('clean', 'build', function () {
-
-  return gulp.src(app.devPath + '/**/*')
-    .pipe(gulp.dest(app.prdPath));
-}))
-
-
-//自动化构建项目，启动服务器
-gulp.task('start', function () {
-  connect.server({
-    root: [app.srcPath],
-    livereload: true,// 保存修改后自动刷新（针对高级浏览器）
-    port: port,// 端口号
-    debug: true,
-    host: host  // 添加这个host配置，写上本地开发电脑的ip地址，那么在其他局域网上的所有设备都能访问了
-  });
-  // 自启动项目 
-  open('http://' + host + ':' + port); // 开起局域网都能访问的项目地址
-  // 监控资源文件，实时刷新
-  gulp.watch(app.srcPath + "**/*", function () {
-    return gulp.src(app.devPath)
-      .pipe(connect.reload())
-  });
-});
-
-gulp.task('default', gulp.series('start'))
-
-`````
 
 ## 参考
+[监听Audio的播放状态](https://blog.csdn.net/qq_42894622/article/details/89421145)
 
-[gulp-babel使用报错：Cannot find module '@babel/core'](https://blog.csdn.net/bxl0218/article/details/82352777)
+[audio自动播放完美兼容实现方案](https://blog.csdn.net/tan9374/article/details/88991723)
 
-[gulp文档](https://www.gulpjs.com.cn/)
-
-[使用gulp打包普通项目](https://www.cnblogs.com/flyingzeng/p/10536690.html)
-
-[-bash: gulp: command not found in Mac](https://stackoverflow.com/questions/35884163/bash-gulp-command-not-found-in-mac?r=SearchResults)
-
-[gulp打包项目的基本配置与分析](https://blog.csdn.net/m0_38134431/article/details/87705456)
+[video下autoplay属性无效——添加muted属性](https://blog.csdn.net/taiyangmiaomiao/article/details/80266625)

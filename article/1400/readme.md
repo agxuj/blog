@@ -1,7 +1,5 @@
-# 20190702114400
-
-<script src="../js/index.js"></script>
-<div id="content"></div>
+# Linux 下 Java的安装
+ 
 
 
 ## 卸载

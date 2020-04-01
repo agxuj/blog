@@ -1,7 +1,5 @@
-# 20180425162104
-
-<script src="../js/index.js"></script>
-<div id="content"></div>
+# Android 运行时权限申请
+ 
 
 
  

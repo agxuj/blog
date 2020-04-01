@@ -1,7 +1,5 @@
-# 20190410164721
-
-<script src="../js/index.js"></script>
-<div id="content"></div>
+# Linux 下  MySQL 的安装
+ 
 
 
  

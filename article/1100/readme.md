@@ -1,7 +1,5 @@
-# 20170202144000
-
-<script src="../js/index.js"></script>
-<div id="content"></div>
+# Android App 软件设计参考
+ 
 
 
 

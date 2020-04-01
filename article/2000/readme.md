@@ -1,7 +1,5 @@
-# 20200314101200
-
-<script src="../js/index.js"></script>
-<div id="content"></div>
+# MySQL 设置编码为 utf8mb4
+ 
 
 ## 备份
 

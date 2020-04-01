@@ -1,7 +1,5 @@
-# 20190227214422
-
-<script src="../js/index.js"></script>
-<div id="content"></div>
+# Linux 下 Tomcat 的安装配置使用
+ 
 
 
 ## 下载启动

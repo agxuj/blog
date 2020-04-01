@@ -1,7 +1,5 @@
-# 20190429101100
-
-<script src="../js/index.js"></script>
-<div id="content"></div>
+# Linux 下 Redis安装与部署
+ 
 
 
 

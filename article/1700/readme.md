@@ -1,7 +1,5 @@
-# 20190429221134
-
-<script src="../js/index.js"></script>
-<div id="content"></div>
+# Redis 简单使用
+ 
 
 
 

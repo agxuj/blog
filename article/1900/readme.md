@@ -1,7 +1,5 @@
-# 20190527203150
-
-<script src="../js/index.js"></script>
-<div id="content"></div>
+# MySQL 的使用
+ 
 
 
 

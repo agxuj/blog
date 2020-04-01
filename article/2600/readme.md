@@ -1,7 +1,5 @@
-# 20191010151116
-
-<script src="../js/index.js"></script>
-<div id="content"></div>
+# Git 的使用
+ 
 
 
 

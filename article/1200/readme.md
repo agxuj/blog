@@ -1,7 +1,5 @@
-# 20190228213451
-
-<script src="../js/index.js"></script>
-<div id="content"></div>
+# Linux 远程工具
+ 
 
 
  

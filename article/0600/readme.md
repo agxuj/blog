@@ -1,7 +1,5 @@
-# 20161219111700
-
-<script src="../js/index.js"></script>
-<div id="content"></div>
+# Android Studio 快捷键总结
+ 
 
 
 

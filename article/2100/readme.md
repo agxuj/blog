@@ -1,7 +1,5 @@
-# 20200228142600
-
-<script src="../js/index.js"></script>
-<div id="content"></div>
+# Spring Boot 集成使用JSP
+ 
 
 
 ## 在pro.xml中添加依赖
