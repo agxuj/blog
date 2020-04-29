@@ -1,8 +1,5 @@
-# 20200415155200
- 
-
 ## 问题:
-倒入库工程 top.knxy.library.java 总是失败，怎么回事呢？
+导入库工程 top.knxy.library.java 总是失败，怎么回事呢？
  
 ### 现象1:
 进行一下操作后
@@ -29,11 +26,17 @@ project stucture -> modules -> top.knxy.library => /Users/faddenyin/workspace/to
 `````
 删掉再添加进去，并且点击import changes后问题解决。
 
+## 问题:
+执行上述操作后,问题又出现.
+
+### 现象1:
+不在 project stucture 引入 module , 把本地仓库中的 ibrary.jar 等文件删了 后 问题解决.
+
 ## 结论:
 
 正确操作如下：
-1. project stucture -> modules -> import modules
-1. top.knxy.age.java -> modules depandency
+1. library project install
+1. 把本地仓库的 library.jar 等文件删了
 1. 把pom.xml文件中的
     `````
     <dependency>
@@ -74,5 +77,5 @@ project stucture -> libraries -> Maven: top.knxy.library:server:1.0 => /Users/fa
 ### 得:
 top.knxy.library.java这个项目打包后在/Users/faddenyin/.m2/repository/目录中存在
 
-
-
+---------------------------
+ 
