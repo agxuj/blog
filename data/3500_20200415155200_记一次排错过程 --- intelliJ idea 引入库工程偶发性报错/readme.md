@@ -65,6 +65,9 @@ project stucture -> modules -> top.knxy.library => /Users/faddenyin/workspace/to
 ## 问题：
 Maven: top.knxy.library:server:1.0是什么时候的什么操作引用？
 
+## 答:
+在 pom.xml 中引入 dependency 后,自动生成
+
 ---------------------------
 
 
