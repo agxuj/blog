@@ -1,121 +1,52 @@
-# Git 的使用
+# Git Rebase
  
 
 
+ 
+
+## 1.运行rebase命令
+ 
+    git rebase -i origin/master
+    
+    git rebase 187f869c9d54c9297d6b0b1b4ff47d2ec781a55e^ -i origin/master
+    
+    这里的  －i ＝ --interactive 
 
 
-git是一个版本管理器，
-## 1.版本管理器涉及到版本的回滚恢复等操作
-### 回滚恢复相关命令
-````
-reset
-revert
-checkout
-````
-### git还有一个强悍的功能，对过往的commit进行删除或者修改
-`````
-rebase
-`````
+## 2.操作
 
-## 2.版本管理器必然涉及到版本的分支
+    pick : git会应用这个补丁，以同样的提交信息（commit message）保存提交。
 
-### git创建一个分支的命令是：
-`````
-git branch ${分支名}
-//or
-git checkout -b z3
-`````
-### 删除分支
-`````
-git branch -d ${分支名}
-`````
+    squash : git会把这个提交和前一个提交合并成为一个新的提交。
+    
+        这会再次调用编辑器，你在里面合并这两个提交的提交信息。
 
-### 切换分支
-`````
-git checkout z3
-`````
-### 查看当前分支
-`````
-git branch
-`````
-### 分支间必然涉及到合并
-`````
-merge
+    edit : 暂时没有，先不写了
 
-//合并分支
-git merge ${分支名}
-`````
+    丢弃提交 : 如果把一行删除而不是指定'pick'、'squash'和‘edit''中的任何一个，git会从历史中移除该提交。
+    
 
-### 分支的几个概念
-head master orign(起源)
+## 3.提交
 
-[head/master/分支 间的关系可以看 --- 理解git中的head和master](https://blog.csdn.net/bdss58/article/details/40537859)
+    git push origin HEAD:master --force
+    
 
-[git中的origin -- 只想服务端仓库的标志](https://blog.csdn.net/niexia_/article/details/79422859)
+## 4.继续 rebase
 
-#### detached head
-如果让HEAD文件指向一个commit id而不是具体分支，那就变成了detached HEAD。 
-
-1. git checkout master可以回到master分支，但是当前工作区的内容就没了
+    git rebase --continue
 
 
+## 5.终止
 
-## 3.简单的添加，提交，推送到服务端
-`````
-add
-commit
-push
-`````
+    git rebase -i --abort    
+    
+<br/>
 
-## 4.从服务端拉去代码
-`````
-fetch
-pull
-`````
-## 5.其他符号解释
-`````
-git checkout 1aea8d9^
-laea8d9是最近的一次commit id，^指的是之前一次
-`````
+## Reference:
 
-## 6.Git Help
-`````
-These are common Git commands used in various situations:
+[Git push master fatal: You are not currently on a branch](https://stackoverflow.com/questions/30471557/git-push-master-fatal-you-are-not-currently-on-a-branch)
 
-start a working area (see also: git help tutorial)
-   clone      Clone a repository into a new directory
-   init       Create an empty Git repository or reinitialize an existing one
+[在git 中修改之前的提交内容](https://blog.csdn.net/wangbole/article/details/8552808)
 
-work on the current change (see also: git help everyday)
-   add        Add file contents to the index
-   mv         Move or rename a file, a directory, or a symlink
-   reset      Reset current HEAD to the specified state
-   rm         Remove files from the working tree and from the index
+[git rebase简介(高级篇)](https://blog.csdn.net/hudashi/article/details/7664651)
 
-examine the history and state (see also: git help revisions)检查历史和状态
-   bisect     Use binary search to find the commit that introduced a bug Use binary search to find the commit that introduced a bug
-   grep       Print lines matching a pattern
-   log        Show commit logs
-   show       Show various types of objects
-   status     Show the working tree status
-
-grow, mark and tweak your common history
-   branch     List, create, or delete branches
-   checkout    Switch branches or restore working tree files
-   commit     Record changes to the repository
-   diff       Show changes between commits, commit and working tree, etc
-   merge      Join two or more development histories together
-   rebase     Reapply commits on top of another base tip
-   tag        Create, list, delete or verify a tag object signed with GPG
-
-collaborate (see also: git help workflows)
-   fetch      Download objects and refs from another repository
-   pull       Fetch from and integrate with another repository or a local branch
-   push       Update remote refs along with associated objects
-`````
-
-
-## 5.Refernece 
-[Git Revert 用法](https://www.cnblogs.com/0616--ataozhijia/p/3709917.html)
-
-[Git 中的 ~ 和 ^](https://www.2cto.com/kf/201807/758347.html)

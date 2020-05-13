@@ -1,77 +1,182 @@
-# 怎样才是合格的记住密码实现
+# gulp 简单使用
  
 
 
 
-[Reference](http://www.zhihu.com/question/20218136/answer/16246633)
+## 代码
+`````
+var gulp = require('gulp');
+var babel = require('gulp-babel');//把es6语法解析成es5
+var concat = require('gulp-concat');//合并
+var uglify = require('gulp-uglify');//压缩
+var rev = require('gulp-rev');//对文件名加MD5后缀
+var revCollector = require('gulp-rev-collector');//替换路径
+var htmlmin = require('gulp-htmlmin'); //压缩html里面的js，css，去除空格
+var del = require('del');//删除文件
+var connect = require('gulp-connect');
+var open = require('open');
 
-## 1.首先用户基本能够完成自动登陆流程
-重新启动客户端/浏览器, 不需要输入密码可以登陆
 
-重启设备后依旧可以自动登陆
+let host = "192.168.101.23";
+let port = 8088;
 
-## 2. 用户更换网络环境自动登陆有效
-同一设备采用有线网络,无线网络,临时中断网络不影响规则1的逻辑
+var app = {
+  srcPath: 'src/',
+  devPath: 'build/',  //打包后的原始数据存放处
+  prdPath: 'dist/'    //打包后的压缩数据存放处
+};
 
-**安全系数较高的业务可能对ip有自动进化的白名单, 此时规则2呈受限状态**    
 
-## 3. 用户更改密码后原有的自动登陆失效(包括且不限于本机的自动登录)
-保证被盗用后/在其他机器上登陆过的信息可以远程"挂失"
+gulp.task('js', function () {
+  return gulp.src(app.srcPath + '/**/*.js')
+    .pipe(babel())
+    //.pipe(uglify())
+    .pipe(rev())
+    .pipe(gulp.dest(app.devPath))
+    .pipe(rev.manifest('js-map.json'))
+    .pipe(gulp.dest(app.devPath));
+});
 
-## 4. 可取消
-用户的登出(明确的Logout)操作使原有的自动登陆失效(包括且不限于本机的自动登录)
 
-并且可以关闭自动登陆/记住密码
+var autoprefix = require('gulp-autoprefixer');//兼容处理
+var minifyCss = require('gulp-minify-css');//压缩
+gulp.task('style', function () {
+  return gulp.src(app.srcPath + '/**/*.css')
+    .pipe(autoprefix({
+      //browsers: ['last 2 versions'],
+      cascade: false
+    }))
+    .pipe(minifyCss())
+    .pipe(rev())
+    .pipe(gulp.dest(app.devPath))
+    .pipe(rev.manifest('css-map.json'))
+    .pipe(gulp.dest(app.devPath));
+});
 
-重新安装软件/客户端必须是失效的(否则你手机卸载了陌陌,回家老婆重装一次居然可以自动登陆,后果就....)
+gulp.task('image', function () {
+  return gulp.src([
+    app.srcPath + '/**/*.jpg',
+    app.srcPath + '/**/*.jpeg',
+    app.srcPath + '/**/*.png',
+    app.srcPath + '/**/*.gif',
+    app.srcPath + '/**/*.svg'])
+    .pipe(rev())//文件名加MD5后缀
+    .pipe(gulp.dest(app.devPath))
+    .pipe(rev.manifest('image-map.json'))//生成一个rev-manifest.json
+    .pipe(gulp.dest(app.devPath));//将 rev-manifest.json 保存到 rev 目录内
+});
 
-# 接下来是安全层面的讨论
 
-## 5. 不可逆(针对本地的token/票据/认证)
-token(理论级)不可逆向出除用户id以外的信息,包括不限于 账号,密码,登陆ip
+gulp.task('audio', function () {
+  return gulp.src([
+    app.srcPath + '/**/*.mp3',
+    app.srcPath + '/**/*.ogg'])
+    .pipe(rev())//文件名加MD5后缀
+    .pipe(gulp.dest(app.devPath))
+    .pipe(rev.manifest('audio-map.json'))//生成一个rev-manifest.json
+    .pipe(gulp.dest(app.devPath));//将 rev-manifest.json 保存到 rev 目录内
+});
 
-## 6. 不可猜测/碰撞
-简单测试:当存在100w有效token时,token值域内随机生成1w个新token不能出现碰撞
+gulp.task('other', function () {
+  return gulp.src([
+    app.srcPath + '/**/*.txt'])
+    .pipe(gulp.dest(app.devPath))
+});
 
-为什么是1w个? 因为token的验证是需要有网络开销的. 当短时间内出现1w个密集请求的时候如果你还不能发现攻击, 只能说明你的系统监控太差了(连流量图上都该出突尖了)
+gulp.task('zip-html', function () {
+  var options = {
+    removeComments: true,//清除HTML注释
+    collapseWhitespace: true,//压缩HTML
+    //collapseBooleanAttributes: true,//省略布尔属性的值 <input checked="true"/> ==> <input />
+    //removeEmptyAttributes: true,//删除所有空格作属性值 <input id="" /> ==> <input />
+    //removeScriptTypeAttributes: true,//删除<script>的type="text/javascript"
+    //removeStyleLinkTypeAttributes: true,//删除<style>和<link>的type="text/css"
+    minifyJS: true,//压缩页面JS
+    minifyCSS: true,//压缩页面CSS
+    babel: true
+  };
+  return gulp.src(app.srcPath + '/**/*.html')
+    .pipe(htmlmin(options))
+    .pipe(gulp.dest(app.devPath))
+});
 
-## 7. 有时效性
-token不可以长期不变可用, 否则规则6将会在可预见的时间内失效
 
-推荐不超过1个月(现在已经大都是1周). 具体可以参考各个站点的设计
+gulp.task('rewrite-css', function () {
+  return gulp.src([app.devPath + '*.json', app.devPath + '/**/*.css'])
+    .pipe(revCollector({
+      replaceReved: true
+    }))
+    .pipe(gulp.dest(app.devPath));
+});
 
-如果需要长期保留可以采用换票(重新签发新的token)的方式来延续自动登陆
+gulp.task('rewrite-js', function () {
+  return gulp.src([app.devPath + '*.json', app.devPath + '/**/*.js'])
+    .pipe(revCollector({
+      replaceReved: true,
+    }))
+    .pipe(gulp.dest(app.devPath));
+});
 
-## 8. 不可被拦截盗用*
-假设当前网络为非安全信道, 消息可被监听. 监听者盗用token不能使用.或者监听者无法盗用token(不能从网络包中分析出具体的token). 简单说就是采用https协议可以快速透明的解决问题 . 
+gulp.task('rewrite-html', function () {
+  return gulp.src([app.devPath + '*.json', app.devPath + '/**/*.html'])
+    .pipe(revCollector({
+      replaceReved: true
+    }))
+    .pipe(gulp.dest(app.devPath));
+});
 
-以下提供几个简化的版本, 建立在黑客没有刻意针对服务进行攻击的前提下, 做到基本的保护. 这样盗用的门槛则提高到,加密代码被获取进而解密的门槛高度.
-    
-标准版:常用ip白名单
-    
-其中规则2的高级情况也可以起到一定程度的限制作用, 但无法抵御对大型区域网路(公司网络, 学校网络, 小区网络)内的攻击.
-    
-廉价版(https是要钱的): token拥有时间戳信息加密.即通信层面上的token是每次都在变化的 
-    
-可达到屏蔽公共wifi这类实时全面截包进行攻击的情况
-    
-极简版:token每5min换票一次.
-    
-可达到非全面截包(局域网出现临时的arp攻击这类)情况下, token被发送到攻击者邮箱后, 未来某一时刻被利用来攻击的情况.
-    
-**建议**
+//删除Build文件
+gulp.task('clean', function () {
+  return del([
+    app.devPath,
+    app.prdPath
+  ]);
+});
 
-规则1~4是最基本的, 完成不了的根本就不达标
-    
-对于尚未拥有可观收益的服务, 只要完成1~6就够了. 属于及格状态. 能攻击的人不来攻击, 这个服务就可以说是"绝对安全"了
 
-git 反之则连规则8也得完成. 属于良好状态
+gulp.task('build', gulp.series(gulp.parallel('js', 'style', 'image', 'audio', 'other'), 'zip-html', 'rewrite-css', 'rewrite-js', 'rewrite-html', function () {
+  return del([
+    app.devPath + '*.json',
+  ]);
+}));
 
-## 终极规则9
-社会工程学层面的安全防御.(应对所有已知的即将知道的软件/框架/协议漏洞 )
-到达此级别的必须得是可以上市级别的公司(或者有实力巨额出售自己)提供的服务了. 当网络上出现高手通过特殊手段(比如最近的Heartbleed漏洞)直接获取到token信息甚至是密码时, 可以 第一时间的得到白帽(乌云/圈子里)的帮助与支持.甚至是收买说服将要攻击的黑客. 达到这个标准的才可以成为真正优秀的状态.
+gulp.task('generate', gulp.series('clean', 'build', function () {
 
-## 究极规则10
-推卸责任(应对出现撞库攻击的情况 如最近的iCloud,Gmail)
-当服务出现安全问题, 并已经产生严重后果/损失时. 找到公关部门,发布安全公告, 发表声明, 严厉谴责漏洞利用者. 并一定要说明,同行现在差不多都是这个样子,不会好只会更差.最好能说 成是全世界的厂商都有这个问题. 可以的话说明一下人类的智慧暂时不能解决这个问题也是可以的. 顺带附上一个很小的数字, 说他们是受到影响的. 我们已经通知他们改密码了. 至于损失 的赔偿么, 游戏公司的运营可以考虑一下. 其他企业不建议给, 否则有认错被抓把柄的风险.
-当达到这个状态时, 差不多可以说"Everything Is Under Control"了. 完美状态.
+  return gulp.src(app.devPath + '/**/*')
+    .pipe(gulp.dest(app.prdPath));
+}))
+
+
+//自动化构建项目，启动服务器
+gulp.task('start', function () {
+  connect.server({
+    root: [app.srcPath],
+    livereload: true,// 保存修改后自动刷新（针对高级浏览器）
+    port: port,// 端口号
+    debug: true,
+    host: host  // 添加这个host配置，写上本地开发电脑的ip地址，那么在其他局域网上的所有设备都能访问了
+  });
+  // 自启动项目 
+  open('http://' + host + ':' + port); // 开起局域网都能访问的项目地址
+  // 监控资源文件，实时刷新
+  gulp.watch(app.srcPath + "**/*", function () {
+    return gulp.src(app.devPath)
+      .pipe(connect.reload())
+  });
+});
+
+gulp.task('default', gulp.series('start'))
+
+`````
+
+## 参考
+
+[gulp-babel使用报错：Cannot find module '@babel/core'](https://blog.csdn.net/bxl0218/article/details/82352777)
+
+[gulp文档](https://www.gulpjs.com.cn/)
+
+[使用gulp打包普通项目](https://www.cnblogs.com/flyingzeng/p/10536690.html)
+
+[-bash: gulp: command not found in Mac](https://stackoverflow.com/questions/35884163/bash-gulp-command-not-found-in-mac?r=SearchResults)
+
+[gulp打包项目的基本配置与分析](https://blog.csdn.net/m0_38134431/article/details/87705456)

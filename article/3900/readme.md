@@ -1,87 +1,101 @@
-# 记一次排错过程 --- intelliJ idea 引入库工程偶发性报错
+# 网站建设 --- 设计
  
 
-## 问题:
-导入库工程 top.knxy.library.java 总是失败，怎么回事呢？
+
+
+
+最近建设了3个网站，对设计有一些思考，在这里总结一下。
+
+外观很重要，不论是用户还是网站所有者，会对设计不错的网站有好感。我需要让设计更丰富一些，
+
+华丽而实用也是追求之一。不要为了漂亮而添加无用的元素。
+
+
+## 网站布局总结
+
+[Bootstrap 优站精选](http://www.youzhan.org)上有很多优秀和知名的网站可做参考。
+
+[模版之家](http://www.cssmoban.com/)
+
+开发模式：
+
+1.先选定模版，再套入相关的内容呢。适合小白客户。
+
+2.先确定内容，再寻找模版。适合已经有所准备，已经知道自己要展示什么内容的客户。
+
+
+## 主题（Theme）设计：
+
+* [Apple Design - iOS Human Interface Guildeline](https://developer.apple.com/design/)
+
+* [Material Design - Google](https://www.material.io)
+
+* [Bootstrap](https://v3.bootcss.com/) 首选使用Bootstrap
+
+## 网站图片素材
+
+图片，背景，图标，icon，矢量图...
+
+分辨率高的背景素材可以在网上找。
+
+用户提供真实素材会让网站内容更贴近实际，实用。但拍摄效果会直接影响整体美观。
+
+如果网站需要的小图标和icon并不多，可以在网上寻找。
+
+如果需要大量的小图标和icon，很有可能就需要自己动手。制作了。
+
+这些小图标和icon的制作需要设计风格以保持整体性。
  
-### 现象1:
-进行一下操作后
 
-1. project stucture -> modules -> import modules
-1. top.knxy.age.java -> modules depandency
+[unsplash](https://unsplash.com/)
 
-主工程可以进行 maven -> install , 生成的jar包可以使用, 但项目无法编译运行。
+[觅元素](http://www.51yuansu.com)
 
-### 现象2:
-我手动进行
-project stucture -> modules -> top.knxy.library => /Users/faddenyin/workspace/top.knxy.library.java/target/server-1.0.jar
-的引入也无法解决问题
+[Flat Icon](https://www.flaticon.com/)
 
-### 现象3:
-把pom.xml文件中的
-`````
-<dependency>
-    <groupId>top.knxy.library</groupId>
-    <artifactId>server</artifactId>
-    <version>1.0</version>
-    <scope>compile</scope>
-</dependency>
-`````
-删掉再添加进去，并且点击import changes后问题解决。
+[Easy Icon](https://www.easyicon.net/)
 
-## 问题:
-执行上述操作后,问题又出现.
+Reference:[Topbook 免费图片素材网站分享](https://www.zhihu.com/question/21757507/answer/288387063)
 
-### 现象1:
-不在 project stucture 引入 module , 把本地仓库中的 ibrary.jar 等文件删了 后 问题解决.
+## 色彩选择
 
-## 结论:
+* [Material Design 色彩](https://www.materialpalette.com/colors)
 
-正确操作如下：
-1. library project install
-1. 把本地仓库的 library.jar 等文件删了
-1. 把pom.xml文件中的
-    `````
-    <dependency>
-        <groupId>top.knxy.library</groupId>
-        <artifactId>server</artifactId>
-        <version>1.0</version>
-        <scope>compile</scope>
-    </dependency>
-    `````
-    删掉再添加进去，并且点击import changes.
- 
---------------------------
+* [Bootstrap 色彩](https://v3.bootcss.com/css/#less-variables)
 
-### 现象2: 
-project stucture -> modules -> Maven: top.knxy.library:server:1.0 => /Users/faddenyin/.m2/repository/top/knxy/library/server/1.0/server-1.0.jar
+* <a href="color_test.html">Color Test</a>
 
-### 现象3: 
-project stucture -> libraries -> top.knxy.library => /Users/faddenyin/workspace/top.knxy.library.java/target/server-1.0.jar
+## 尺寸
 
-### 现象4: 
-project stucture -> modules -> top.knxy.library => /Users/faddenyin/workspace/top.knxy.library.java/target/server-1.0.jar
+黄金分割 : 0.382 : 0.618
 
-### 得：
-此前存在多余操作， Maven: top.knxy.library:server:1.0 和 top.knxy.library 是重复的,但我却手动引入 top.knxy.library .
+<a href="color_test.html">计算工具</a>
 
-## 问题：
-Maven: top.knxy.library:server:1.0是什么时候的什么操作引用？
+## 工具
+<table>
+<thead>
+<tr>
+<td>name</td>
+<td>note</td>
+</tr>
+</thead>
 
-## 答:
-在 pom.xml 中引入 dependency 后,自动生成
-
----------------------------
-
-
-### 现象1: 
-project stucture -> libraries -> Maven: top.knxy.library:server:1.0 => /Users/faddenyin/.m2/repository/top/knxy/library/server/1.0/server-1.0.jar
-
-### 现象2:
-在项目top.knxy.library.java用maven打包（install）后, 目录/Users/faddenyin/.m2/repository/中会存在相关的jar包
-
-### 得:
-top.knxy.library.java这个项目打包后在/Users/faddenyin/.m2/repository/目录中存在
-
----------------------------
- 
+<tbody>
+<tr>
+<td>PhotoShop CC</td>
+<td></td>
+</tr>
+<tr>
+<td>Adobe XD</td>
+<td>画原型图</td>
+</tr>
+<tr>
+<td>Sketch</td>
+<td></td>
+</tr>
+<tr>
+<td>InVision</td>
+<td></td>
+</tr>
+</tbody>
+</table>
