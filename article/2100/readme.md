@@ -1,63 +1,91 @@
-# Spring Boot 集成使用JSP
+# Spring 初体验
  
 
 
-## 在pro.xml中添加依赖
-``````
-<dependency>
-    <groupId>org.apache.tomcat.embed</groupId>
-    <artifactId>tomcat-embed-jasper</artifactId>
-    <scope>provided</scope>
-</dependency>
-<dependency>
-    <groupId>javax.servlet</groupId>
-    <artifactId>javax.servlet-api</artifactId>
-</dependency>
-<dependency>
-    <groupId>javax.servlet.jsp</groupId>
-    <artifactId>javax.servlet.jsp-api</artifactId>
-    <version>2.3.1</version>
-</dependency>
-<dependency>
-    <groupId>javax.servlet</groupId>
-    <artifactId>jstl</artifactId>
-    <scope>provided</scope>
-</dependency>
-``````
+## Spring 
+1. ioc 控制反转
+1. ip 依赖注入 
+1. 代理 静态代理，动态代理
+1. aop 面向切面编程
 
-## 在appliction.properties文件配置Spring mvc的视图展示为jsp
-``````
-spring.mvc.view.prefix=/WEB-INF/jsp/
-spring.mvc.view.suffix=.jsp
-``````
+## Spring MVC
+### 导jar包
+`````
+spring-aop-4.1.6.RELEASE.jar
+spring-beans-4.1.6.RELEASE.jar
+spring-context-4.1.6.RELEASE.jar
+spring-context-support-4.1.6.RELEASE.jar
+spring-core-4.1.6.RELEASE.jar
+spring-expression-4.1.6.RELEASE.jar
+spring-web-4.1.6.RELEASE.jar
+spring-webmvc-4.1.6.RELEASE.jar
+commons-logging-1.2.jar
+`````
+[下载地址](http://repo.spring.io/simple/libs-release-local/org/springframework/spring/)
 
-## 建立web文件存放点
+### xml配置
 
-在src/main目录中新建webapp文件夹，在webapp目录中新建/WEB-INF/jsp/文件夹用于存放jsp文件，其他类型的文件直接存放在webapp文件夹中。
+`````
+<servlet>
+    <servlet-name>springmvc</servlet-name>
+    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+    <init-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>classpath:mvc.xml</param-value>
+    </init-param>
+    <load-on-startup>1</load-on-startup>
+</servlet>
 
-## 在pro.xml的build标签中添加配置
-``````
-<resources>
-    <resource>
-        <directory>src/main/java</directory>
-        <includes>
-            <include>**/*.xml</include>
-        </includes>
-    </resource>
+<servlet-mapping>
+    <servlet-name>springmvc</servlet-name>
+    <url-pattern>*.html</url-pattern>
+</servlet-mapping>
+`````
+### 创建src/mvc.xml
 
-    <resource>
-        <directory>src/main/resources</directory>
-        <includes>
-            <include>**/*.*</include>
-        </includes>
-    </resource>
+配置 controller 所在的包名
 
-    <resource>
-        <directory>src/main/webapp</directory>
-        <targetPath>META-INF/resources</targetPath>
-        <includes>
-            <include>**/*.*</include>
-        </includes>
-    </resource>
-</resources>
-``````
+配置 view (jsp) 所在的目录
+`````
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:p="http://www.springframework.org/schema/p"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd">
+
+
+    <!-- 配置渲染器 -->
+    <bean id="jspViewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
+        <!-- 配置 view (jsp) 所在的目录 -->
+        <property name="prefix" value="/WEB-INF/manager/"/>
+        <property name="suffix" value=".jsp"/>
+    </bean>
+    <!-- 配置 controller 所在的包名 -->
+    <context:component-scan base-package="top.knxy"/>
+</beans>
+`````
+### 创建Controller
+`````
+@Controller
+public class ManagerController {
+
+    @RequestMapping("/login")
+    public ModelAndView login(HttpServletRequest request, HttpServletResponse response) {
+        ModelAndView mv = new ModelAndView();
+        mv.addObject("msg","hello Spring MVC");
+        mv.setViewName("login");//指向jsp的页面
+        return mv;
+    }
+}
+
+`````
+
+References:
+
+[Spring Framework Reference Documentation](https://docs.spring.io/spring/docs/4.1.6.RELEASE/spring-framework-reference/html/)

@@ -1,6 +1,3 @@
-# Spring Boot 集成 MyBatis
- 
-
 ## 在 pom.xml 中添加 dependency
 `````
 <dependency>

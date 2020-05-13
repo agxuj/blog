@@ -1,101 +1,74 @@
-# 网站建设 --- 设计
+# Java BigDecimal 笔记
  
 
 
-
-
-最近建设了3个网站，对设计有一些思考，在这里总结一下。
-
-外观很重要，不论是用户还是网站所有者，会对设计不错的网站有好感。我需要让设计更丰富一些，
-
-华丽而实用也是追求之一。不要为了漂亮而添加无用的元素。
-
-
-## 网站布局总结
-
-[Bootstrap 优站精选](http://www.youzhan.org)上有很多优秀和知名的网站可做参考。
-
-[模版之家](http://www.cssmoban.com/)
-
-开发模式：
-
-1.先选定模版，再套入相关的内容呢。适合小白客户。
-
-2.先确定内容，再寻找模版。适合已经有所准备，已经知道自己要展示什么内容的客户。
-
-
-## 主题（Theme）设计：
-
-* [Apple Design - iOS Human Interface Guildeline](https://developer.apple.com/design/)
-
-* [Material Design - Google](https://www.material.io)
-
-* [Bootstrap](https://v3.bootcss.com/) 首选使用Bootstrap
-
-## 网站图片素材
-
-图片，背景，图标，icon，矢量图...
-
-分辨率高的背景素材可以在网上找。
-
-用户提供真实素材会让网站内容更贴近实际，实用。但拍摄效果会直接影响整体美观。
-
-如果网站需要的小图标和icon并不多，可以在网上寻找。
-
-如果需要大量的小图标和icon，很有可能就需要自己动手。制作了。
-
-这些小图标和icon的制作需要设计风格以保持整体性。
  
+## 简单使用
+### 例子
+``````
+String money = "100.00";
+BigDecimal dbMoney = new BigDecimal(money);
+dbMoney.add(new BigDecimal("20.00"));
+String result = dbMoney.toString();
+``````
+### setScale
 
-[unsplash](https://unsplash.com/)
+BigDecimal.setScale()方法用于格式化小数点
 
-[觅元素](http://www.51yuansu.com)
+setScale(1)表示保留一位小数，默认用四舍五入方式
 
-[Flat Icon](https://www.flaticon.com/)
+``````
+BigDecimal data = new BigDecimal("9.655").setScale(2, BigDecimal.ROUND_HALF_UP);
+System.out.println("data=" + data);
+//结果：data=9.66
+``````
 
-[Easy Icon](https://www.easyicon.net/)
+### 其他常用方法
+1. 加法 add()     
+1. 减法 subtract()
+1. 乘法 multiply()    
+1. 除法 divide()    
+1. 绝对值 abs()
 
-Reference:[Topbook 免费图片素材网站分享](https://www.zhihu.com/question/21757507/answer/288387063)
+## 格式化
 
-## 色彩选择
+### "#" 说明
+* 整数部分多了:不会截断,但是排在有效位最前面的0会被删除
+* 整数部分少了:不作处理
+* 小数部分多了:截断,建议指定RoundingMode,默认为RoundingMode.HALF_EVEN
+* 小数部分少了:不作处理
+### "0" 说明
+* 整数部分多了:不会截断,排在有效位前面的0也不会被删除
+* 整数部分少了:补0
+* 小数部分多了:截断,建议指定RoundingMode,默认为RoundingMode.HALF_EVEN
+* 小数部分少了:补0 
 
-* [Material Design 色彩](https://www.materialpalette.com/colors)
+**其他类型字符可查看API文档**
+``````
+DecimalFormat format = new DecimalFormat("#.##");
+BigDecimal val= new BigDecimal("1.23");
+format.format(val);
+``````
+## 舍入模式
+1. ROUND_UP 
+1. ROUND_DOWN 
+1. ROUND_CEILING 
+1. ROUND_FLOOR 
+1. ROUND_HALF_UP (四舍五入)
+1. ROUND_HALF_DOWN
+1. ROUND_HALF_EVEN 
 
-* [Bootstrap 色彩](https://v3.bootcss.com/css/#less-variables)
+``````
+BigDecimal result = new BigDecimal("1.23").divide(new BigDecimal("1.23"),BigDecimal.ROUND_HALF_UP);
+``````
 
-* <a href="color_test.html">Color Test</a>
+## 参考
+[Java中BigDecimal的8种舍入模式](https://blog.csdn.net/u010575112/article/details/81560275)
 
-## 尺寸
+[Java中DecimalFormat用法详解](https://www.jb51.net/article/135720.htm)
 
-黄金分割 : 0.382 : 0.618
+[DecimalFormat格式化 # 和 0 的区别](https://blog.csdn.net/qq_28988969/article/details/97394848)
 
-<a href="color_test.html">计算工具</a>
+[BigDecimal加减乘除计算](https://blog.csdn.net/haiyinshushe/article/details/82721234)
 
-## 工具
-<table>
-<thead>
-<tr>
-<td>name</td>
-<td>note</td>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td>PhotoShop CC</td>
-<td></td>
-</tr>
-<tr>
-<td>Adobe XD</td>
-<td>画原型图</td>
-</tr>
-<tr>
-<td>Sketch</td>
-<td></td>
-</tr>
-<tr>
-<td>InVision</td>
-<td></td>
-</tr>
-</tbody>
-</table>
+[BigDecimal.setScale 处理java小数点](https://blog.csdn.net/ahwr24/article/details/7048724)

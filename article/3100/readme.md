@@ -1,29 +1,23 @@
-# jsp 页面中引入文件
+# Git 本地账号设置
  
 
+## 配置全局的 name 和 email
+git config --global user.name  "username"  
+git config --global user.email  email
 
- 
+## 配置项目内的 name 和 email
+git config user.name "username"
+git config user.email email
 
-## 静态包含
- 
-`````
-<%@ include file="inlayingJsp.jsp" %>
-`````
-## 动态包含
-`````
-<jsp:include page="inlayingJsp.jsp" flush="true"/>
-`````
-## jstl import 
+## 删除 GitHub 密钥
+密钥所处位置(mac) : 应用 --> 钥匙串访问 --> github.com
 
-<c:import>标签提供了所有<jsp:include>行为标签所具有的功能，同时也允许包含绝对URL。
+## 在一台设备内使用多个 Github 账户及 SSH
 
-`````
-<c:import url="inlayingJsp.jsp"></c:import> 
-`````
 
-References:
 
-[JSP中include的动态引入和静态引入](https://baijiahao.baidu.com/s?id=1590373998823758796&wfr=spider&for=pc)
+## 参考
 
-[一个jsp页面引入另一个jsp页面的三种方式 及静态引入和动态引入的区别](https://blog.csdn.net/fn_2015/article/details/70311495)
-
+[Git配置用户名和密码](https://blog.csdn.net/weixin_41287260/article/details/90111027)
+[mac 下自动记录git密码，如何删除？](https://www.updateweb.cn/zwfec/item-80.html)
+[Git 当前项目设置 用户名、邮箱](https://blog.csdn.net/pintu274111451/article/details/79767970)

@@ -1,46 +1,75 @@
-# H5 标签 Audio 兼容总结
+# 记一次排错过程
  
 
+## Android 微信登陆排错记录
+
+### 现象一: 登陆跳转到 WXEntryActivity，返回到 MainAtivity 的 LoginFragment 后，mActivity 为空。相同的第二次操作出现
+
+    排除没有执行 onAttach, 排除执行 onAttach 时赋值为空, 排除执行了 onDetach
+ 
+
+### 现象二: fragment.toString()返回的值与之前的值不一致。（第二次操作内
+
+    怀疑前后的LoginFragment不是同一个对象。
+ 
+
+### 现象三:返回后执行onStart及后续方法。（第二次操作内）
+
+    如果不是同一个对象，为什么没有从onAttach开始执行
+ 
+
+### 现象四: LoginFragment这个对象竟然是第一次操作是的对象。
+
+    解释：第一次操作的LoginFragment被保留在不知道哪里，连onAttach等方法都省的执行，直接onStart走起。
+    第二次操作时被复用了。
+    但mActivity(Context)这个值没了。id和tag也没有了。
+    我在里面赋了个long类型的变量却一直存在
+ 
+
+### 现象五: MainActivity一直都是同一个对象
+ 
+
+### 现象六：两次放回MainActivity的生命周期也没有从onCreate开始走。
+
+    猜测：是否是微信支付WXEntryActivity做了某些操作呢？
+
+ 
+
+### 现象七: 如果直接从AppContext中获取当前Activity，fragment的id和tag是没有的。
+
+ 
+<br/>
+
+### 结论: 上一个LoginFragment所注册的本地广播接收器没有清除，导致这个接收器在第二次操作时依然能收到消息并调用其中已经被destroy的第一次使用的LoginFragment
+
+<br/>
+<br/>
+
+## 微信支付，支付宝支付相关信息获取途径
+
+### 微信小程序支付
+[微信支付商户](https://pay.weixin.qq.com)
+
+    mchId,apiKey,apiv3Key,p12File
+
+[小程序管理端](https://mp.weixin.qq.com)
+
+    appId,appSecret
+
+### IOS，Android应用微信支付
+[微信支付商户](https://pay.weixin.qq.com)
+
+    mchId,apiKey,apiv3Key,p12File
+
+[微信开放平台](https://open.weixin.qq.com)
+
+    appId,appSecret
 
 
-移动端的浏览器是 不支持autoplay属性，不支持自动播放的。桌面端的浏览器也逐渐不支持了。
+### IOS，Android应用支付宝支付
+[支付宝 商家中心](https://mrchportalweb.alipay.com)
 
-除非添加 muted 属性(静音播放)。此外，chrome浏览器有[MEI的策略](https://developers.google.com/web/updates/2017/09/autoplay-policy-changes#mei)
+[支付宝 开发者中心](https://developers.alipay.com/)
 
-开发的时候要分2种情况，一种是可以自动播放，另一种是不可以自动播放
+    appId,privateKey,publicKey,serverPublicKey
 
-判断是否可以自动播放的代码如下：
-``````
-function testAutoPlay () {
-    // 返回一个promise以告诉调用者检测结果
-    return new Promise(resolve => {
-        let audio = document.createElement('audio');
-        // require一个本地文件，会变成base64格式
-        audio.src = require('@/assets/empty-audio.mp3');
-        document.body.appendChild(audio);
-        let autoplay = true;
-        // play返回的是一个promise
-        audio.play().then(() => {
-            // 支持自动播放
-            autoplay = true;
-        }).catch(err => {
-            // 不支持自动播放
-            autoplay = false;
-        }).finally(() => {
-            audio.remove();
-            // 告诉调用者结果
-            resolve(autoplay);
-        });
-    });
-}
-``````
-
-## Audio 支持 的音频格式
-
-
-## 参考
-[监听Audio的播放状态](https://blog.csdn.net/qq_42894622/article/details/89421145)
-
-[audio自动播放完美兼容实现方案](https://blog.csdn.net/tan9374/article/details/88991723)
-
-[video下autoplay属性无效——添加muted属性](https://blog.csdn.net/taiyangmiaomiao/article/details/80266625)

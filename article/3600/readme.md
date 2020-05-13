@@ -1,154 +1,86 @@
-# 7个步骤来完成一个PC网站向移动设备的跳跃
+# 缓存置换算法
  
 
 
 
-[Reference](http://www.100vic.com/jianshe/details/2026.html)
 
-## 允许网页宽度自动调整
-"自适应网页设计"到底是怎么做到的？其实并不难。
+Reference:
 
-首先，在网页代码的头部，加入一行viewport元标签。
+[RAND算法,FIFO算法,LFU算法,LRU算法,OPT算法](http://blog.163.com/shi_shun/blog/static/237078492010420320196/)
 
-viewport是网页默认的宽度和高度，上面这行代码的意思是，网页宽度默认等于屏幕宽度（width=device-width），原始缩放比例（initial-scale=1）为1.0，即网页初始大小占屏幕面积的100%。
+[十种常用的缓存替换算法](http://www.open-open.com/lib/view/open1401935263431.html)
 
-所有主流浏览器都支持这个设置，包括IE9。对于那些老式浏览器（主要是IE6、7、8），需要使用css3-mediaqueries.js。
+[缓存算法（页面置换算法）-FIFO、LFU、LRU](http://www.cnblogs.com/dolphin0520/p/3749259.html)
 
-`````
-<meta http-equiv="Content-type" name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no, width=device-width">
-`````
 
-[html5之meta标签viewport应用](http://www.cnblogs.com/luohtyy/p/4608195.html)
+**评价一个页面替换算法好坏的标准主要有两个，一是命中率要高，二是算法要容易实现。**
 
-## 不使用绝对宽度
-由于网页会根据屏幕宽度调整布局，所以不能使用绝对宽度的布局，也不能使用具有绝对宽度的元素。这一条非常重要。
+## RAND（Random algorithm，随机算法）
 
-具体说，CSS代码不能指定像素宽度：
-`````
-width:xxx px;
-`````
-只能指定百分比宽度：
-`````
-width: xx%;
-`````
-或者
-`````
-width:auto;
-`````
+利用软件或硬件的随机数发生器来确定主存储器中被替换的页面。这种算法最简单，而且容易实现。但是，这种算法完全没有利用主存储器中页面调度情况的历史信息，也没有反映程序的局部性，所以命中率比较低。
 
-## 相对大小的字体
+ 
 
-[CSS3的REM设置字体大小](https://www.w3cplus.com/css3/define-font-size-with-css3-rem)
+## FIFO（First-In First-Out algorithm，先进先出算法）
 
-字体也不能使用绝对大小（px），而只能使用相对大小（em）。
+核心原则就是：如果一个数据最先进入缓存中，则应该最早淘汰掉。也就是说，当缓存满的时候，应当把最先进入缓存的数据给淘汰掉。在FIFO Cache中应该支持以下操作。它的优点是比较容易实现，能够利用主存储器中页面调度情况的历史信息，但是，没有反映程序的局部性。因为最先调入主存的页面，很可能也是经常要使用的页面。
+实现：
+LinkHashMap
 
-`````
-body {
-    font: normal 100% Helvetica, Arial, sans-serif;
-}
-`````
+ 
 
-上面的代码指定，字体大小是页面默认大小的100%，即16像素。
+## LRU（Least-Recently-Used，最近最少使用）
 
-`````
-h1 {
-    font-size: 1.5em;
-}
-`````
+替换掉最近被请求最少的文档。这一传统策略在实际中应用最广。在CPU缓存淘汰和虚拟内存系统中效果很好。然而直接应用与代理缓存效果欠佳，因为Web访问的时间局部性常常变化很大。
+实现：
+LruCache选择的是LinkedHashMap这个数据结构，LinkedHashMap是一个双向循环链表，在构造LinkedHashMap时，通过一个boolean（accessOrder）值来指定LinkedHashMap中保存数据的方式。
+在LruCache中选择的是accessOrder = true；此时，当accessOrder 设置为 true时，每当我们更新（即调用put方法）或访问（即调用get方法）map中的结点时，LinkedHashMap内部都会将这个结点移动到链表的尾部，因此，在链表的尾部是最近刚刚使用的结点，在链表的头部是是最近最少使用的结点，当我们的缓存空间不足时，就应该持续把链表头部结点移除掉，直到有剩余空间放置新结点。
+在LruCache中选择的是accessOrder = false；则可用在FIFO；
 
-然后，h1的大小是默认大小的1.5倍，即24像素（24/16=1.5）。
+## LFU（Least-Frequently-Used，最不经常使用）
 
-`````
-small {
-    font-size: 0.875em;
-}
-`````
-small元素的大小是默认大小的0.875倍，即14像素（14/16=0.875）。
+替换掉访问次数最少的。这一策略意图保留最常用的、最流行的对象，替换掉很少使用的那些。然而，有的文档可能有很高的使用频率，但之后再也不会用到。传统 的LFU策略没有提供任何移除这类文件的机制，因此会导致“缓存污染(Cache Pollution)”，即一个先前流行的缓存对象会在缓存中驻留很长时间，这样，就阻碍了新进来可能会流行的对象对它的替代。
+实现：
+用HashMap保存关系{key值 : 命中次数与上次命中时间}，当需要淘汰某个key值时，调用map.remove(key)
 
-## 流动布局（fluid grid）
+## SIZE
 
-"流动布局"的含义是，各个区块的位置都是浮动的，不是固定不变的。
-`````
-.main {
-    float: right;
-    width: 70%;
-}
+替换size最大的对象。这一策略通过淘汰一个大对象而不是多个小对象来提高命中率。不过，可能有些进入缓存的小对象永远不会再被访问。SIZE策略没有提供淘汰这类对象的机制，也会导致“缓存污染”。
 
-.leftBar {
-    float: left;
-    width: 25%;
-}
-`````
-float的好处是，如果宽度太小，放不下两个元素，后面的元素会自动滚动到前面元素的下方，不会在水平方向overflow（溢出），避免了水平滚动条的出现。
+## LRU-Threshold
 
-另外，绝对定位（position: absolute）的使用，也要非常小心。
+不缓存超过某一size的对象，其它与LRU相同。
 
-## 选择加载CSS
+## Log(Size) + LRU
 
-"自适应网页设计"的核心，就是CSS3引入的Media Query模块
+替换size最大的对象，当size相同时，按LRU进行替换
 
-它的意思就是，自动探测屏幕宽度，然后加载相应的CSS文件。
-`````
-media=”screen and (max-device-width:400px)”
-href=”tinyScreen.css”/>
-`````
-上面的代码意思是，如果屏幕宽度小于400像素（max-device-width: 400px），就加载tinyScreen.css文件。
-`````
-media=”screen and (min-width:400px) and (max-device-width:600px)”
-href=”smallScreen.css”/>
-`````
-如果屏幕宽度在400像素到600像素之间，则加载smallScreen.css文件。
+## Hyper-G
 
-除了用html标签加载CSS文件，还可以在现有CSS文件中加载。
+LFU的改进版，同时考虑上次访问时间和对象size
 
-## CSS的@media规则
+## Pitkow/Recker
 
-同一个CSS文件中，也可以根据不同的屏幕分辨率，选择应用不同的CSS规则。
+替换最近最少使用的对象，除非所有对象都是今天访问过的。如果是这样，则替换掉最大的对象。这一策略试图符合每日访问web网页的特定模式。这一策略也被建议在每天结束是运行，以释放被“旧的”，最近最少使用的对象占用的空间。
 
-`````
-@media screen and (max-device-width: 400px) {
-    .column {
-        float: none;
-        width:auto;
-    }
+## Lowest-Latency-First
 
-    #sidebar {
-        display:none;
-    }
-}
-`````
+替换下载时间最少的文档。显然它的目标是最小化平均延迟。
 
-上面的代码意思是，如果屏幕宽度小于400像素，则column块取消浮动（float:none）、宽度自动调节（width:auto），sidebar块不显示（display:none）。
+## Hybrid
 
-## 图片的自适应
+Hybrid有另外一个目标，减少平均延迟。对缓存中的每个文档都会计算一个保留效用（utility of retaining）。保留效用最低的对象会被替换掉。位于服务器s的文档f的效用函数定义如下：
+Cs: 与服务器s的连接时间
+bs: 服务器s的带宽
+frf: f的使用频率
+sizef: f的size，单位字节
 
-除了布局和文本，”自适应网页设计”还必须实现图片的自动缩放。
+K1和K2是常量，Cs和bs是根据最近从服务器s获取文档的时间进行估计的。
 
-这只要一行CSS代码：
-`````
-img { max-width: 100%;}
-`````
-这行代码对于大多数嵌入网页的视频也有效，所以可以写成：
-`````
-img, object { max-width: 100%;}
-`````
-老版本的IE不支持max-width，所以只好写成：
-`````
-img { width: 100%; }
-`````
-此外，windows平台缩放图片时，可能出现图像失真现象。这时，可以尝试使用IE的专有命令：
-`````
-img { -ms-interpolation-mode: bicubic; }
-`````
-或者，Ethan Marcotte的imgSizer.js。
-`````
-addLoadEvent(function() {
+## LRV（Lowest Relative Value）
 
-    var imgs = document.getElementById(“content”).getElementsByTagName(“img”);
+LRV也是基于计算缓存中文档的保留效用。然后替换保留效用最低的文档。有点复杂，实际应用价值不大，就不详述了。
 
-    imgSizer.collate(imgs);
+## OPT（OPTimal replacement algorithm，最优替换算法）
 
-});
-`````
-最好还是做适配分辨率的图片。有很多方法可以做到同样效果，服务器端和客户端都可以实现。
-
+上面介绍的几种页面替换算法主要是以主存储器中页面调度情况的历史信息为依据的，它假设将来主存储器中的页面调度情况与过去一段时间内主存储器中的页面调度情况是相同的。显然，这种假设不总是正确的。最好的算法应该是选择将来最久不被访问的页面作为被替换的页面，这种替换算法的命中率一定是最高的，它就是最优替换算法。

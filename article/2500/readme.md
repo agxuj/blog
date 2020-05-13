@@ -1,24 +1,63 @@
-# Git 命令集合
+# Spring Boot 集成使用JSP
  
 
 
- 
-Server，Local，缓存区
+## 在pro.xml中添加依赖
+``````
+<dependency>
+    <groupId>org.apache.tomcat.embed</groupId>
+    <artifactId>tomcat-embed-jasper</artifactId>
+    <scope>provided</scope>
+</dependency>
+<dependency>
+    <groupId>javax.servlet</groupId>
+    <artifactId>javax.servlet-api</artifactId>
+</dependency>
+<dependency>
+    <groupId>javax.servlet.jsp</groupId>
+    <artifactId>javax.servlet.jsp-api</artifactId>
+    <version>2.3.1</version>
+</dependency>
+<dependency>
+    <groupId>javax.servlet</groupId>
+    <artifactId>jstl</artifactId>
+    <scope>provided</scope>
+</dependency>
+``````
 
-#### 恢复到上一个版本
-``````````
-git reset –hard HEAD^ 
-git checkout -- <file>
-``````````
-[Reference](https://blog.csdn.net/zch501157081/article/details/51939854)
+## 在appliction.properties文件配置Spring mvc的视图展示为jsp
+``````
+spring.mvc.view.prefix=/WEB-INF/jsp/
+spring.mvc.view.suffix=.jsp
+``````
 
-<br/>
+## 建立web文件存放点
 
-#### Git pull 强制覆盖本地文件
+在src/main目录中新建webapp文件夹，在webapp目录中新建/WEB-INF/jsp/文件夹用于存放jsp文件，其他类型的文件直接存放在webapp文件夹中。
 
-`````````
-git fetch --all  
-git reset --hard origin/master 
-git pull
-`````````
-[Reference](https://blog.csdn.net/baple/article/details/49872765)
+## 在pro.xml的build标签中添加配置
+``````
+<resources>
+    <resource>
+        <directory>src/main/java</directory>
+        <includes>
+            <include>**/*.xml</include>
+        </includes>
+    </resource>
+
+    <resource>
+        <directory>src/main/resources</directory>
+        <includes>
+            <include>**/*.*</include>
+        </includes>
+    </resource>
+
+    <resource>
+        <directory>src/main/webapp</directory>
+        <targetPath>META-INF/resources</targetPath>
+        <includes>
+            <include>**/*.*</include>
+        </includes>
+    </resource>
+</resources>
+``````
