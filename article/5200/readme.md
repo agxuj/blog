@@ -1,340 +1,77 @@
-# Oval说明文档
+# 怎样才是合格的记住密码实现
  
 
 
-## 注解说明
 
-### @Assert
+[Reference](http://www.zhihu.com/question/20218136/answer/16246633)
 
-Check if evaluating the expression in thespecified expression language returns true.
+## 1.首先用户基本能够完成自动登陆流程
+重新启动客户端/浏览器, 不需要输入密码可以登陆
 
-检查指定语言的表达式返回值是否为true；这里表达式是groovy。
- 
- | 参数 | 说明|
- | - | - |
- | expr | 表达式 |
- | lang | 指明脚本语言 | 
- | errorCode | 错误编码（共有属性）<br/>（可以修改成自己的异常编码串）<br/>net.sf.oval.constraint.Assert（默认值）
- | message | 错误描述（共有属性） | 
- | when | 前置条件（共有属性） |  
+重启设备后依旧可以自动登陆
 
-### @AssertFalse
-Check if the value is false. 
+## 2. 用户更换网络环境自动登陆有效
+同一设备采用有线网络,无线网络,临时中断网络不影响规则1的逻辑
+
+**安全系数较高的业务可能对ip有自动进化的白名单, 此时规则2呈受限状态**    
+
+## 3. 用户更改密码后原有的自动登陆失效(包括且不限于本机的自动登录)
+保证被盗用后/在其他机器上登陆过的信息可以远程"挂失"
+
+## 4. 可取消
+用户的登出(明确的Logout)操作使原有的自动登陆失效(包括且不限于本机的自动登录)
+
+并且可以关闭自动登陆/记住密码
+
+重新安装软件/客户端必须是失效的(否则你手机卸载了陌陌,回家老婆重装一次居然可以自动登陆,后果就....)
+
+# 接下来是安全层面的讨论
+
+## 5. 不可逆(针对本地的token/票据/认证)
+token(理论级)不可逆向出除用户id以外的信息,包括不限于 账号,密码,登陆ip
+
+## 6. 不可猜测/碰撞
+简单测试:当存在100w有效token时,token值域内随机生成1w个新token不能出现碰撞
+
+为什么是1w个? 因为token的验证是需要有网络开销的. 当短时间内出现1w个密集请求的时候如果你还不能发现攻击, 只能说明你的系统监控太差了(连流量图上都该出突尖了)
+
+## 7. 有时效性
+token不可以长期不变可用, 否则规则6将会在可预见的时间内失效
+
+推荐不超过1个月(现在已经大都是1周). 具体可以参考各个站点的设计
+
+如果需要长期保留可以采用换票(重新签发新的token)的方式来延续自动登陆
+
+## 8. 不可被拦截盗用*
+假设当前网络为非安全信道, 消息可被监听. 监听者盗用token不能使用.或者监听者无法盗用token(不能从网络包中分析出具体的token). 简单说就是采用https协议可以快速透明的解决问题 . 
+
+以下提供几个简化的版本, 建立在黑客没有刻意针对服务进行攻击的前提下, 做到基本的保护. 这样盗用的门槛则提高到,加密代码被获取进而解密的门槛高度.
     
-检查值是否为假或真
+标准版:常用ip白名单
     
-Note: This constraint is also satisfied when the value to validate is null, therefore you might also need to specified @NotNull
-
-主要参数when,errorCode,message
-
-### @AssertTrue
-Check if the value is true.
+其中规则2的高级情况也可以起到一定程度的限制作用, 但无法抵御对大型区域网路(公司网络, 学校网络, 小区网络)内的攻击.
     
-### @AssertNull
-Check if null. 
-
-与@NotNull相反;
-
-### @AssertURL
-Check if the value is a valid URL. 
-
-检查值是否为有效的URL
-
-Note: This constraint is also satisfied when the value to validate is null, therefore you might also need to specified @NotNull
-
-| 参数 | 说明 | 
-| - | - |
-| connect(boolean) | Specifies if a connection to the URL should be attempted to verify its validity.<br/>是否发起连接进行尝试. | 
-
-
-### @DateRange
-Check if the date is within the a daterange. 
-
-Note: This constraint is also satisfied when the value to validate is null, therefore you might also need to specified @NotNull
-
-@DateRange可以验证字符串类型，请查看源码验证
-`````
-示例：
-@DateRange(min="2010-10-01",max="now",message="dateis error.")
-private String birthday;
-`````
-
- | 参数 | 说明 |
- | - | - |
- | min | The upper date compared against in the format specified with the dateFormat parameter.If not specified then no upper boundary check is performed.<br>Special values are:<br/>1. now<br/>2. today<br/>3. yesterday<br/>4. tomorrow | 
- | max | The lower date compared against in the format specified with the dateFormat parameter.if not specified then no lower boundary check is performed.<br>Special values are:<br/>1. now<br/>2. today<br/>3. yesterday<br/>4. tomorrow | 
-
-### @Future
-`````
-示例：
-@Future(message="date isfuture.") //不能验证字符串
-`````
-### @Past
-`````
-示例：
-@Past(message="date is past.") //不能验证字符串
-`````
-### @Email
-Check if the value is a valid e-mailaddress. The check is performed based on a regular expression.
-
-Note: This constraint is also satisfied when the value to validate is null, therefore you might also need to specified @NotNull
-
+廉价版(https是要钱的): token拥有时间戳信息加密.即通信层面上的token是每次都在变化的 
     
-`````
-示例：
-@Email(message="email is error.")
-private String email;
-`````
-
-### @EqualToField
-Check if value equals the value of thereferenced field.
-
-Note: This constraint is also satisfied when the value to validate is null, therefore you might also need to specified @NotNull
-
-`````
-示例：
-//检查userCode是否和userName相等；使用get方法。
-@EqualToField(value="userName" message="mustequals userName",useGetter=true)
-private String userCode;
-`````
-@NotEqualToField
-`````
-示例；
-与@EqualToField相反
-@NotNull(message="not null")
-@NotEqualToField(value="userCode" message="can'tequals userCode")
-private String userName;
-`````
-
-### @HasSubstring
-Check if the string contains a certainsubstring.
+可达到屏蔽公共wifi这类实时全面截包进行攻击的情况
     
-Note: This constraint is also satisfied when the value to validate is null, therefore you might also need to specified @NotNull
-
-
- | 参数 | 说明 | 
- | - | - |
- | value | 需要给的子串 | 
- | ignoreCase（boolean） | ignoreCase default false | 
-
-`````
-示例：
-@HasSubstring(value="san",ignoreCase=true,message="mustcontains 'san'")
-private String userCode;
-`````
-### @Length
-Check if the string representation has certain length. 
-
-检查字符串的长度
-
-Note: This constraint is also satisfied when the value to validate is null, therefore you might also need to specified @NotNull
-
- | 参数 | 说明 | 
- | - | - |
- | max | 最大长度，默认为：Integer.MAX_VALUE | 
- | min | 默认值为0 | 
-
-### @MaxLength
-Check if the string representation has certain length. 
-
-检查字符串的长度
-
-Note: This constraint is also satisfied when the value to validate is null, therefore you might also need to specified @NotNull
-
-有value属性；表示和value进行比较
-
-### @MinLength
-Check if the string representation has certain length. 
-
-检查字符串的长度
-
-Note: This constraint is also satisfied when the value to validate is null, therefore you might also need to specified @NotNull
+极简版:token每5min换票一次.
     
-有value属性；表示和value进行比较
+可达到非全面截包(局域网出现临时的arp攻击这类)情况下, token被发送到攻击者邮箱后, 未来某一时刻被利用来攻击的情况.
     
+**建议**
 
-### @Size
-Check if the array,map, or collection has the given size. For objects of other types thelength of their String representation will be checked. 
+规则1~4是最基本的, 完成不了的根本就不达标
+    
+对于尚未拥有可观收益的服务, 只要完成1~6就够了. 属于及格状态. 能攻击的人不来攻击, 这个服务就可以说是"绝对安全"了
 
-检查array、map或集合的大小；其他类型的对象检查对应字符串的长度；建议字符长度使用@Length验证。
+git 反之则连规则8也得完成. 属于良好状态
 
-Note: This constraint is also satisfied when the value to validate is null, therefore you might also need to specified @NotNull
+## 终极规则9
+社会工程学层面的安全防御.(应对所有已知的即将知道的软件/框架/协议漏洞 )
+到达此级别的必须得是可以上市级别的公司(或者有实力巨额出售自己)提供的服务了. 当网络上出现高手通过特殊手段(比如最近的Heartbleed漏洞)直接获取到token信息甚至是密码时, 可以 第一时间的得到白帽(乌云/圈子里)的帮助与支持.甚至是收买说服将要攻击的黑客. 达到这个标准的才可以成为真正优秀的状态.
 
-
- | 参数 | 说明 | 
- | - | - |
- | max |  | 
- | min |  | 
-
-
-### @MinSize
-Check if the array,map, or collection has the given size. For objects of other types thelength of their String representation will be checked. 
-
-检查array、map或集合的大小；其他类型的对象检查对应字符串的长度；建议字符长度使用@Length验证。
-
-### @MaxSize
-Check if the array,map, or collection has the given size. For objects of other types thelength of their String representation will be checked. 
-
-检查array、map或集合的大小；其他类型的对象检查对应字符串的长度；建议字符长度使用@Length验证。
-
-
-### @MemberOf, @NotMemberOf
-Check if the string representation iscontained in the given string array.
-
-检查值是否包含在给定的数组中；@NotMemberOf实现相反效果；
-
-Note: This constraint is also satisfied when the value to validate is null, therefore you might also need to specified @NotNull
-
- | 参数 | 说明 | 
- | - | - |
- | value 字符串数组 |  | 
- | ignoreCase | 默认值false | 
-
-### @NotBlank, @NotNull, @NotEmpty
-
- | 参数 | 说明 | 
- | - | - |
- | NotBlank | Check if the string representation is not empty and does not only contain white spaces. | 
- | NotNull | Check if not null. | 
- | NotEmpty | Check if the string representation is not empty(""). | 
-
-### @NotNegative
-Check if the number is greater or equalzero. 
-
-检查值是否为非负数
-
-Note: This constraint is also satisfied when the value to validate is null, therefore you might also need to specified @NotNull
- 
-
-### @Range
-Check if the number is in the given range.
-
-@Range 有max和min 属性，检查数值类型的范围；
-
-### @Min
-Check if the number is greater than orequal to X.
-
-### @Max
-Check if the number is smaller than orequal to X.
-
-### @Digits
-Check if the String representation has thegiven max/min number of integral and fractional digits.
-
-检查字符串形式的数字范围，对应属性如下
-
-maxFraction = Integer.MAX_VALUE;
-maxInteger = Integer.MAX_VALUE;
-minFraction = 0;
-minInteger = 0;
-
-### @NotMatchPatternCheck, @MatchPatternCheck
-Check if the specified regular expressionpattern is or not matched. 
-
-正则表达式验证
-
- | 参数 | 说明 | 
- | pattern | The regular expression(s) that must match or not match | 
-
-### @ValidateWithMethod
-Check the value by a method of the sameclass that takes the value as argument and returns true if valid and false ifinvalid.
-
-验证值作为参数，使用同一个类的某个方法返回值的布尔值进行验证；
-
-方法必须是和验证值在同一类中。 
-
- | 参数 | 说明 | 
- | - | - | 
- | methodName String | name a the single parameter method to use for validation | 
- | Class<?> parameterType | type of the method parameter 方法的参数，及被验证值的类型 | 
-
-### @CheckWith
-Check the value by a method of the sameclass that takes the value as argument and returns true if valid and false ifinvalid.
-
-使用net.sf.oval.constraint.CheckWithCheck.SimpleCheck实现该接口的类中isSatisfied方法来判断，返回true有效，false无效；如果实现类是内部的，必须为静态类。
-
-
- | 参数 | 说明 | 
- | - | - | 
- | Class<? extendsCheckWithCheck.SimpleCheck> | value -- Check class to use for validation.<br/>指明验证类 | 
- | ignoreIfNull | this constraint will be ignored if the value to check is null | 
-
-
-`````
-示例：验证User类中的age字段
-@CheckWith(value=CheckAge.class,message="agemust in (18~65)")
-private int age;
-`````
-验证类如下：
-`````
-public class CheckAge implements CheckWithCheck.SimpleCheck {
-
-    private static final long serialVersionUID =1L;
-
-    @Override
-    public boolean isSatisfied(Object validatedObject, Object value) {
-        User user = (User)validatedObject;
-        int age = user.getAge();
-        if(age <18 || age > 65)
-            return false;
-        else
-            return true;
-    }
-}
-`````
-
-## 自定义注解
-@Past和@Future不能验证字符串类型的日期；自定义@CPast和@CFuture，都提供要给参数指定日期格式，默认为：yyyy-MM-dd;
-
-### 定义注解
-`````
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.FIELD,ElementType.PARAMETER,ElementType.METHOD})
-@Constraint(checkWith = CPastCheck.class)
-public @interface CPast {
-    Stringmessage() default "日期必须小于现在.";
-    StringdateFormat() default "yyyy-MM-dd";
-} 
-`````
-
-### 定义实现
-`````
-public class CPastCheck extends AbstractAnnotationCheck<CPast> {
-    private static final longserialVersionUID = 1L;
-    private StringdateFormat;
-
-    public voidconfigure(final CPast constraintAnnotation) {
-        super.configure(constraintAnnotation);
-        setDateFormat(constraintAnnotation.dateFormat());
-    }
-
-    public booleanisSatisfied(Object validatedObject, 
-            Object valueToValidate,
-            OValContextcontext, 
-            Validator validator) throws OValException {
-        SimpleDateFormatsdf = new SimpleDateFormat(dateFormat);
-        
-        if(valueToValidate instanceof String) {
-            try {
-                Datedate = sdf.parse((String) valueToValidate);
-                returndate.before(new Date());
-            } catch (ParseException e) {
-                e.printStackTrace();
-                super.setMessage("日期格式错误,无法验证,请修改成正确格式.");
-                return false;
-            }
-        }
-        return false;
-    }
-
-    public StringgetDateFormat() {
-        returndateFormat;
-    }
-
-    public voidsetDateFormat(String dateFormat) {
-        this.dateFormat= dateFormat;
-    }
-}
-`````
-
-## Referencd
-[java开源验证框架OVAL帮助文档](https://blog.csdn.net/neweastsun/article/details/49154337/)
+## 究极规则10
+推卸责任(应对出现撞库攻击的情况 如最近的iCloud,Gmail)
+当服务出现安全问题, 并已经产生严重后果/损失时. 找到公关部门,发布安全公告, 发表声明, 严厉谴责漏洞利用者. 并一定要说明,同行现在差不多都是这个样子,不会好只会更差.最好能说 成是全世界的厂商都有这个问题. 可以的话说明一下人类的智慧暂时不能解决这个问题也是可以的. 顺带附上一个很小的数字, 说他们是受到影响的. 我们已经通知他们改密码了. 至于损失 的赔偿么, 游戏公司的运营可以考虑一下. 其他企业不建议给, 否则有认错被抓把柄的风险.
+当达到这个状态时, 差不多可以说"Everything Is Under Control"了. 完美状态.

@@ -1,87 +1,45 @@
-# 记一次排错过程 --- intelliJ idea 引入库工程偶发性报错
+# 记一次排错过程
  
 
-## 问题:
-导入库工程 top.knxy.library.java 总是失败，怎么回事呢？
+## Android 微信登陆排错记录
+
+### 现象一: 登陆跳转到 WXEntryActivity，返回到 MainAtivity 的 LoginFragment 后，mActivity 为空。相同的第二次操作出现
+
+    排除没有执行 onAttach, 排除执行 onAttach 时赋值为空, 排除执行了 onDetach
  
-### 现象1:
-进行一下操作后
 
-1. project stucture -> modules -> import modules
-1. top.knxy.age.java -> modules depandency
+### 现象二: fragment.toString()返回的值与之前的值不一致。（第二次操作内
 
-主工程可以进行 maven -> install , 生成的jar包可以使用, 但项目无法编译运行。
-
-### 现象2:
-我手动进行
-project stucture -> modules -> top.knxy.library => /Users/faddenyin/workspace/top.knxy.library.java/target/server-1.0.jar
-的引入也无法解决问题
-
-### 现象3:
-把pom.xml文件中的
-`````
-<dependency>
-    <groupId>top.knxy.library</groupId>
-    <artifactId>server</artifactId>
-    <version>1.0</version>
-    <scope>compile</scope>
-</dependency>
-`````
-删掉再添加进去，并且点击import changes后问题解决。
-
-## 问题:
-执行上述操作后,问题又出现.
-
-### 现象1:
-不在 project stucture 引入 module , 把本地仓库中的 ibrary.jar 等文件删了 后 问题解决.
-
-## 结论:
-
-正确操作如下：
-1. library project install
-1. 把本地仓库的 library.jar 等文件删了
-1. 把pom.xml文件中的
-    `````
-    <dependency>
-        <groupId>top.knxy.library</groupId>
-        <artifactId>server</artifactId>
-        <version>1.0</version>
-        <scope>compile</scope>
-    </dependency>
-    `````
-    删掉再添加进去，并且点击import changes.
+    怀疑前后的LoginFragment不是同一个对象。
  
---------------------------
 
-### 现象2: 
-project stucture -> modules -> Maven: top.knxy.library:server:1.0 => /Users/faddenyin/.m2/repository/top/knxy/library/server/1.0/server-1.0.jar
+### 现象三:返回后执行onStart及后续方法。（第二次操作内）
 
-### 现象3: 
-project stucture -> libraries -> top.knxy.library => /Users/faddenyin/workspace/top.knxy.library.java/target/server-1.0.jar
-
-### 现象4: 
-project stucture -> modules -> top.knxy.library => /Users/faddenyin/workspace/top.knxy.library.java/target/server-1.0.jar
-
-### 得：
-此前存在多余操作， Maven: top.knxy.library:server:1.0 和 top.knxy.library 是重复的,但我却手动引入 top.knxy.library .
-
-## 问题：
-Maven: top.knxy.library:server:1.0是什么时候的什么操作引用？
-
-## 答:
-在 pom.xml 中引入 dependency 后,自动生成
-
----------------------------
-
-
-### 现象1: 
-project stucture -> libraries -> Maven: top.knxy.library:server:1.0 => /Users/faddenyin/.m2/repository/top/knxy/library/server/1.0/server-1.0.jar
-
-### 现象2:
-在项目top.knxy.library.java用maven打包（install）后, 目录/Users/faddenyin/.m2/repository/中会存在相关的jar包
-
-### 得:
-top.knxy.library.java这个项目打包后在/Users/faddenyin/.m2/repository/目录中存在
-
----------------------------
+    如果不是同一个对象，为什么没有从onAttach开始执行
  
+
+### 现象四: LoginFragment这个对象竟然是第一次操作是的对象。
+
+    解释：第一次操作的LoginFragment被保留在不知道哪里，连onAttach等方法都省的执行，直接onStart走起。
+    第二次操作时被复用了。
+    但mActivity(Context)这个值没了。id和tag也没有了。
+    我在里面赋了个long类型的变量却一直存在
+ 
+
+### 现象五: MainActivity一直都是同一个对象
+ 
+
+### 现象六：两次放回MainActivity的生命周期也没有从onCreate开始走。
+
+    猜测：是否是微信支付WXEntryActivity做了某些操作呢？
+
+ 
+
+### 现象七: 如果直接从AppContext中获取当前Activity，fragment的id和tag是没有的。
+
+ 
+<br/>
+
+### 结论: 上一个LoginFragment所注册的本地广播接收器没有清除，导致这个接收器在第二次操作时依然能收到消息并调用其中已经被destroy的第一次使用的LoginFragment
+
+
