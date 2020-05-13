@@ -1,86 +1,71 @@
-# 缓存置换算法
+# Java Web 服务端搭建
  
 
 
+## 亚马逊免费服务器申请
 
+[亚马逊一年免费VPS申请及SSH安全代理搭建 ](http://blog.sina.com.cn/s/blog_67de9c540102uxk3.html)
 
-Reference:
+[PuTTYGen生成的key与openSSH的ssh-keygen生成的key互换](http://blog.chinaunix.net/uid-22785603-id-3888819.html)
 
-[RAND算法,FIFO算法,LFU算法,LRU算法,OPT算法](http://blog.163.com/shi_shun/blog/static/237078492010420320196/)
+[亚马逊云VPS AWS更改LINUX为root权限密码登陆](http://www.mamicode.com/info-detail-493861.html)
 
-[十种常用的缓存替换算法](http://www.open-open.com/lib/view/open1401935263431.html)
+[亚马逊云](https://aws.amazon.com/)
 
-[缓存算法（页面置换算法）-FIFO、LFU、LRU](http://www.cnblogs.com/dolphin0520/p/3749259.html)
+[其他服务器提供商选择 - 搬瓦工](https://bandwagonhost.com/)
 
+## Java Download Install
+[Linux安装jdk1.8和配置环境变量](https://www.cnblogs.com/zs-notes/p/8535275.html)
 
-**评价一个页面替换算法好坏的标准主要有两个，一是命中率要高，二是算法要容易实现。**
+[在CentOS上安装Java环境：[1]使用yum安装java](https://jingyan.baidu.com/article/4853e1e51d0c101909f72607.html)
 
-## RAND（Random algorithm，随机算法）
+## MySql Install
+[mysql 官方 yum repo](http://zongming.net/read-668)
 
-利用软件或硬件的随机数发生器来确定主存储器中被替换的页面。这种算法最简单，而且容易实现。但是，这种算法完全没有利用主存储器中页面调度情况的历史信息，也没有反映程序的局部性，所以命中率比较低。
+[启动和停止MySQL服务](http://www.cnblogs.com/jdonson/archive/2009/07/03/1516289.html)
 
- 
+[linux下mysql的root密码忘记解决方](http://www.cnblogs.com/allenblogs/archive/2010/08/12/1798247.html)
 
-## FIFO（First-In First-Out algorithm，先进先出算法）
+[Mysql数据备份与恢复](http://www.cnblogs.com/wenanry/archive/2010/05/18/1737939.html)
 
-核心原则就是：如果一个数据最先进入缓存中，则应该最早淘汰掉。也就是说，当缓存满的时候，应当把最先进入缓存的数据给淘汰掉。在FIFO Cache中应该支持以下操作。它的优点是比较容易实现，能够利用主存储器中页面调度情况的历史信息，但是，没有反映程序的局部性。因为最先调入主存的页面，很可能也是经常要使用的页面。
-实现：
-LinkHashMap
+install cmd
+`````
+yum install mysql
+`````
 
- 
+## Tomcat Install
+[amazon ec2 安装tomcat](http://blog.sina.com.cn/s/blog_3d37a56901011os7.html)
 
-## LRU（Least-Recently-Used，最近最少使用）
+[Linux下Tomcat的安装配置](https://blog.csdn.net/zhuying_linux/article/details/6583096)
 
-替换掉最近被请求最少的文档。这一传统策略在实际中应用最广。在CPU缓存淘汰和虚拟内存系统中效果很好。然而直接应用与代理缓存效果欠佳，因为Web访问的时间局部性常常变化很大。
-实现：
-LruCache选择的是LinkedHashMap这个数据结构，LinkedHashMap是一个双向循环链表，在构造LinkedHashMap时，通过一个boolean（accessOrder）值来指定LinkedHashMap中保存数据的方式。
-在LruCache中选择的是accessOrder = true；此时，当accessOrder 设置为 true时，每当我们更新（即调用put方法）或访问（即调用get方法）map中的结点时，LinkedHashMap内部都会将这个结点移动到链表的尾部，因此，在链表的尾部是最近刚刚使用的结点，在链表的头部是是最近最少使用的结点，当我们的缓存空间不足时，就应该持续把链表头部结点移除掉，直到有剩余空间放置新结点。
-在LruCache中选择的是accessOrder = false；则可用在FIFO；
+[linux环境下安装tomcat6](http://www.cnblogs.com/wenqiangwu/p/3288339.html)
 
-## LFU（Least-Frequently-Used，最不经常使用）
+[CentOS6.4下Yum安装Mysql和JDK和tomcat](https://blog.csdn.net/renfufei/article/details/9733367)
 
-替换掉访问次数最少的。这一策略意图保留最常用的、最流行的对象，替换掉很少使用的那些。然而，有的文档可能有很高的使用频率，但之后再也不会用到。传统 的LFU策略没有提供任何移除这类文件的机制，因此会导致“缓存污染(Cache Pollution)”，即一个先前流行的缓存对象会在缓存中驻留很长时间，这样，就阻碍了新进来可能会流行的对象对它的替代。
-实现：
-用HashMap保存关系{key值 : 命中次数与上次命中时间}，当需要淘汰某个key值时，调用map.remove(key)
+## 文件管理
+[史上最简单的上传文件到linux系统方法](https://jingyan.baidu.com/article/219f4bf7d28185de442d38d2.html)
 
-## SIZE
+## Linux 命令 
+[Linux常用命令大全](http://www.php100.com/html/webkaifa/Linux/2009/1106/3485.html)
 
-替换size最大的对象。这一策略通过淘汰一个大对象而不是多个小对象来提高命中率。不过，可能有些进入缓存的小对象永远不会再被访问。SIZE策略没有提供淘汰这类对象的机制，也会导致“缓存污染”。
+[linux文件创建、查看、编辑命令](http://blog.163.com/fan_yishan/blog/static/4769221320095148164649/)
 
-## LRU-Threshold
+[Linux下*.tar.gz文件解压缩命令](http://www.cnblogs.com/xiehy/archive/2010/09/13/1824776.html)
 
-不缓存超过某一size的对象，其它与LRU相同。
+## VPS 域名绑定
+1. 将域名解析到VPS的IP地址
+1. 如果绑定多个域名对于多个web应用，需要配置Tomcat的server.xml文件
 
-## Log(Size) + LRU
+## 防火墙
+[Linux防火墙的关闭和开启](https://kiddwyl.iteye.com/blog/67708)
 
-替换size最大的对象，当size相同时，按LRU进行替换
+[RedHat Linux下iptables防火墙设置](https://www.linuxidc.com/Linux/2012-08/67186.htm)
 
-## Hyper-G
+[Redhat Linux 7 命令关闭防火墙](https://jingyan.baidu.com/article/e52e3615a9009440c70c5162.html)
 
-LFU的改进版，同时考虑上次访问时间和对象size
+## Tools
+[Win7下如何使用Telnet命令](https://jingyan.baidu.com/article/95c9d20d96ba4aec4f756154.html)
 
-## Pitkow/Recker
+[linux下怎么退出telnet](http://www.cnblogs.com/hnrainll/archive/2012/02/04/2337928.html)
 
-替换最近最少使用的对象，除非所有对象都是今天访问过的。如果是这样，则替换掉最大的对象。这一策略试图符合每日访问web网页的特定模式。这一策略也被建议在每天结束是运行，以释放被“旧的”，最近最少使用的对象占用的空间。
-
-## Lowest-Latency-First
-
-替换下载时间最少的文档。显然它的目标是最小化平均延迟。
-
-## Hybrid
-
-Hybrid有另外一个目标，减少平均延迟。对缓存中的每个文档都会计算一个保留效用（utility of retaining）。保留效用最低的对象会被替换掉。位于服务器s的文档f的效用函数定义如下：
-Cs: 与服务器s的连接时间
-bs: 服务器s的带宽
-frf: f的使用频率
-sizef: f的size，单位字节
-
-K1和K2是常量，Cs和bs是根据最近从服务器s获取文档的时间进行估计的。
-
-## LRV（Lowest Relative Value）
-
-LRV也是基于计算缓存中文档的保留效用。然后替换保留效用最低的文档。有点复杂，实际应用价值不大，就不详述了。
-
-## OPT（OPTimal replacement algorithm，最优替换算法）
-
-上面介绍的几种页面替换算法主要是以主存储器中页面调度情况的历史信息为依据的，它假设将来主存储器中的页面调度情况与过去一段时间内主存储器中的页面调度情况是相同的。显然，这种假设不总是正确的。最好的算法应该是选择将来最久不被访问的页面作为被替换的页面，这种替换算法的命中率一定是最高的，它就是最优替换算法。
+[初用 VPS，感到 putty 反应迟钝](https://www.v2ex.com/t/102990)

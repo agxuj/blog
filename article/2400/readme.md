@@ -6,7 +6,7 @@
 
 @RestController : Spring4 后新增注解, 是 @Controller 和 @ResponseBody 的组合注解, 用于**返回字符串或者json数据**.
 
-@RequestMapping
+@RequestMapping : 配置请求信息
 
 @GetMapping : @RequestMapping 和 method = RequestMethod.GET 请求方法的组合.
 
@@ -24,8 +24,10 @@
 @Service
 
 ## 其他
-@Autowired
+@Autowired : (声明读取properties的实体类)
 
 @Component : 是所有受Spring 管理组件的通用形式，@Component注解可以放在类的头上，@Component不推荐使用
 
-@ConfigurationProperties
+@ConfigurationProperties : (读取properties参数时设置前缀)
+
+@Configuration : (拦截器配置)

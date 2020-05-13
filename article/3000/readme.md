@@ -1,52 +1,100 @@
-# Git Rebase
+# Spring Boot 集成 MyBatis
  
 
+## 在 pom.xml 中添加 dependency
+`````
+<dependencies>
+    <dependency>
+        <groupId>mysql</groupId>
+        <artifactId>mysql-connector-java</artifactId>
+        <version>8.0.16</version>
+    </dependency>
+    <dependency>
+        <groupId>org.mybatis.spring.boot</groupId>
+        <artifactId>mybatis-spring-boot-starter</artifactId>
+        <version>2.0.1</version>
+    </dependency>
+</dependencies>
+`````
+## 在 pom.xml 中添加对 xml 文件的引用
 
- 
+`````
+<build>
+    <resources>
+        <resource>
+            <directory>src/main/java</directory>
+            <includes>
+                <include>**/*.xml</include>
+            </includes>
+        </resource>
 
-## 1.运行rebase命令
- 
-    git rebase -i origin/master
-    
-    git rebase 187f869c9d54c9297d6b0b1b4ff47d2ec781a55e^ -i origin/master
-    
-    这里的  －i ＝ --interactive 
+        <resource>
+            <directory>src/main/resources</directory>
+            <includes>
+                <include>**/*.*</include>
+            </includes>
+        </resource>
 
+        <resource>
+            <directory>src/main/webapp</directory>
+            <targetPath>META-INF/resources</targetPath>
+            <includes>
+                <include>**/*.*</include>
+            </includes>
+        </resource>
+    </resources>
+</build>
+`````
 
-## 2.操作
+## 配置 application.properties
+`````
+spring.datasource.driver=com.mysql.cj.jdbc.Driver
+spring.datasource.url=jdbc:mysql://localhost/name
+spring.datasource.username=
+spring.datasource.password=
+`````
 
-    pick : git会应用这个补丁，以同样的提交信息（commit message）保存提交。
+## 新建 mybatis-config.xml
+`````
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <properties resource="application.properties" />
+    <environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC"/>
+            <dataSource type="POOLED">
+                <property name="driver" value="${spring.datasource.driver}"/>
+                <property name="url" value="${spring.datasource.url}"/>
+                <property name="username" value="${spring.datasource.username}"/>
+                <property name="password" value="${spring.datasource.password}"/>
+                <!-- https://my.oschina.net/xpbug/blog/324978 -->
+                <property name="poolPingEnabled" value="true"/>
+                <property name="poolPingQuery" value="select 1"/>
+                <property name="poolPingConnectionsNotUsedFor" value="300000"/>
+            </dataSource>
+        </environment>
+    </environments>
+    <mappers>
+        <mapper class="com.excample.database.dal.TestDAL"/> 
+    </mappers>
+</configuration>
+`````
 
-    squash : git会把这个提交和前一个提交合并成为一个新的提交。
-    
-        这会再次调用编辑器，你在里面合并这两个提交的提交信息。
+## 新建 DAL 类
+`````
+public interface TestDAL {
 
-    edit : 暂时没有，先不写了
+    @Select("")
+    Test get(String id);
 
-    丢弃提交 : 如果把一行删除而不是指定'pick'、'squash'和‘edit''中的任何一个，git会从历史中移除该提交。
-    
+    @Update("")
+    void update(Test test);
 
-## 3.提交
+    @Insert("")
+    void add(Test test);
 
-    git push origin HEAD:master --force
-    
-
-## 4.继续 rebase
-
-    git rebase --continue
-
-
-## 5.终止
-
-    git rebase -i --abort    
-    
-<br/>
-
-## Reference:
-
-[Git push master fatal: You are not currently on a branch](https://stackoverflow.com/questions/30471557/git-push-master-fatal-you-are-not-currently-on-a-branch)
-
-[在git 中修改之前的提交内容](https://blog.csdn.net/wangbole/article/details/8552808)
-
-[git rebase简介(高级篇)](https://blog.csdn.net/hudashi/article/details/7664651)
-
+    @Delete("")
+    void delete(Test test);
+}
+`````
