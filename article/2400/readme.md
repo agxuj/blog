@@ -1,33 +1,38 @@
-# Spring Boot 注解说明
+# Spring Boot 初体验
  
 
-## Controller
+
+参考:[Java视频教程-SpringBoot教程免费分享](https://zhuanlan.zhihu.com/p/47908153)
+
+## 新建项目
+
+<img src="image/00.png"/>
+
+<img src="image/01.png"/>
+
+<img src="image/02.png"/>
+
+<img src="image/03.png"/>
+
+<img src="image/04.png"/>
+
+## 新建 Controller 
+
+`````
 @Controller
+public class AppController {
+    @RequestMapping("/index")
+    @ResponseBody
+    public String hello() {
+        return "hello world";
+    }
+}
+`````
 
-@RestController : Spring4 后新增注解, 是 @Controller 和 @ResponseBody 的组合注解, 用于**返回字符串或者json数据**.
+## 运行 Application 的 main 方法
 
-@RequestMapping : 配置请求信息
+**运行结果**
 
-@GetMapping : @RequestMapping 和 method = RequestMethod.GET 请求方法的组合.
+<img src="image/05.png"/>
 
-@PostMapping : @RequestMapping 和 method = RequestMethod.POST 请求方法的组合
 
-@PutMapping : @RequestMapping 和 method = RequestMethod.PUT 请求方法的组合
-
-@DeleteMapping : @RequestMapping 和 method = RequestMethod.DELETE 请求方法的组合
-
-@ResponseBody : 确定返回字符串
-
-@PathVariable : RestFull参数设定
-
-## Service
-@Service
-
-## 其他
-@Autowired : (声明读取properties的实体类)
-
-@Component : 是所有受Spring 管理组件的通用形式，@Component注解可以放在类的头上，@Component不推荐使用
-
-@ConfigurationProperties : (读取properties参数时设置前缀)
-
-@Configuration : (拦截器配置)

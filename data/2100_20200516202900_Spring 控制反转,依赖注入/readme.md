@@ -1,6 +1,3 @@
-# Spring 控制反转,依赖注入
- 
-
 
 # spring 控制反转和依赖注入
     控制反转 ( Inversion of Control )

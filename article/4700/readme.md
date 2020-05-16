@@ -1,154 +1,96 @@
-# 7个步骤来完成一个PC网站向移动设备的跳跃
+# 记一次排错过程 --- 七牛云无法缩小图片
  
 
+## 问题1:
+为什么长宽会小于2048?
 
+## 答:
+有可能是这张图片的长宽本就小于2048.
 
-[Reference](http://www.100vic.com/jianshe/details/2026.html)
+---------------------------------
 
-## 允许网页宽度自动调整
-"自适应网页设计"到底是怎么做到的？其实并不难。
+## 问题2:
+服务端报400错误，错误信息：INVALID_IMAGE_SIZE（图片尺寸超过限制），七牛云上的图片确实超出了限制。
+但我在客户端做了限制，为何无效？
 
-首先，在网页代码的头部，加入一行viewport元标签。
+## 现象1:
+“dd048b7479e5404298f6da4c5de8fd9f”这张图片在七牛上是大于2048,但在设置图片长宽这一步中,计算得出的长宽却小于2048
 
-viewport是网页默认的宽度和高度，上面这行代码的意思是，网页宽度默认等于屏幕宽度（width=device-width），原始缩放比例（initial-scale=1）为1.0，即网页初始大小占屏幕面积的100%。
+## 猜测:
+设置图片长宽失败.
 
-所有主流浏览器都支持这个设置，包括IE9。对于那些老式浏览器（主要是IE6、7、8），需要使用css3-mediaqueries.js。
+## 现象2:
+计算并设置图片的长宽小于2048,经过 ctx.drawImage 和 wx.getImageInfo 后得出的长宽却大于2048
 
-`````
-<meta http-equiv="Content-type" name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no, width=device-width">
-`````
+## 猜测:
+ctx.drawImage 无法在指定的长宽里绘制
 
-[html5之meta标签viewport应用](http://www.cnblogs.com/luohtyy/p/4608195.html)
+## 结论:
+在客户端层面应该没法解决, 只能在服务端层面寻找方法.
+尝试记录出现这个问题的设备信息.
+测试阶段要做多机型测试
 
-## 不使用绝对宽度
-由于网页会根据屏幕宽度调整布局，所以不能使用绝对宽度的布局，也不能使用具有绝对宽度的元素。这一条非常重要。
+---------------------------------
 
-具体说，CSS代码不能指定像素宽度：
-`````
-width:xxx px;
-`````
-只能指定百分比宽度：
-`````
-width: xx%;
-`````
-或者
-`````
-width:auto;
-`````
+## 解决方法:
 
-## 相对大小的字体
+### 方法一: 获取上传凭证时,添加缩小参数.
 
-[CSS3的REM设置字体大小](https://www.w3cplus.com/css3/define-font-size-with-css3-rem)
-
-字体也不能使用绝对大小（px），而只能使用相对大小（em）。
+结论: 处理失败,原因不明,无法解决.
 
 `````
-body {
-    font: normal 100% Helvetica, Arial, sans-serif;
-}
+String accessKey = C.QiNiu.AccessKey;
+String secretKey = C.QiNiu.SecretKey;
+String bucket = C.QiNiu.bucket;
+String key = ServiceUtils.getUUid() + ".jpg";
+Auth auth = Auth.create(accessKey, secretKey);
+StringMap putPolicy = new StringMap();
+//数据处理指令，支持多个指令
+String entry = String.format("imageView2/0/w/2048/h/2048|saveas/%s", UrlSafeBase64.encodeToString(bucket+":"+key));
+//将多个数据处理指令拼接起来
+String persistentOpfs = StringUtils.join(new String[]{
+        entry
+}, ";");
+putPolicy.put("persistentOps", persistentOpfs);
+//数据处理队列名称，必填
+putPolicy.put("persistentPipeline", "mps-pipe1");
+long expireSeconds = 3600;
+String token = auth.uploadToken(bucket, key, expireSeconds, putPolicy);
 `````
 
-上面的代码指定，字体大小是页面默认大小的100%，即16像素。
+### 方法二: 下载时,添加缩小参数.
+
+
+结论: 这个空间是私有的,直接拼裁剪参数是无效的.之前尝试过和key一起编码生成相关参数后拼接,依然无效.
+把空间变为公有,这个方法就有效了.
+
+尝试记录:
+
+选择 七牛云 的 基本图片处理.
+
+有效的链接
+`````
+http://image.www.funning.top/aad7ad3ce0854d20993d35ca6d9a7b5d.jpg?/imageView2/0/w/2048/h/2048
+
+http://image.age.knxy.top/dd048b7479e5404298f6da4c5de8fd9f.jpg?e=1587099252&token=rMTw7d8DI7VnjA0WXhVST5BVDPfAKNqfpAgZYMEf:A8cRYsN5L8z-F1x1p2yww0BZDfg=&
 
 `````
-h1 {
-    font-size: 1.5em;
-}
+
+无效的链接
+`````
+http://image.age.knxy.top/dd048b7479e5404298f6da4c5de8fd9f.jpg?e=1587099252&token=rMTw7d8DI7VnjA0WXhVST5BVDPfAKNqfpAgZYMEf:A8cRYsN5L8z-F1x1p2yww0BZDfg=&/imageView2/0/w/2048/h/2048
+
+http://image.age.knxy.top/dd048b7479e5404298f6da4c5de8fd9f.jpg?/imageView2/0/w/2048/h/2048&e=1587099252&token=rMTw7d8DI7VnjA0WXhVST5BVDPfAKNqfpAgZYMEf:A8cRYsN5L8z-F1x1p2yww0BZDfg=
 `````
 
-然后，h1的大小是默认大小的1.5倍，即24像素（24/16=1.5）。
+**上述无效链接多了个“/”符号,修改后有效.**
 
-`````
-small {
-    font-size: 0.875em;
-}
-`````
-small元素的大小是默认大小的0.875倍，即14像素（14/16=0.875）。
 
-## 流动布局（fluid grid）
+### 方法三: 客户端上传时缩小图片.
 
-"流动布局"的含义是，各个区块的位置都是浮动的，不是固定不变的。
-`````
-.main {
-    float: right;
-    width: 70%;
-}
+结论参考问题2.
 
-.leftBar {
-    float: left;
-    width: 25%;
-}
-`````
-float的好处是，如果宽度太小，放不下两个元素，后面的元素会自动滚动到前面元素的下方，不会在水平方向overflow（溢出），避免了水平滚动条的出现。
-
-另外，绝对定位（position: absolute）的使用，也要非常小心。
-
-## 选择加载CSS
-
-"自适应网页设计"的核心，就是CSS3引入的Media Query模块
-
-它的意思就是，自动探测屏幕宽度，然后加载相应的CSS文件。
-`````
-media=”screen and (max-device-width:400px)”
-href=”tinyScreen.css”/>
-`````
-上面的代码意思是，如果屏幕宽度小于400像素（max-device-width: 400px），就加载tinyScreen.css文件。
-`````
-media=”screen and (min-width:400px) and (max-device-width:600px)”
-href=”smallScreen.css”/>
-`````
-如果屏幕宽度在400像素到600像素之间，则加载smallScreen.css文件。
-
-除了用html标签加载CSS文件，还可以在现有CSS文件中加载。
-
-## CSS的@media规则
-
-同一个CSS文件中，也可以根据不同的屏幕分辨率，选择应用不同的CSS规则。
-
-`````
-@media screen and (max-device-width: 400px) {
-    .column {
-        float: none;
-        width:auto;
-    }
-
-    #sidebar {
-        display:none;
-    }
-}
-`````
-
-上面的代码意思是，如果屏幕宽度小于400像素，则column块取消浮动（float:none）、宽度自动调节（width:auto），sidebar块不显示（display:none）。
-
-## 图片的自适应
-
-除了布局和文本，”自适应网页设计”还必须实现图片的自动缩放。
-
-这只要一行CSS代码：
-`````
-img { max-width: 100%;}
-`````
-这行代码对于大多数嵌入网页的视频也有效，所以可以写成：
-`````
-img, object { max-width: 100%;}
-`````
-老版本的IE不支持max-width，所以只好写成：
-`````
-img { width: 100%; }
-`````
-此外，windows平台缩放图片时，可能出现图像失真现象。这时，可以尝试使用IE的专有命令：
-`````
-img { -ms-interpolation-mode: bicubic; }
-`````
-或者，Ethan Marcotte的imgSizer.js。
-`````
-addLoadEvent(function() {
-
-    var imgs = document.getElementById(“content”).getElementsByTagName(“img”);
-
-    imgSizer.collate(imgs);
-
-});
-`````
-最好还是做适配分辨率的图片。有很多方法可以做到同样效果，服务器端和客户端都可以实现。
-
+---------------------------------
+  
+## 结论:
+上述无效链接多了个“/”符号,修改后问题解决.

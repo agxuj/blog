@@ -1,28 +1,63 @@
-# Spring Boot 编码配置
+# Spring Boot 集成使用JSP
  
 
 
+## 在pro.xml中添加依赖
+``````
+<dependency>
+    <groupId>org.apache.tomcat.embed</groupId>
+    <artifactId>tomcat-embed-jasper</artifactId>
+    <scope>provided</scope>
+</dependency>
+<dependency>
+    <groupId>javax.servlet</groupId>
+    <artifactId>javax.servlet-api</artifactId>
+</dependency>
+<dependency>
+    <groupId>javax.servlet.jsp</groupId>
+    <artifactId>javax.servlet.jsp-api</artifactId>
+    <version>2.3.1</version>
+</dependency>
+<dependency>
+    <groupId>javax.servlet</groupId>
+    <artifactId>jstl</artifactId>
+    <scope>provided</scope>
+</dependency>
+``````
 
-## 在 intellij IDEA 中配置
-    设置的是项目文本文件的编码
-    preferences --> Editor --> File Encoding
+## 在appliction.properties文件配置Spring mvc的视图展示为jsp
+``````
+spring.mvc.view.prefix=/WEB-INF/jsp/
+spring.mvc.view.suffix=.jsp
+``````
 
+## 建立web文件存放点
 
-## 在 application.properties 中配置
-    设置的是请求和回复时字符串的编码
-    `````
-    spring.http.encoding.charset=UTF-8
-    spring.http.encoding.enabled=true
-    spring.http.encoding.force=true
-    `````
+在src/main目录中新建webapp文件夹，在webapp目录中新建/WEB-INF/jsp/文件夹用于存放jsp文件，其他类型的文件直接存放在webapp文件夹中。
 
-## 在 pom.xml 中配置
-    设置的是构建打包时字符串的编码
-    `````
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <java.version>1.8</java.version>
-    </properties>
-    `````
+## 在pro.xml的build标签中添加配置
+``````
+<resources>
+    <resource>
+        <directory>src/main/java</directory>
+        <includes>
+            <include>**/*.xml</include>
+        </includes>
+    </resource>
 
+    <resource>
+        <directory>src/main/resources</directory>
+        <includes>
+            <include>**/*.*</include>
+        </includes>
+    </resource>
+
+    <resource>
+        <directory>src/main/webapp</directory>
+        <targetPath>META-INF/resources</targetPath>
+        <includes>
+            <include>**/*.*</include>
+        </includes>
+    </resource>
+</resources>
+``````

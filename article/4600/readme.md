@@ -1,32 +1,87 @@
-# 支付开发
+# 记一次排错过程 --- intelliJ idea 引入库工程偶发性报错
  
 
+## 问题:
+导入库工程 top.knxy.library.java 总是失败，怎么回事呢？
+ 
+### 现象1:
+进行一下操作后
 
-## 微信支付，支付宝支付相关信息获取途径
+1. project stucture -> modules -> import modules
+1. top.knxy.age.java -> modules depandency
 
-### 微信小程序支付
-[微信支付商户](https://pay.weixin.qq.com)
+主工程可以进行 maven -> install , 生成的jar包可以使用, 但项目无法编译运行。
 
-    mchId,apiKey,apiv3Key,p12File
+### 现象2:
+我手动进行
+project stucture -> modules -> top.knxy.library => /Users/faddenyin/workspace/top.knxy.library.java/target/server-1.0.jar
+的引入也无法解决问题
 
-[小程序管理端](https://mp.weixin.qq.com)
+### 现象3:
+把pom.xml文件中的
+`````
+<dependency>
+    <groupId>top.knxy.library</groupId>
+    <artifactId>server</artifactId>
+    <version>1.0</version>
+    <scope>compile</scope>
+</dependency>
+`````
+删掉再添加进去，并且点击import changes后问题解决。
 
-    appId,appSecret
+## 问题:
+执行上述操作后,问题又出现.
 
-### IOS，Android应用微信支付
-[微信支付商户](https://pay.weixin.qq.com)
+### 现象1:
+不在 project stucture 引入 module , 把本地仓库中的 ibrary.jar 等文件删了 后 问题解决.
 
-    mchId,apiKey,apiv3Key,p12File
+## 结论:
 
-[微信开放平台](https://open.weixin.qq.com)
+正确操作如下：
+1. library project install
+1. 把本地仓库的 library.jar 等文件删了
+1. 把pom.xml文件中的
+    `````
+    <dependency>
+        <groupId>top.knxy.library</groupId>
+        <artifactId>server</artifactId>
+        <version>1.0</version>
+        <scope>compile</scope>
+    </dependency>
+    `````
+    删掉再添加进去，并且点击import changes.
+ 
+--------------------------
 
-    appId,appSecret
+### 现象2: 
+project stucture -> modules -> Maven: top.knxy.library:server:1.0 => /Users/faddenyin/.m2/repository/top/knxy/library/server/1.0/server-1.0.jar
+
+### 现象3: 
+project stucture -> libraries -> top.knxy.library => /Users/faddenyin/workspace/top.knxy.library.java/target/server-1.0.jar
+
+### 现象4: 
+project stucture -> modules -> top.knxy.library => /Users/faddenyin/workspace/top.knxy.library.java/target/server-1.0.jar
+
+### 得：
+此前存在多余操作， Maven: top.knxy.library:server:1.0 和 top.knxy.library 是重复的,但我却手动引入 top.knxy.library .
+
+## 问题：
+Maven: top.knxy.library:server:1.0是什么时候的什么操作引用？
+
+## 答:
+在 pom.xml 中引入 dependency 后,自动生成
+
+---------------------------
 
 
-### IOS，Android应用支付宝支付
-[支付宝 商家中心](https://mrchportalweb.alipay.com)
+### 现象1: 
+project stucture -> libraries -> Maven: top.knxy.library:server:1.0 => /Users/faddenyin/.m2/repository/top/knxy/library/server/1.0/server-1.0.jar
 
-[支付宝 开发者中心](https://developers.alipay.com/)
+### 现象2:
+在项目top.knxy.library.java用maven打包（install）后, 目录/Users/faddenyin/.m2/repository/中会存在相关的jar包
 
-    appId,privateKey,publicKey,serverPublicKey
+### 得:
+top.knxy.library.java这个项目打包后在/Users/faddenyin/.m2/repository/目录中存在
 
+---------------------------
+ 

@@ -1,101 +1,84 @@
-# Spring Boot 配置文件
+# Spring mvc 初体验
  
 
 
-## 简介
-
-配置文件在 application.properties 位于 /src/main/resources 中.
-
-配置文件有2种,分别是 properties 和 yml, 这里主要讲 properties 格式
-
-## 多配置文件
-
-在不同的场景使用不同的配置文件,比如开发环境和生产环境部分参数是不同的,可以分别给每个环境创建配置文件,格式如下:
-
-开发环境: application-dev.properties
-生产环境: application-pro.properties
-
-具体使用哪个环境,可以在 application.properties 的 spring.profiles.active 中设置
-如设置生产环境
+## 导jar包
 `````
-spring.profiles.active=pro
+spring-aop-4.1.6.RELEASE.jar
+spring-beans-4.1.6.RELEASE.jar
+spring-context-4.1.6.RELEASE.jar
+spring-context-support-4.1.6.RELEASE.jar
+spring-core-4.1.6.RELEASE.jar
+spring-expression-4.1.6.RELEASE.jar
+spring-web-4.1.6.RELEASE.jar
+spring-webmvc-4.1.6.RELEASE.jar
+commons-logging-1.2.jar
 `````
+[下载地址](http://repo.spring.io/simple/libs-release-local/org/springframework/spring/)
 
-## 读取配置文件
+## xml配置
 
-### 注解 @Value
+`````
+<servlet>
+    <servlet-name>springmvc</servlet-name>
+    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+    <init-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>classpath:mvc.xml</param-value>
+    </init-param>
+    <load-on-startup>1</load-on-startup>
+</servlet>
 
+<servlet-mapping>
+    <servlet-name>springmvc</servlet-name>
+    <url-pattern>*.html</url-pattern>
+</servlet-mapping>
+`````
+## 创建src/mvc.xml
+
+配置 controller 所在的包名
+
+配置 view (jsp) 所在的目录
+`````
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:p="http://www.springframework.org/schema/p"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd">
+
+
+    <!-- 配置渲染器 -->
+    <bean id="jspViewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
+        <!-- 配置 view (jsp) 所在的目录 -->
+        <property name="prefix" value="/WEB-INF/manager/"/>
+        <property name="suffix" value=".jsp"/>
+    </bean>
+    <!-- 配置 controller 所在的包名 -->
+    <context:component-scan base-package="top.knxy"/>
+</beans>
+`````
+## 创建Controller
 `````
 @Controller
-public class AppController {
-    
-    @Value("database.username")
-    private String username;
-    
-    @Value("database.password")
-    private String password;
+public class ManagerController {
 
-    @RequestMapping("/index")
-    @ResponseBody
-    public String hello() {
-        return "hello world,"+username;
-    }
-}
-`````
-
-### 注解 @Component
-
-`````
-
-@Component
-@ConfigurationProperties(prefix = "database")
-public class Config {
-
-    private String username;
-
-    private String password;
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-}
-
-
-@Controller
-public class AppController {
-
-    @Autowired
-    private Config config;
-
-    @RequestMapping("/index")
-    @ResponseBody
-    public String hello() {
-        return "hello world," + config.getUsername();
+    @RequestMapping("/login")
+    public ModelAndView login(HttpServletRequest request, HttpServletResponse response) {
+        ModelAndView mv = new ModelAndView();
+        mv.addObject("msg","hello Spring MVC");
+        mv.setViewName("login");//指向jsp的页面
+        return mv;
     }
 }
 
 `````
 
-### 直接读取
+References:
 
-`````
-public static String getProperty(String filePath) throws IOException {
-    InputStream in = FileUtils.class.getClassLoader().getResourceAsStream("application.properties");
-    Properties prop = new Properties();
-    prop.load(in);
-    String value = prop.get(key);
-    return value;
-}
-`````
+[Spring Framework Reference Documentation](https://docs.spring.io/spring/docs/4.1.6.RELEASE/spring-framework-reference/html/)

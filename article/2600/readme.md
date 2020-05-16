@@ -1,123 +1,33 @@
-# Spring Boot 拦截器
+# Spring Boot 注解说明
  
 
-参考:[处理器拦截器（HandlerInterceptor）详解](https://www.jianshu.com/p/1e8d088c2be9)
+## Controller
+@Controller
 
-## Spring boot 中的 Interceptor
+@RestController : Spring4 后新增注解, 是 @Controller 和 @ResponseBody 的组合注解, 用于**返回字符串或者json数据**.
 
-### 实现 HandlerInterceptor
-`````
-public class LoginInterceptor implements HandlerInterceptor {
+@RequestMapping : 配置请求信息
 
-    /**
-     * 进入Controller之前执行，预处理回调方法
-     *
-     * @return true表示继续流程（如调用下一个拦截器或处理器。
-     * false表示流程中断（如登录检查失败），不会继续调用其他的拦截器或处理器，此时我们需要通过response来产生响应；
-     * @throws Exception
-     */
-    @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) 
-    throws Exception {
-        if (isLogin) {
-            return true;
-        } else {
-            return false;
-        }
-    }
+@GetMapping : @RequestMapping 和 method = RequestMethod.GET 请求方法的组合.
 
-    /**
-     * 后处理回调方法，实现处理器的后处理（但在渲染视图之前），
-     * 此时我们可以通过modelAndView（模型和视图对象）对模型数据进行处理或对视图进行处理，
-     * modelAndView也可能为null。
-     */
-    @Override
-    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) 
-    throws Exception {
+@PostMapping : @RequestMapping 和 method = RequestMethod.POST 请求方法的组合
 
-    }
+@PutMapping : @RequestMapping 和 method = RequestMethod.PUT 请求方法的组合
 
-    /**
-     * 整个请求处理完毕回调方法，即在视图渲染完毕时回调，
-     * 如性能监控中我们可以在此记录结束时间并输出消耗时间，
-     * 还可以进行一些资源清理，类似于try-catch-finally中的finally，但仅调用处理器执行链中
-     */
-    @Override
-    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) 
-    throws Exception {
+@DeleteMapping : @RequestMapping 和 method = RequestMethod.DELETE 请求方法的组合
 
-    }
-}
+@ResponseBody : 确定返回字符串
 
-`````
+@PathVariable : RestFull参数设定
 
-### 配置拦截器
-`````
-@Configuration
-public class WebConfig implements WebMvcConfigurer {
+## Service
+@Service
 
-    @Override
-    public void addInterceptors(InterceptorRegistry registry) {
+## 其他
+@Autowired : (声明读取properties的实体类)
 
-        //需要拦截的路径
-        String[] addPathPatterns = {
-                "/admin/**"
-        };
+@Component : 是所有受Spring 管理组件的通用形式，@Component注解可以放在类的头上，@Component不推荐使用
 
+@ConfigurationProperties : (读取properties参数时设置前缀)
 
-        //不拦截的路径
-        String[] excludePathPatterns = {
-                "/admin/login",
-                "/admin/register",
-        };
-
-        //注册登陆拦截器
-        registry.addInterceptor(new LoginInterceptor())
-                .addPathPatterns(addPathPatterns)
-                .excludePathPatterns(excludePathPatterns);
-
-
-        //注册权限拦截器
-        /*registry.addInterceptor(new AuthInterceptor())
-                .addPathPatterns()
-                .excludePathPatterns();*/
-    }
-}
-`````
-
-## Java Web 中的 filter
-
-### 实现 Filter
-`````
-@WebFilter(filterName = "AdminFilter", urlPatterns = "/admin/*")
-public class AdminFilter implements Filter {
-
-    @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
-
-    }
-
-    @Override
-    public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain) throws IOException, ServletException {
-        HttpServletResponse response = (HttpServletResponse) resp;
-        HttpServletRequest request = (HttpServletRequest) req;
-
-        if (request.getSession().getAttribute(V.adminId) == null) {
-            response.sendRedirect("/login");
-            return;
-        }
-        chain.doFilter(request, response);
-
-    }
-
-    @Override
-    public void destroy() {
-
-    }
-}
-`````
-
-### 在 Application.java 中配置
-`````
-@ServletComponentScan(basePackages={"filter.class"})
-`````
+@Configuration : (拦截器配置)

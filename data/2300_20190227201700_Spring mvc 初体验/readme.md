@@ -1,12 +1,5 @@
 
-## Spring 
-1. ioc 控制反转
-1. ip 依赖注入 
-1. 代理 静态代理，动态代理
-1. aop 面向切面编程
-
-## Spring MVC
-### 导jar包
+## 导jar包
 `````
 spring-aop-4.1.6.RELEASE.jar
 spring-beans-4.1.6.RELEASE.jar
@@ -20,7 +13,7 @@ commons-logging-1.2.jar
 `````
 [下载地址](http://repo.spring.io/simple/libs-release-local/org/springframework/spring/)
 
-### xml配置
+## xml配置
 
 `````
 <servlet>
@@ -38,7 +31,7 @@ commons-logging-1.2.jar
     <url-pattern>*.html</url-pattern>
 </servlet-mapping>
 `````
-### 创建src/mvc.xml
+## 创建src/mvc.xml
 
 配置 controller 所在的包名
 
@@ -67,7 +60,7 @@ commons-logging-1.2.jar
     <context:component-scan base-package="top.knxy"/>
 </beans>
 `````
-### 创建Controller
+## 创建Controller
 `````
 @Controller
 public class ManagerController {
