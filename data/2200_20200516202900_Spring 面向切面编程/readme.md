@@ -72,8 +72,7 @@ beans.xml文件
             id="loginCheck" 
             expression="execution(* com.example.service.BaseService.add())" />
         <aop:advice
-            advice-ref="login" pointcut-ref="loginCheck"
-            />
+            advice-ref="login" pointcut-ref="loginCheck" />
     </aop:config>
 </beans>
 `````
