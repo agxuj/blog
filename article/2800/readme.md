@@ -1,123 +1,101 @@
-# Spring Boot 拦截器
+# Spring Boot 配置文件
  
 
-参考:[处理器拦截器（HandlerInterceptor）详解](https://www.jianshu.com/p/1e8d088c2be9)
 
-## Spring boot 中的 Interceptor
+## 简介
 
-### 实现 HandlerInterceptor
+配置文件在 application.properties 位于 /src/main/resources 中.
+
+配置文件有2种,分别是 properties 和 yml, 这里主要讲 properties 格式
+
+## 多配置文件
+
+在不同的场景使用不同的配置文件,比如开发环境和生产环境部分参数是不同的,可以分别给每个环境创建配置文件,格式如下:
+
+开发环境: application-dev.properties
+生产环境: application-pro.properties
+
+具体使用哪个环境,可以在 application.properties 的 spring.profiles.active 中设置
+如设置生产环境
 `````
-public class LoginInterceptor implements HandlerInterceptor {
+spring.profiles.active=pro
+`````
 
-    /**
-     * 进入Controller之前执行，预处理回调方法
-     *
-     * @return true表示继续流程（如调用下一个拦截器或处理器。
-     * false表示流程中断（如登录检查失败），不会继续调用其他的拦截器或处理器，此时我们需要通过response来产生响应；
-     * @throws Exception
-     */
-    @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) 
-    throws Exception {
-        if (isLogin) {
-            return true;
-        } else {
-            return false;
-        }
+## 读取配置文件
+
+### 注解 @Value
+
+`````
+@Controller
+public class AppController {
+    
+    @Value("database.username")
+    private String username;
+    
+    @Value("database.password")
+    private String password;
+
+    @RequestMapping("/index")
+    @ResponseBody
+    public String hello() {
+        return "hello world,"+username;
+    }
+}
+`````
+
+### 注解 @Component
+
+`````
+
+@Component
+@ConfigurationProperties(prefix = "database")
+public class Config {
+
+    private String username;
+
+    private String password;
+
+    public String getUsername() {
+        return username;
     }
 
-    /**
-     * 后处理回调方法，实现处理器的后处理（但在渲染视图之前），
-     * 此时我们可以通过modelAndView（模型和视图对象）对模型数据进行处理或对视图进行处理，
-     * modelAndView也可能为null。
-     */
-    @Override
-    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) 
-    throws Exception {
-
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    /**
-     * 整个请求处理完毕回调方法，即在视图渲染完毕时回调，
-     * 如性能监控中我们可以在此记录结束时间并输出消耗时间，
-     * 还可以进行一些资源清理，类似于try-catch-finally中的finally，但仅调用处理器执行链中
-     */
-    @Override
-    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) 
-    throws Exception {
+    public String getPassword() {
+        return password;
+    }
 
+    public void setPassword(String password) {
+        this.password = password;
+    }
+}
+
+
+@Controller
+public class AppController {
+
+    @Autowired
+    private Config config;
+
+    @RequestMapping("/index")
+    @ResponseBody
+    public String hello() {
+        return "hello world," + config.getUsername();
     }
 }
 
 `````
 
-### 配置拦截器
+### 直接读取
+
 `````
-@Configuration
-public class WebConfig implements WebMvcConfigurer {
-
-    @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-
-        //需要拦截的路径
-        String[] addPathPatterns = {
-                "/admin/**"
-        };
-
-
-        //不拦截的路径
-        String[] excludePathPatterns = {
-                "/admin/login",
-                "/admin/register",
-        };
-
-        //注册登陆拦截器
-        registry.addInterceptor(new LoginInterceptor())
-                .addPathPatterns(addPathPatterns)
-                .excludePathPatterns(excludePathPatterns);
-
-
-        //注册权限拦截器
-        /*registry.addInterceptor(new AuthInterceptor())
-                .addPathPatterns()
-                .excludePathPatterns();*/
-    }
+public static String getProperty(String filePath) throws IOException {
+    InputStream in = FileUtils.class.getClassLoader().getResourceAsStream("application.properties");
+    Properties prop = new Properties();
+    prop.load(in);
+    String value = prop.get(key);
+    return value;
 }
-`````
-
-## Java Web 中的 filter
-
-### 实现 Filter
-`````
-@WebFilter(filterName = "AdminFilter", urlPatterns = "/admin/*")
-public class AdminFilter implements Filter {
-
-    @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
-
-    }
-
-    @Override
-    public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain) throws IOException, ServletException {
-        HttpServletResponse response = (HttpServletResponse) resp;
-        HttpServletRequest request = (HttpServletRequest) req;
-
-        if (request.getSession().getAttribute(V.adminId) == null) {
-            response.sendRedirect("/login");
-            return;
-        }
-        chain.doFilter(request, response);
-
-    }
-
-    @Override
-    public void destroy() {
-
-    }
-}
-`````
-
-### 在 Application.java 中配置
-`````
-@ServletComponentScan(basePackages={"filter.class"})
 `````

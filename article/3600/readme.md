@@ -1,24 +1,55 @@
-# Git 命令集合
+# Spring Boot 打包
  
 
 
- 
-Server，Local，缓存区
 
-#### 恢复到上一个版本
-``````````
-git reset –hard HEAD^ 
-git checkout -- <file>
-``````````
-[Reference](https://blog.csdn.net/zch501157081/article/details/51939854)
+## 打成 jar 包
 
-<br/>
+### 在 pom.xml 中配置
+`````
+<project>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>1.4.2.RELEASE</version> //注意
+            </plugin>   
+        </plugins>
+    </build>
+</project>
+`````
 
-#### Git pull 强制覆盖本地文件
+### 打包
+maven --> install
 
-`````````
-git fetch --all  
-git reset --hard origin/master 
-git pull
-`````````
-[Reference](https://blog.csdn.net/baple/article/details/49872765)
+
+## 打成 war 包
+
+### 修改 Application.java
+1. 继承 SpringBootServletInitializer
+1. 实现 configure 方法
+
+代码如下:
+`````
+@SpringBootApplication
+public class Application extends SpringBootServletInitializer {
+
+    @Override
+    protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
+        return super.configure(builder);
+    }
+
+    public static void main(String[] args) {
+        SpringApplication.run(Application.class, args);
+    }
+
+}
+`````
+
+### 修改 pom.xml
+`````
+<project>
+    <packaging>war</packaging>
+</project>
+`````

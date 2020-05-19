@@ -1,28 +1,33 @@
-# Spring Boot 编码配置
+# Spring Boot 注解说明
  
 
+## Controller
+@Controller
 
+@RestController : Spring4 后新增注解, 是 @Controller 和 @ResponseBody 的组合注解, 用于**返回字符串或者json数据**.
 
-## 在 intellij IDEA 中配置
-    设置的是项目文本文件的编码
-    preferences --> Editor --> File Encoding
+@RequestMapping : 配置请求信息
 
+@GetMapping : @RequestMapping 和 method = RequestMethod.GET 请求方法的组合.
 
-## 在 application.properties 中配置
-    设置的是请求和回复时字符串的编码
-    `````
-    spring.http.encoding.charset=UTF-8
-    spring.http.encoding.enabled=true
-    spring.http.encoding.force=true
-    `````
+@PostMapping : @RequestMapping 和 method = RequestMethod.POST 请求方法的组合
 
-## 在 pom.xml 中配置
-    设置的是构建打包时字符串的编码
-    `````
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <java.version>1.8</java.version>
-    </properties>
-    `````
+@PutMapping : @RequestMapping 和 method = RequestMethod.PUT 请求方法的组合
 
+@DeleteMapping : @RequestMapping 和 method = RequestMethod.DELETE 请求方法的组合
+
+@ResponseBody : 确定返回字符串
+
+@PathVariable : RestFull参数设定
+
+## Service
+@Service
+
+## 其他
+@Autowired : (声明读取properties的实体类)
+
+@Component : 是所有受Spring 管理组件的通用形式，@Component注解可以放在类的头上，@Component不推荐使用
+
+@ConfigurationProperties : (读取properties参数时设置前缀)
+
+@Configuration : (拦截器配置)

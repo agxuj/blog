@@ -1,74 +1,121 @@
-# Java BigDecimal 笔记
+# Git 的使用
  
 
 
- 
-## 简单使用
-### 例子
-``````
-String money = "100.00";
-BigDecimal dbMoney = new BigDecimal(money);
-dbMoney.add(new BigDecimal("20.00"));
-String result = dbMoney.toString();
-``````
-### setScale
 
-BigDecimal.setScale()方法用于格式化小数点
 
-setScale(1)表示保留一位小数，默认用四舍五入方式
+git是一个版本管理器，
+## 1.版本管理器涉及到版本的回滚恢复等操作
+### 回滚恢复相关命令
+````
+reset
+revert
+checkout
+````
+### git还有一个强悍的功能，对过往的commit进行删除或者修改
+`````
+rebase
+`````
 
-``````
-BigDecimal data = new BigDecimal("9.655").setScale(2, BigDecimal.ROUND_HALF_UP);
-System.out.println("data=" + data);
-//结果：data=9.66
-``````
+## 2.版本管理器必然涉及到版本的分支
 
-### 其他常用方法
-1. 加法 add()     
-1. 减法 subtract()
-1. 乘法 multiply()    
-1. 除法 divide()    
-1. 绝对值 abs()
+### git创建一个分支的命令是：
+`````
+git branch ${分支名}
+//or
+git checkout -b z3
+`````
+### 删除分支
+`````
+git branch -d ${分支名}
+`````
 
-## 格式化
+### 切换分支
+`````
+git checkout z3
+`````
+### 查看当前分支
+`````
+git branch
+`````
+### 分支间必然涉及到合并
+`````
+merge
 
-### "#" 说明
-* 整数部分多了:不会截断,但是排在有效位最前面的0会被删除
-* 整数部分少了:不作处理
-* 小数部分多了:截断,建议指定RoundingMode,默认为RoundingMode.HALF_EVEN
-* 小数部分少了:不作处理
-### "0" 说明
-* 整数部分多了:不会截断,排在有效位前面的0也不会被删除
-* 整数部分少了:补0
-* 小数部分多了:截断,建议指定RoundingMode,默认为RoundingMode.HALF_EVEN
-* 小数部分少了:补0 
+//合并分支
+git merge ${分支名}
+`````
 
-**其他类型字符可查看API文档**
-``````
-DecimalFormat format = new DecimalFormat("#.##");
-BigDecimal val= new BigDecimal("1.23");
-format.format(val);
-``````
-## 舍入模式
-1. ROUND_UP 
-1. ROUND_DOWN 
-1. ROUND_CEILING 
-1. ROUND_FLOOR 
-1. ROUND_HALF_UP (四舍五入)
-1. ROUND_HALF_DOWN
-1. ROUND_HALF_EVEN 
+### 分支的几个概念
+head master orign(起源)
 
-``````
-BigDecimal result = new BigDecimal("1.23").divide(new BigDecimal("1.23"),BigDecimal.ROUND_HALF_UP);
-``````
+[head/master/分支 间的关系可以看 --- 理解git中的head和master](https://blog.csdn.net/bdss58/article/details/40537859)
 
-## 参考
-[Java中BigDecimal的8种舍入模式](https://blog.csdn.net/u010575112/article/details/81560275)
+[git中的origin -- 只想服务端仓库的标志](https://blog.csdn.net/niexia_/article/details/79422859)
 
-[Java中DecimalFormat用法详解](https://www.jb51.net/article/135720.htm)
+#### detached head
+如果让HEAD文件指向一个commit id而不是具体分支，那就变成了detached HEAD。 
 
-[DecimalFormat格式化 # 和 0 的区别](https://blog.csdn.net/qq_28988969/article/details/97394848)
+1. git checkout master可以回到master分支，但是当前工作区的内容就没了
 
-[BigDecimal加减乘除计算](https://blog.csdn.net/haiyinshushe/article/details/82721234)
 
-[BigDecimal.setScale 处理java小数点](https://blog.csdn.net/ahwr24/article/details/7048724)
+
+## 3.简单的添加，提交，推送到服务端
+`````
+add
+commit
+push
+`````
+
+## 4.从服务端拉去代码
+`````
+fetch
+pull
+`````
+## 5.其他符号解释
+`````
+git checkout 1aea8d9^
+laea8d9是最近的一次commit id，^指的是之前一次
+`````
+
+## 6.Git Help
+`````
+These are common Git commands used in various situations:
+
+start a working area (see also: git help tutorial)
+   clone      Clone a repository into a new directory
+   init       Create an empty Git repository or reinitialize an existing one
+
+work on the current change (see also: git help everyday)
+   add        Add file contents to the index
+   mv         Move or rename a file, a directory, or a symlink
+   reset      Reset current HEAD to the specified state
+   rm         Remove files from the working tree and from the index
+
+examine the history and state (see also: git help revisions)检查历史和状态
+   bisect     Use binary search to find the commit that introduced a bug Use binary search to find the commit that introduced a bug
+   grep       Print lines matching a pattern
+   log        Show commit logs
+   show       Show various types of objects
+   status     Show the working tree status
+
+grow, mark and tweak your common history
+   branch     List, create, or delete branches
+   checkout    Switch branches or restore working tree files
+   commit     Record changes to the repository
+   diff       Show changes between commits, commit and working tree, etc
+   merge      Join two or more development histories together
+   rebase     Reapply commits on top of another base tip
+   tag        Create, list, delete or verify a tag object signed with GPG
+
+collaborate (see also: git help workflows)
+   fetch      Download objects and refs from another repository
+   pull       Fetch from and integrate with another repository or a local branch
+   push       Update remote refs along with associated objects
+`````
+
+
+## 5.Refernece 
+[Git Revert 用法](https://www.cnblogs.com/0616--ataozhijia/p/3709917.html)
+
+[Git 中的 ~ 和 ^](https://www.2cto.com/kf/201807/758347.html)

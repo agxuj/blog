@@ -1,12 +1,24 @@
-# Github Markdown
+# Git 命令集合
  
 
 
  
-References:
+Server，Local，缓存区
 
-[The Markdown API lets you render the markdown documents](https://developer.github.com/v3/markdown/)
+#### 恢复到上一个版本
+``````````
+git reset –hard HEAD^ 
+git checkout -- <file>
+``````````
+[Reference](https://blog.csdn.net/zch501157081/article/details/51939854)
 
-[GitHub Flavored Markdown Spec](https://github.github.com/gfm/)
+<br/>
 
-[Mastering Markdown](https://guides.github.com/features/mastering-markdown/)
+#### Git pull 强制覆盖本地文件
+
+`````````
+git fetch --all  
+git reset --hard origin/master 
+git pull
+`````````
+[Reference](https://blog.csdn.net/baple/article/details/49872765)

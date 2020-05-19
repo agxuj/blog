@@ -1,63 +1,38 @@
-# Spring Boot 集成使用JSP
+# Spring Boot 初体验
  
 
 
-## 在pro.xml中添加依赖
-``````
-<dependency>
-    <groupId>org.apache.tomcat.embed</groupId>
-    <artifactId>tomcat-embed-jasper</artifactId>
-    <scope>provided</scope>
-</dependency>
-<dependency>
-    <groupId>javax.servlet</groupId>
-    <artifactId>javax.servlet-api</artifactId>
-</dependency>
-<dependency>
-    <groupId>javax.servlet.jsp</groupId>
-    <artifactId>javax.servlet.jsp-api</artifactId>
-    <version>2.3.1</version>
-</dependency>
-<dependency>
-    <groupId>javax.servlet</groupId>
-    <artifactId>jstl</artifactId>
-    <scope>provided</scope>
-</dependency>
-``````
+参考:[Java视频教程-SpringBoot教程免费分享](https://zhuanlan.zhihu.com/p/47908153)
 
-## 在appliction.properties文件配置Spring mvc的视图展示为jsp
-``````
-spring.mvc.view.prefix=/WEB-INF/jsp/
-spring.mvc.view.suffix=.jsp
-``````
+## 新建项目
 
-## 建立web文件存放点
+<img src="image/00.png"/>
 
-在src/main目录中新建webapp文件夹，在webapp目录中新建/WEB-INF/jsp/文件夹用于存放jsp文件，其他类型的文件直接存放在webapp文件夹中。
+<img src="image/01.png"/>
 
-## 在pro.xml的build标签中添加配置
-``````
-<resources>
-    <resource>
-        <directory>src/main/java</directory>
-        <includes>
-            <include>**/*.xml</include>
-        </includes>
-    </resource>
+<img src="image/02.png"/>
 
-    <resource>
-        <directory>src/main/resources</directory>
-        <includes>
-            <include>**/*.*</include>
-        </includes>
-    </resource>
+<img src="image/03.png"/>
 
-    <resource>
-        <directory>src/main/webapp</directory>
-        <targetPath>META-INF/resources</targetPath>
-        <includes>
-            <include>**/*.*</include>
-        </includes>
-    </resource>
-</resources>
-``````
+<img src="image/04.png"/>
+
+## 新建 Controller 
+
+`````
+@Controller
+public class AppController {
+    @RequestMapping("/index")
+    @ResponseBody
+    public String hello() {
+        return "hello world";
+    }
+}
+`````
+
+## 运行 Application 的 main 方法
+
+**运行结果**
+
+<img src="image/05.png"/>
+
+

@@ -1,101 +1,71 @@
-# 网站建设 --- 设计
+# Java Web 服务端搭建
  
 
 
+## 亚马逊免费服务器申请
 
+[亚马逊一年免费VPS申请及SSH安全代理搭建 ](http://blog.sina.com.cn/s/blog_67de9c540102uxk3.html)
 
-最近建设了3个网站，对设计有一些思考，在这里总结一下。
+[PuTTYGen生成的key与openSSH的ssh-keygen生成的key互换](http://blog.chinaunix.net/uid-22785603-id-3888819.html)
 
-外观很重要，不论是用户还是网站所有者，会对设计不错的网站有好感。我需要让设计更丰富一些，
+[亚马逊云VPS AWS更改LINUX为root权限密码登陆](http://www.mamicode.com/info-detail-493861.html)
 
-华丽而实用也是追求之一。不要为了漂亮而添加无用的元素。
+[亚马逊云](https://aws.amazon.com/)
 
+[其他服务器提供商选择 - 搬瓦工](https://bandwagonhost.com/)
 
-## 网站布局总结
+## Java Download Install
+[Linux安装jdk1.8和配置环境变量](https://www.cnblogs.com/zs-notes/p/8535275.html)
 
-[Bootstrap 优站精选](http://www.youzhan.org)上有很多优秀和知名的网站可做参考。
+[在CentOS上安装Java环境：[1]使用yum安装java](https://jingyan.baidu.com/article/4853e1e51d0c101909f72607.html)
 
-[模版之家](http://www.cssmoban.com/)
+## MySql Install
+[mysql 官方 yum repo](http://zongming.net/read-668)
 
-开发模式：
+[启动和停止MySQL服务](http://www.cnblogs.com/jdonson/archive/2009/07/03/1516289.html)
 
-1.先选定模版，再套入相关的内容呢。适合小白客户。
+[linux下mysql的root密码忘记解决方](http://www.cnblogs.com/allenblogs/archive/2010/08/12/1798247.html)
 
-2.先确定内容，再寻找模版。适合已经有所准备，已经知道自己要展示什么内容的客户。
+[Mysql数据备份与恢复](http://www.cnblogs.com/wenanry/archive/2010/05/18/1737939.html)
 
+install cmd
+`````
+yum install mysql
+`````
 
-## 主题（Theme）设计：
+## Tomcat Install
+[amazon ec2 安装tomcat](http://blog.sina.com.cn/s/blog_3d37a56901011os7.html)
 
-* [Apple Design - iOS Human Interface Guildeline](https://developer.apple.com/design/)
+[Linux下Tomcat的安装配置](https://blog.csdn.net/zhuying_linux/article/details/6583096)
 
-* [Material Design - Google](https://www.material.io)
+[linux环境下安装tomcat6](http://www.cnblogs.com/wenqiangwu/p/3288339.html)
 
-* [Bootstrap](https://v3.bootcss.com/) 首选使用Bootstrap
+[CentOS6.4下Yum安装Mysql和JDK和tomcat](https://blog.csdn.net/renfufei/article/details/9733367)
 
-## 网站图片素材
+## 文件管理
+[史上最简单的上传文件到linux系统方法](https://jingyan.baidu.com/article/219f4bf7d28185de442d38d2.html)
 
-图片，背景，图标，icon，矢量图...
+## Linux 命令 
+[Linux常用命令大全](http://www.php100.com/html/webkaifa/Linux/2009/1106/3485.html)
 
-分辨率高的背景素材可以在网上找。
+[linux文件创建、查看、编辑命令](http://blog.163.com/fan_yishan/blog/static/4769221320095148164649/)
 
-用户提供真实素材会让网站内容更贴近实际，实用。但拍摄效果会直接影响整体美观。
+[Linux下*.tar.gz文件解压缩命令](http://www.cnblogs.com/xiehy/archive/2010/09/13/1824776.html)
 
-如果网站需要的小图标和icon并不多，可以在网上寻找。
+## VPS 域名绑定
+1. 将域名解析到VPS的IP地址
+1. 如果绑定多个域名对于多个web应用，需要配置Tomcat的server.xml文件
 
-如果需要大量的小图标和icon，很有可能就需要自己动手。制作了。
+## 防火墙
+[Linux防火墙的关闭和开启](https://kiddwyl.iteye.com/blog/67708)
 
-这些小图标和icon的制作需要设计风格以保持整体性。
- 
+[RedHat Linux下iptables防火墙设置](https://www.linuxidc.com/Linux/2012-08/67186.htm)
 
-[unsplash](https://unsplash.com/)
+[Redhat Linux 7 命令关闭防火墙](https://jingyan.baidu.com/article/e52e3615a9009440c70c5162.html)
 
-[觅元素](http://www.51yuansu.com)
+## Tools
+[Win7下如何使用Telnet命令](https://jingyan.baidu.com/article/95c9d20d96ba4aec4f756154.html)
 
-[Flat Icon](https://www.flaticon.com/)
+[linux下怎么退出telnet](http://www.cnblogs.com/hnrainll/archive/2012/02/04/2337928.html)
 
-[Easy Icon](https://www.easyicon.net/)
-
-Reference:[Topbook 免费图片素材网站分享](https://www.zhihu.com/question/21757507/answer/288387063)
-
-## 色彩选择
-
-* [Material Design 色彩](https://www.materialpalette.com/colors)
-
-* [Bootstrap 色彩](https://v3.bootcss.com/css/#less-variables)
-
-* <a href="color_test.html">Color Test</a>
-
-## 尺寸
-
-黄金分割 : 0.382 : 0.618
-
-<a href="color_test.html">计算工具</a>
-
-## 工具
-<table>
-<thead>
-<tr>
-<td>name</td>
-<td>note</td>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td>PhotoShop CC</td>
-<td></td>
-</tr>
-<tr>
-<td>Adobe XD</td>
-<td>画原型图</td>
-</tr>
-<tr>
-<td>Sketch</td>
-<td></td>
-</tr>
-<tr>
-<td>InVision</td>
-<td></td>
-</tr>
-</tbody>
-</table>
+[初用 VPS，感到 putty 反应迟钝](https://www.v2ex.com/t/102990)

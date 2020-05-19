@@ -1,4 +1,4 @@
-# Linux 下  MySQL 的安装
+# MySQL 的安装(Linux)
  
 
 
