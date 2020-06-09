@@ -51,14 +51,14 @@ grant insert on table S to User1 WITH GRANT OPTION;
 //每当调整权限后，通常需要执行以下语句刷新权限
 flush privileges;
 `````
-
-｜对象｜对象类型｜操作权限｜
-｜-｜-｜-｜
-｜属性列｜table｜select,insert,update,delete,all privileges(5种权限综合，MySQL 中同 all)｜
-｜视图｜table｜select,insert,update,delete,all privileges(5种权限综合，MySQL 中同 all)｜
-｜基本表｜table｜select,insert,update,delete,all privileges(5种权限综合，MySQL 中同 all)｜
-｜数据库｜database｜create table 建立表的权限，可由DBA授予普通用户｜
  
+| 对象 | 对象类型 | 操作权限 |
+| --- | --- | --- |
+| 属性列 | table | select, insert, update, delete, all privileges (5种权限综合，MySQL 中同 all) |
+| 视图 | table | select, insert, update, delete, all privileges (5种权限综合，MySQL 中同 all) |
+| 基本表 | table | select, insert, update, delete, all privileges (5种权限综合，MySQL 中同 all) |
+| 数据库 | database | create table 建立表的权限，可由DBA授予普通用户 |
+  
 
 ### 销权(REVOKE)
 
