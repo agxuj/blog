@@ -1,6 +1,3 @@
-# Spring beans.xml的常见配置
- 
-
 ## bean.xml的加载方式
 
 `````

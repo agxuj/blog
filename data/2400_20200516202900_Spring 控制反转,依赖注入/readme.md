@@ -1,9 +1,15 @@
 
-# spring 控制反转和依赖注入
-    控制反转 ( Inversion of Control )
-    依赖注入 ( Dependency Injection ) 
+
+## 参考
+[Java Spring框架入门教程](http://c.biancheng.net/spring/)
+
+[Java Web开发系列课程：Spring框架入门](https://edu.aliyun.com/course/1202?utm_content=m_1000012634)
+
 
 ## 什么是控制反转(ioc)和依赖注入(ip) 
+
+    控制反转 ( Inversion of Control )
+    依赖注入 ( Dependency Injection ) 
 
 请看下面代码A，留意注释。
 
@@ -228,6 +234,5 @@ beans.xml 文件
 小结2: Service 的 UserDal 依赖与 xml 文件的配置，Service 是被动接收 xml 文件的配置的对象，这就是 spring 中的<span style="color:red">依赖注入</span>。
 
 
-## 参考
 
-[Java Web开发系列课程：Spring框架入门](https://edu.aliyun.com/course/1202?utm_content=m_1000012634)
+

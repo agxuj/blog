@@ -1,101 +1,38 @@
-# Spring Boot 配置文件
+# Spring Boot 初体验
  
 
 
-## 简介
+参考:[Java视频教程-SpringBoot教程免费分享](https://zhuanlan.zhihu.com/p/47908153)
 
-配置文件在 application.properties 位于 /src/main/resources 中.
+## 新建项目
 
-配置文件有2种,分别是 properties 和 yml, 这里主要讲 properties 格式
+<img src="image/00.png"/>
 
-## 多配置文件
+<img src="image/01.png"/>
 
-在不同的场景使用不同的配置文件,比如开发环境和生产环境部分参数是不同的,可以分别给每个环境创建配置文件,格式如下:
+<img src="image/02.png"/>
 
-开发环境: application-dev.properties
-生产环境: application-pro.properties
+<img src="image/03.png"/>
 
-具体使用哪个环境,可以在 application.properties 的 spring.profiles.active 中设置
-如设置生产环境
-`````
-spring.profiles.active=pro
-`````
+<img src="image/04.png"/>
 
-## 读取配置文件
-
-### 注解 @Value
+## 新建 Controller 
 
 `````
 @Controller
 public class AppController {
-    
-    @Value("database.username")
-    private String username;
-    
-    @Value("database.password")
-    private String password;
-
     @RequestMapping("/index")
     @ResponseBody
     public String hello() {
-        return "hello world,"+username;
+        return "hello world";
     }
 }
 `````
 
-### 注解 @Component
+## 运行 Application 的 main 方法
 
-`````
+**运行结果**
 
-@Component
-@ConfigurationProperties(prefix = "database")
-public class Config {
-
-    private String username;
-
-    private String password;
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-}
+<img src="image/05.png"/>
 
 
-@Controller
-public class AppController {
-
-    @Autowired
-    private Config config;
-
-    @RequestMapping("/index")
-    @ResponseBody
-    public String hello() {
-        return "hello world," + config.getUsername();
-    }
-}
-
-`````
-
-### 直接读取
-
-`````
-public static String getProperty(String filePath) throws IOException {
-    InputStream in = FileUtils.class.getClassLoader().getResourceAsStream("application.properties");
-    Properties prop = new Properties();
-    prop.load(in);
-    String value = prop.get(key);
-    return value;
-}
-`````

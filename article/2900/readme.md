@@ -1,33 +1,101 @@
-# Spring Boot 注解说明
+# Spring Boot 配置文件
  
 
-## Controller
+
+## 简介
+
+配置文件在 application.properties 位于 /src/main/resources 中.
+
+配置文件有2种,分别是 properties 和 yml, 这里主要讲 properties 格式
+
+## 多配置文件
+
+在不同的场景使用不同的配置文件,比如开发环境和生产环境部分参数是不同的,可以分别给每个环境创建配置文件,格式如下:
+
+开发环境: application-dev.properties
+生产环境: application-pro.properties
+
+具体使用哪个环境,可以在 application.properties 的 spring.profiles.active 中设置
+如设置生产环境
+`````
+spring.profiles.active=pro
+`````
+
+## 读取配置文件
+
+### 注解 @Value
+
+`````
 @Controller
+public class AppController {
+    
+    @Value("database.username")
+    private String username;
+    
+    @Value("database.password")
+    private String password;
 
-@RestController : Spring4 后新增注解, 是 @Controller 和 @ResponseBody 的组合注解, 用于**返回字符串或者json数据**.
+    @RequestMapping("/index")
+    @ResponseBody
+    public String hello() {
+        return "hello world,"+username;
+    }
+}
+`````
 
-@RequestMapping : 配置请求信息
+### 注解 @Component
 
-@GetMapping : @RequestMapping 和 method = RequestMethod.GET 请求方法的组合.
+`````
 
-@PostMapping : @RequestMapping 和 method = RequestMethod.POST 请求方法的组合
+@Component
+@ConfigurationProperties(prefix = "database")
+public class Config {
 
-@PutMapping : @RequestMapping 和 method = RequestMethod.PUT 请求方法的组合
+    private String username;
 
-@DeleteMapping : @RequestMapping 和 method = RequestMethod.DELETE 请求方法的组合
+    private String password;
 
-@ResponseBody : 确定返回字符串
+    public String getUsername() {
+        return username;
+    }
 
-@PathVariable : RestFull参数设定
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
-## Service
-@Service
+    public String getPassword() {
+        return password;
+    }
 
-## 其他
-@Autowired : (声明读取properties的实体类)
+    public void setPassword(String password) {
+        this.password = password;
+    }
+}
 
-@Component : 是所有受Spring 管理组件的通用形式，@Component注解可以放在类的头上，@Component不推荐使用
 
-@ConfigurationProperties : (读取properties参数时设置前缀)
+@Controller
+public class AppController {
 
-@Configuration : (拦截器配置)
+    @Autowired
+    private Config config;
+
+    @RequestMapping("/index")
+    @ResponseBody
+    public String hello() {
+        return "hello world," + config.getUsername();
+    }
+}
+
+`````
+
+### 直接读取
+
+`````
+public static String getProperty(String filePath) throws IOException {
+    InputStream in = FileUtils.class.getClassLoader().getResourceAsStream("application.properties");
+    Properties prop = new Properties();
+    prop.load(in);
+    String value = prop.get(key);
+    return value;
+}
+`````
