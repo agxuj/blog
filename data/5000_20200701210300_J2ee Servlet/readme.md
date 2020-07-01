@@ -1,6 +1,3 @@
-# J2ee Servlet
- 
-
 
 ## 生命周期
 Servlet 生命周期可被定义为从创建直到毁灭的整个过程。以下是 Servlet 遵循的过程：

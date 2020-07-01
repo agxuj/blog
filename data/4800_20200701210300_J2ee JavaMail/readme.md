@@ -1,6 +1,3 @@
-# J2ee JavaMail
- 
-
 
 ## 参考
 [Java 发送邮件](https://www.runoob.com/java/java-sending-email.html)

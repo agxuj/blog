@@ -1,6 +1,3 @@
-# J2ee XML
- 
-
 
 解析XML文件一般有两种方式:<span style="color:red">DOM</span>解析和<span style="color:red">SAX</span>解析，首先看一下两者的概念和基础知识：
 
