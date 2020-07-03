@@ -1,36 +1,57 @@
-# J2ee XML
+# J2ee JavaMail
  
 
 
-解析XML文件一般有两种方式:<span style="color:red">DOM</span>解析和<span style="color:red">SAX</span>解析，首先看一下两者的概念和基础知识：
+## 参考
+[Java 发送邮件](https://www.runoob.com/java/java-sending-email.html)
 
+## 发送一封简单的 E-mail
 
-## 原理：
-
-DOM解析：在程序开始执行的时候，先将整个XML文件加载到内存中，在内存中形成一棵DOM树，然后通过某种编程语言对这颗树上的任意节点进行增删改查操作。
-
-SAX解析：基于事件驱动型的解析方式。解析是有顺序的，顺序遵守：从左到右，从上到下。基于事件驱动型的解析方式不需要将XML文件全部加载到内存中，所以这种方式不会耗费大量的内存，只不过解析过去的节点不能再次解析，不够灵活，如果还想解析，只能再次从XML文件头开始。
-
-## 两者的优缺点：
-
-DOM解析：
-    
-    优点：灵活。因为整个树都在内存中，我们随时随地都可以对某个节点操作，解析过去的节点还可以再次解析，比较灵活。
-    缺点：如果XML文件很大，则会耗费大量的内存，因为这个XML文件很大，而需要访问的节点又很少。
-    总结：所以XML文件较小、需要解析的节点较多，这样才值得使用DOM解析。
-
-SAX解析：
-
-    优点：不会耗费大量的内存。
-    缺点：不灵活（我们可以使用另外一个技术XPATH，使用它可以在XML文件中快速定位要解析的节点）。
-    总结：有了XPath技术，SAX解析方式成为我们常用的。
-
-
-## JDK中的XML的解析
-
-[Java Dom解析](https://www.iteye.com/topic/763926)
-
-[Java Sax解析](https://www.iteye.com/blog/sinye-763895)
+`````
+public void send()
+{   
+    // 收件人电子邮箱
+    String to = "abcd@gmail.com";
+ 
+    // 发件人电子邮箱
+    String from = "web@gmail.com";
+ 
+    // 指定发送邮件的主机为 localhost
+    String host = "localhost";
+ 
+    // 获取系统属性
+    Properties properties = System.getProperties();
+ 
+    // 设置邮件服务器
+    properties.setProperty("mail.smtp.host", host);
+ 
+    // 获取默认session对象
+    Session session = Session.getDefaultInstance(properties);
+ 
+    try{
+        // 创建默认的 MimeMessage 对象
+        MimeMessage message = new MimeMessage(session);
+ 
+        // Set From: 头部头字段
+        message.setFrom(new InternetAddress(from));
+ 
+        // Set To: 头部头字段
+        message.addRecipient(Message.RecipientType.TO,new InternetAddress(to));
+ 
+        // Set Subject: 头部头字段
+        message.setSubject("This is the Subject Line!");
+ 
+        // 设置消息体
+        message.setText("This is actual message");
+ 
+        // 发送消息
+        Transport.send(message);
+        System.out.println("Sent message successfully....");
+    } catch (MessagingException mex) {
+     mex.printStackTrace();
+    }
+}
+`````
 
 
 
