@@ -44,7 +44,7 @@ show grants for "fadden";
 grant <权限>, ... <权限> on <对象类型> <对象名> to <用户>, ... <用户> [WITH GRANT OPTION];
 
 //例子
-grant all on "database"."*" to "faddenyin"@"%";
+grant all on `database`.* to 'faddenyin'@'%';
 
 grant all privileges on table S,P,J to User1, User2
 
