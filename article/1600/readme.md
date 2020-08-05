@@ -1,183 +1,199 @@
-# Redis 安装与部署(Linux)
+# Linux 下 Nginx 的安装
  
 
 
-
-## 下载与安装
+建议安装最新版本
+## 安装编译工具及库文件
 `````
-[root]# wget http://download.redis.io/releases/redis-5.0.4.tar.gz
-[root]# tar xzf redis-5.0.4.tar.gz
-[root]# cd redis-5.0.4
-[root]# make //编译
-[root]# cd src
+[root]# yum -y install make zlib zlib-devel gcc-c++ libtool  openssl openssl-devel
+`````
+
+## 安装 PCRE
+PCRE 作用是让 Nginx 支持 Rewrite 功能。
+
+### 下载
+`````
+[root]# cd /usr/local/src/
+[root]# wget ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre-8.43.tar.gz
+`````
+### 解压
+`````
+[root]# tar zxvf pcre-8.43.tar.gz
+`````
+### 编译安装 
+`````
+[root]# cd pcre-8.35
+[root]# ./configure
+[root]# make && make install
+//查看版本
+[root]# pcre-config --version
+`````
+
+## 安装 Nginx
+### 下载
+`````
+[root]# cd /usr/local/src/
+[root]# wget http://nginx.org/download/nginx-1.9.9.tar.gz
+`````
+### 解压
+`````
+[root]# tar zxvf nginx-1.6.2.tar.gz
+[root]# cd nginx-1.6.2
+`````
+
+### 编译安装
+`````
+[root]# ./configure --prefix=/usr/local/webserver/nginx --with-http_stub_status_module --with-http_ssl_module --with-pcre=/usr/local/src/pcre-8.35
+[root]# make
 [root]# make install
-`````
-## 创建bin和ect目录
-`````
-[root]# mkdir -p /usr/local/redis/bin
-[root]# mkdir -p /usr/local/redis/etc
-
-[root]# cp /faddenyin/redis-5.0.4/redis.conf /usr/local/redis/etc
-[root]# cd /faddenyin/redis-5.0.4/src
-[root]# cp redis-benchmark redis-check-aof redis-cli redis-server /usr/local/redis/bin
+//查看版本
+[root]# /usr/local/webserver/nginx/sbin/nginx -v
 `````
 
-## 配置
+## Nginx 配置
+### 创建用户
 `````
-[root]# vi /faddenyin/redis-5.0.4/redis.conf
-`````
-配置外网可以访问
-`````
-bind 127.0.0.1
-protected-mode yes
-//更改为,注意注释127.0.0.1
-#bind 127.0.0.1
-protected-mode no
-
-`````
-配置密码
-`````
-requirepass ${password}
+[root]# /usr/sbin/groupadd www 
+[root]# /usr/sbin/useradd -g www www 
 `````
 
-## 启动服务
+### 配置nginx.conf
 `````
-[root]# cd /usr/local/redis/bin
-[root]# ./redis-server //启动服务
+[root]# vi /usr/local/webserver/nginx/conf/nginx.conf
 `````
 
-后台启动redis服务
 `````
-[root]# vi /usr/local/redis/etc/redis.conf
+user www www;
+worker_processes 1; #设置值和CPU核心数一致
+error_log /usr/local/webserver/nginx/logs/nginx_error.log crit; #日志位置和日志级别
+pid /usr/local/webserver/nginx/nginx.pid;
+#Specifies the value for maximum file descriptors that can be opened by this process.
+worker_rlimit_nofile 65535;
+events
+{
+    use epoll;
+    worker_connections 65535;
+}
+http
+{
+    include       mime.types;
+    default_type  application/octet-stream;
+ 
+    #log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+    #                  '$status $body_bytes_sent "$http_referer" '
+    #                  '"$http_user_agent" "$http_x_forwarded_for"';
+    #access_log  logs/access.log  main;
+ 
+    sendfile        on;
+    #tcp_nopush     on;
+ 
+    #keepalive_timeout  0;
+    keepalive_timeout  65;
+ 
+    #gzip  on;
+	 
+    server {
+        listen 443 ssl;
+        server_name age.knxy.top;
+        ssl on; 
+        ssl_certificate /etc/ssl/1789802_age.knxy.top.pem;
+        ssl_certificate_key /etc/ssl/1789802_age.knxy.top.key;
 
-daemonize yes
+        ssl_session_timeout 5m;
+        ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDHE:ECDH:AES:HIGH:!NULL:!aNULL:!MD5:!ADH:!RC4;
+        ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+        ssl_prefer_server_ciphers on;
+        
+        location / {
+                proxy_pass http://127.0.0.1:8088;  
+            }
+        }
+        server{
+            listen 80;
+            server_name age.knxy.top;
+            location / {
+                proxy_pass http://127.0.0.1:8088;  
+            }
+        }
+        server{
+            listen 80;
+            server_name www.funning.top;
+            root /faddenyin/tomcat9/webs/top.funning.www;
+        }
+}
 
-//再次启动redis服务，并指定启动服务配置文件
-[root]# ./redis-server /usr/local/redis/etc/redis.conf
 `````
-查看端口
+### 检查配置文件nginx.conf的正确性
 `````
-[root]# netstat -tunpl|grep 6379
+[root]# /usr/local/webserver/nginx/sbin/nginx -t
 `````
-## 关闭服务
+
+###  Nginx启动,关闭,重启
 `````
-[root]# redis-cli -h 127.0.0.1 -p 6379 -a ${password} shutdown
+
+[root]# /usr/local/webserver/nginx/sbin/nginx -s reload    # 重新载入配置文件
+[root]# /usr/local/webserver/nginx/sbin/nginx              # 启动
+[root]# /usr/local/webserver/nginx/sbin/nginx -s reopen    # 重启 Nginx
+[root]# /usr/local/webserver/nginx/sbin/nginx -s stop      # 停止 Nginx
 `````
-## 启动客户端
+## 添加 service 配置
+
 `````
-[root]# cd /usr/local/redis/bin
-[root]# ./redis-cli
+[root]# /etc/init.d/idea
+[root]# chmod a+wrx /etc/init.d/idea
 `````
-## 关闭客户端
-`````
-[root]# ./redis-cli shutdown 
-`````
-## 其他配置
-### 修改profile文件
-`````
-[root]# vi /etc/profile
-export PATH=$PATH:/usr/local/redis/bin
-`````
-### 配置内核参数
-**否则Redis脚本在重启或停止redis时，将会报错，并且不能自动在停止服务前同步数据到磁盘上/etc/sysctl.conf加上**
-`````
-[root]# vi /etc/sysctl.conf
-vm.overcommit_memory = 1 
-sysctl -p
-`````
-### 配置service
-`````
-[root]# vi /etc/init.d/redis
-`````
-**<span style="color:red">Ensure</span> your init.d PIDFILE=/var/run/redis.pid is the same as your redis.conf pidfile
-/var/run/redis.pid and you are done!**
+内容：
 `````
 #!/bin/sh
-#
-# redis        Startup script for Redis Server
-#
-# chkconfig: - 80 12
-# description: Redis is an open source, advanced key-value store.
-#
-# processname: redis-server
-# config: /etc/redis.conf
-# pidfile: /var/run/redis.pid
-source /etc/init.d/functions
-BIN="/usr/local/redis/bin"
-CONFIG="/usr/local/redis/etc/redis.conf"
-PIDFILE="/var/run/redis.pid"
-### Read configuration
-[ -r "$SYSCONFIG" ] && source "$SYSCONFIG"
-RETVAL=0
-prog="redis-server"
-desc="Redis Server"
-start() {
-        if [ -e $PIDFILE ];then
-             echo "$desc already running...."
-             exit 1
-        fi
-        echo -n $"Starting $desc: "
-        daemon $BIN/$prog $CONFIG
-        RETVAL=$?
-        echo
-        [ $RETVAL -eq 0 ] && touch /var/lock/subsys/$prog
-        return $RETVAL
+# chkconfig: 2345 80 90
+# description: nginx register server
+
+PATH="/usr/local/webserver/nginx/sbin/nginx"
+start(){
+    $PATH
 }
-stop() {
-        echo -n $"Stop $desc: "
-        killproc $prog
-        RETVAL=$?
-        echo
-        [ $RETVAL -eq 0 ] && rm -f /var/lock/subsys/$prog $PIDFILE
-        return $RETVAL
+stop(){
+    $PATH -s stop
 }
-restart() {
-        stop
-        start
+reopen(){
+    $PATH -s reopen
+}
+reload(){
+    $PATH -s reload
 }
 case "$1" in
-  start)
-        start
-        ;;
-  stop)
-        stop
-        ;;
-  restart)
-        restart
-        ;;
-  condrestart)
-        [ -e /var/lock/subsys/$prog ] && restart
-        RETVAL=$?
-        ;;
-  status)
-        status $prog
-        RETVAL=$?
-        ;;
-   *)
-        echo $"Usage: $0 {start|stop|restart|condrestart|status}"
-        RETVAL=1
+"start")
+    start
+    ;;
+"stop")
+    stop
+    ;;
+"reopen")
+    reopen
+    ;;
+"reload")
+    reload
+    ;;
 esac
-exit $RETVAL
-`````
-`````
-chmod +x /etc/init.d/redis
-service redis start
-service redis stop
-chkconfig --add redis
 `````
 
+服务启动：service idea start
 
-## Reference 
-[理解Linux系统/etc/init.d目录和/etc/rc.local脚本](https://blog.csdn.net/acs713/article/details/7322082)
+服务关闭：service idea shutdown
 
-[linux命令sysctl使用](https://www.cnblogs.com/codeblock/p/5207431.html)
+设置自启：chkconfig idea on
 
-[Linux下Redis的安装和部署](https://www.cnblogs.com/wangchunniu1314/p/6339416.html)
+关闭自启：chkconfig idea off
 
-[如何停止/重启/启动redis服务](http://outofmemory.cn/code-snippet/37597/how-to-stop-start-restart-redis-server)
+## 参考
+[Nginx 安装配置](https://www.runoob.com/linux/nginx-install-setup.html)
+ 
+[nginx配置ssl证书实现https访问](https://www.cnblogs.com/tianhei/p/7726505.html)
 
-[redis 设置外网可访问](https://www.cnblogs.com/zhangqigao/p/9110544.html)
+[nginx基本配置与参数说明](http://www.nginx.cn/76.html)
 
-[Redis 密码设置和查看密码](https://www.cnblogs.com/suanshun/p/7699084.html)
+[springboot nginx 配置](https://www.cnblogs.com/gmq-sh/p/8126361.html)
 
-[redis 如何执行redis命令](https://www.cnblogs.com/AlanLee/p/5927700.html)
+[linux添加service服务，设置自启](https://www.jianshu.com/p/4b6ef05cef2d)
+
+[env: /etc/init.d/mysqld: 权限不够](https://blog.csdn.net/wu920604/article/details/99716894)

@@ -1,85 +1,193 @@
-# MySQL 数据定义语言DDL
+# MySQL 的安装(Linux)
  
 
 
-
-## 创建表
+ 
+## 官网下载安装
+### 1.下载
+到[Oracle Download](https://dev.mysql.com/downloads/mysql/)查看下载地址
 `````
-CREATE TABLE <表名>（
-    <列名> <数据类型> [列级完整性约束条件],
-    [表级完整性约束条件]
-);
+wget https://cdn.mysql.com//Downloads/MySQL-8.0/mysql-8.0.15-linux-glibc2.12-x86_64.tar
+`````
+### 2.解压
+`````
+tar -xvf mysql-8.0.15-linux-glibc2.12-x86_64.tar
+tar -xvf mysql-8.0.15-linux-glibc2.12-x86_64.tar.xz
+`````
+### 3.移动目录
+`````
+mv mysql-8.0.15-linux-glibc2.12-x86_64 /faddenyin/mysql8
+`````
+### 4.添加用户
+`````
+groupadd mysql //创建 mysql 用户组
+useradd -g mysql mysql //创建 mysql 用户
+`````
+### 5.设置权限
+`````
+chown -R mysql.mysql /faddenyin/mysql8/
+//or
+chown -R mysql .
+chgrp -R mysql .
+`````
+### 6.创建my.cnf
+`````
+vi /etc/my.cnf
 `````
 
-**常见列级约束条件**
-1. not null
-1. null
-1. default
-1. unique
-1. check
-
-**主键**
-primary key
-
-**外键**
-foreign key
 `````
-foreign key(列名) references 表名(列名)
+[mysqld]
+port=3306
+basedir = /faddenyin/mysql8
+datadir = /faddenyin/mysql8/data
+socket=/tmp/mysql.sock
+log-error=/faddenyin/mysql8/data/error.log
+pid-file=/faddenyin/mysql8/data/mysql.pid
+user=mysql
+tmpdir=/tmp
+character_set_server=utf8
+default-storage-engine=INNODB
+init_connect='SET NAMES utf8'
+default_authentication_plugin=mysql_native_password
+default-time_zone = '+8:00'//设置时区
+
+[client]
+port=3306
+default-character-set=utf8 
+`````
+### 7.初始化数据库
+**这里会生成一个随机密码,注意保留**
+`````
+cd /faddenyin/mysql8/bin
+./mysqld --initialize --user=mysql
+`````
+如果出现错误：
+`````
+error while loading shared libraries: libaio.so.1: cannot open shared object file: No such file or directory
+//安装libaio
+yum install libaio
 `````
 
-**自增长**
-auto_increament
+### 8.配置mysql服务
+`````
+cd /faddenyin/mysql8
+cp -a ./support-files/mysql.server /etc/init.d/mysqld
 
-## 修改表和删除表
-1. 添加列
-    `````
-    ALTER TABLE <表名> ADD <新列名> <数据类型> [完整性约束条件];
-    `````
+chmod +x /etc/rc.d/init.d/mysqld    
+chkconfig --add mysqld
 
-1. 删除列
-    `````
-    ALTER TABLE <表名> DROP <完整性约束名>;
-    `````
+//检查服务是否生效  
+chkconfig  --list mysqld
+`````
+### 9.配置全局环境变量
+`````
+vi /etc/profile
+`````
+在 profile 文件底部添加如下两行配置，保存后退出
+`````
+PATH=/faddenyin/mysql8/bin:/faddenyin/mysql8/lib:$PATH
+export PATH
+`````
+设置环境变量立即生效
+`````
+source /etc/profile
+`````
+### 10.启动MySQL服务
+`````
+service mysql start
+`````
+## yum命令安装
+### 下载repo源并导入
+mysql 官网下载 repo。 
+[Repo List](https://dev.mysql.com/downloads/repo/yum/), 选择Red Hat
+``````
+https://dev.mysql.com/get/mysql80-community-release-el7-3.noarch.rpm
+``````
+安装 yum repo文件并更新 yum 缓存
+``````
+rpm -ivh mysql80-community-release-el7-3.noarch.rpm
+//更新 yum 命令
+yum clean all
+yum makecache
+``````
+### 安装mysql 
+``````
+yum install mysql-community-server
+``````
+### 开启mysql 服务
+``````
+systemctl start mysqld.service
+``````
+### 获取初始密码登录mysql
+``````
+cat /var/log/mysqld.log | grep password
+``````
 
-1. 修改列属性
-    `````
-    ALTER TABLE <表名> MODIFY <列名> <数据类型> [完整性约束条件];
-    `````
+## 卸载
 
-1. 修改列名
-    `````
-    ALTER TABLE <表名> CHANGE <列名> <新列名> <数据类型> [完整性约束条件]; --- MySQL
-    exec sp_rename '<表名>.<列名>‘,’<表名>.<新列名>' --- sql server
-    ALTER TABLE <表名> RENAME COLUMN <列名> TO <新列名> --- oracle
-    `````
+### 1. 停止服务
+`````
+service mysqld stop
+`````
+### 2. 查看当前安装mysql情况，查找以前是否装有mysql
+`````
+rpm -qa|grep -i mysql
+----------------------
+mysql-community-client-8.0.13-1.el7.x86_64
+mysql-community-libs-8.0.13-1.el7.x86_64
+mysql-community-common-8.0.13-1.el7.x86_64
+mysql-community-server-8.0.13-1.el7.x86_64
+`````
+### 3. 执行命令删除安装的MySQL
+逐条删除上一步查询的结果
+`````
+rpm -ev mysql-community-client-8.0.13-1.el7.x86_64 --nodeps
+`````
+### 4. 查看之前安装的MySQL的目录并删除
+`````
+find / -name mysql
 
-1. 删除表
-    `````
-    DROP TABLE <表名>
-    `````
+/var/lib/mysql
+/var/lib/mysql/mysql
+/usr/lib64/mysql
+/usr/share/mysql
 
-## 创建和删除索引
-1. 建立索引
-    `````
-    CREATE UNIQUE INDEX <索引名> ON <表名> (<列名> <次序>, ... <列名><次序>);
+rm -rf /var/lib/mysql
+.
+.
+.
+`````
 
-    //例子:
-    CREATE UNIQUE INDEX J-JNO ON J(Jno);
-    CREATE UNIQUE INDEX SPJ-NO ON SPJ(Sno ASC, Pno DESC,JNO ASC)
-    `````
+### 5. 删除my.cnf
 
-1. 删除索引
-    `````
-    DROP INDEX <索引名>
-    `````
+`````
+rm -rf /etc/my.cnf
+`````
 
-## 视图的创建和删除
-1. 创建视图
-    `````
-    CREATE VIEW <视图名> AS SELECT <查询子句> WITH CHECK OPTION;
-    `````
 
-1. 删除视图
-    `````
-    DROP VIEW <视图名>;
-    `````
+## 备注
+
+添加防火墙开放端口
+
+## Reference
+[Linux下如何彻底删除(卸载)MySQL?](https://jingyan.baidu.com/article/4b52d702db8a82fc5c774b92.html)
+
+[Linux下卸载MySQL8.0版本](https://blog.csdn.net/eric_wii/article/details/86300450)
+
+[如何在Ubuntu Linux上安装 MySQL 8.0.11](https://blog.51cto.com/13804472/2134479)
+
+[Linux安装mysql8](https://blog.csdn.net/cacalili/article/details/80805855)
+
+[MySQL 8.0给数据库添加用户和赋权](https://www.cnblogs.com/testway/p/9289827.html)
+
+[MySQL中用户权限、库权限、表权限的控制](https://blog.csdn.net/u010735147/article/details/81744002)
+
+[MySQL时间和本地时间相差13个小时](https://blog.csdn.net/xgs736214763/article/details/78814072)
+
+[MySQL修改时区的几种方法](https://www.cnblogs.com/shiqiangqiang/p/8393662.html)
+
+[MySQL用户及权限管理 小结](https://www.cnblogs.com/SQL888/p/5748824.html)
+
+[libaio install](https://help.directadmin.com/item.php?id=368)
+
+[CentOS7 安装 MySQL8](https://www.cnblogs.com/yaowen/p/9486138.html)

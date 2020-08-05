@@ -1,340 +1,96 @@
-# Java Oval说明文档
+# Java 注解
  
 
 
-## 注解说明
-
-### @Assert
-
-Check if evaluating the expression in thespecified expression language returns true.
-
-检查指定语言的表达式返回值是否为true；这里表达式是groovy。
  
- | 参数 | 说明|
- | - | - |
- | expr | 表达式 |
- | lang | 指明脚本语言 | 
- | errorCode | 错误编码（共有属性）<br/>（可以修改成自己的异常编码串）<br/>net.sf.oval.constraint.Assert（默认值）
- | message | 错误描述（共有属性） | 
- | when | 前置条件（共有属性） |  
+## 内置注解简单介绍 
 
-### @AssertFalse
-Check if the value is false. 
-    
-检查值是否为假或真
-    
-Note: This constraint is also satisfied when the value to validate is null, therefore you might also need to specified @NotNull
+Java 定义了一套注解，共有 7 个，3 个在 java.lang 中，剩下 4 个在 java.lang.annotation 中。
 
-主要参数when,errorCode,message
+### 作用在代码的注解是
 
-### @AssertTrue
-Check if the value is true.
-    
-### @AssertNull
-Check if null. 
+* @Override - 检查该方法是否是重写方法。如果发现其父类，或者是引用的接口中并没有该方法时，会报编译错误。
+* @Deprecated - 标记过时方法。如果使用该方法，会报编译警告。
+* @SuppressWarnings - 指示编译器去忽略注解中声明的警告。
 
-与@NotNull相反;
+### 作用在其他注解的注解(或者说 元注解)是:
 
-### @AssertURL
-Check if the value is a valid URL. 
+* @Retention - 标识这个注解怎么保存，是只在代码中，还是编入class文件中，或者是在运行时可以通过反射访问。
+* @Documented - 标记这些注解是否包含在用户文档中。
+* @Target - 标记这个注解应该是哪种 Java 成员。
+* @Inherited - 标记这个注解是继承于哪个注解类(默认 注解并没有继承于任何子类)
 
-检查值是否为有效的URL
+### 从 Java 7 开始，额外添加了 3 个注解:
 
-Note: This constraint is also satisfied when the value to validate is null, therefore you might also need to specified @NotNull
+* @SafeVarargs - Java 7 开始支持，忽略任何使用参数为泛型变量的方法或构造函数调用产生的警告。
+* @FunctionalInterface - Java 8 开始支持，标识一个匿名函数或函数式接口。
+* @Repeatable - Java 8 开始支持，标识某注解可以在同一个声明上使用多次。
 
-| 参数 | 说明 | 
-| - | - |
-| connect(boolean) | Specifies if a connection to the URL should be attempted to verify its validity.<br/>是否发起连接进行尝试. | 
+## 注解的架构
+<img src="image/1.jpg" />
 
+* 1 个 Annotation 和 1 个 RetentionPolicy 关联。
+* 1 个 Annotation 和 1~n 个 ElementType 关联。
+* Annotation 有许多实现类，包括：Deprecated, Documented, Inherited, Override 等等。
 
-### @DateRange
-Check if the date is within the a daterange. 
-
-Note: This constraint is also satisfied when the value to validate is null, therefore you might also need to specified @NotNull
-
-@DateRange可以验证字符串类型，请查看源码验证
+## 注解实现所需理解的3个主要类
+### Annotation.java
 `````
-示例：
-@DateRange(min="2010-10-01",max="now",message="dateis error.")
-private String birthday;
+package java.lang.annotation;
+public interface Annotation {
+    boolean equals(Object obj);
+    int hashCode();
+    String toString();
+    Class<? extends Annotation> annotationType();
+}
 `````
-
- | 参数 | 说明 |
- | - | - |
- | min | The upper date compared against in the format specified with the dateFormat parameter.If not specified then no upper boundary check is performed.<br>Special values are:<br/>1. now<br/>2. today<br/>3. yesterday<br/>4. tomorrow | 
- | max | The lower date compared against in the format specified with the dateFormat parameter.if not specified then no lower boundary check is performed.<br>Special values are:<br/>1. now<br/>2. today<br/>3. yesterday<br/>4. tomorrow | 
-
-### @Future
+### ElementType.java
 `````
-示例：
-@Future(message="date isfuture.") //不能验证字符串
+package java.lang.annotation;
+public enum ElementType {
+    TYPE,               /* 类、接口（包括注释类型）或枚举声明  */
+    FIELD,              /* 字段声明（包括枚举常量）  */
+    METHOD,             /* 方法声明  */
+    PARAMETER,          /* 参数声明  */
+    CONSTRUCTOR,        /* 构造方法声明  */
+    LOCAL_VARIABLE,     /* 局部变量声明  */
+    ANNOTATION_TYPE,    /* 注释类型声明  */
+    PACKAGE             /* 包声明  */
+}
 `````
-### @Past
+### RetentionPolicy.java
 `````
-示例：
-@Past(message="date is past.") //不能验证字符串
-`````
-### @Email
-Check if the value is a valid e-mailaddress. The check is performed based on a regular expression.
-
-Note: This constraint is also satisfied when the value to validate is null, therefore you might also need to specified @NotNull
-
-    
-`````
-示例：
-@Email(message="email is error.")
-private String email;
-`````
-
-### @EqualToField
-Check if value equals the value of thereferenced field.
-
-Note: This constraint is also satisfied when the value to validate is null, therefore you might also need to specified @NotNull
-
-`````
-示例：
-//检查userCode是否和userName相等；使用get方法。
-@EqualToField(value="userName" message="mustequals userName",useGetter=true)
-private String userCode;
-`````
-@NotEqualToField
-`````
-示例；
-与@EqualToField相反
-@NotNull(message="not null")
-@NotEqualToField(value="userCode" message="can'tequals userCode")
-private String userName;
-`````
-
-### @HasSubstring
-Check if the string contains a certainsubstring.
-    
-Note: This constraint is also satisfied when the value to validate is null, therefore you might also need to specified @NotNull
-
-
- | 参数 | 说明 | 
- | - | - |
- | value | 需要给的子串 | 
- | ignoreCase（boolean） | ignoreCase default false | 
-
-`````
-示例：
-@HasSubstring(value="san",ignoreCase=true,message="mustcontains 'san'")
-private String userCode;
-`````
-### @Length
-Check if the string representation has certain length. 
-
-检查字符串的长度
-
-Note: This constraint is also satisfied when the value to validate is null, therefore you might also need to specified @NotNull
-
- | 参数 | 说明 | 
- | - | - |
- | max | 最大长度，默认为：Integer.MAX_VALUE | 
- | min | 默认值为0 | 
-
-### @MaxLength
-Check if the string representation has certain length. 
-
-检查字符串的长度
-
-Note: This constraint is also satisfied when the value to validate is null, therefore you might also need to specified @NotNull
-
-有value属性；表示和value进行比较
-
-### @MinLength
-Check if the string representation has certain length. 
-
-检查字符串的长度
-
-Note: This constraint is also satisfied when the value to validate is null, therefore you might also need to specified @NotNull
-    
-有value属性；表示和value进行比较
-    
-
-### @Size
-Check if the array,map, or collection has the given size. For objects of other types thelength of their String representation will be checked. 
-
-检查array、map或集合的大小；其他类型的对象检查对应字符串的长度；建议字符长度使用@Length验证。
-
-Note: This constraint is also satisfied when the value to validate is null, therefore you might also need to specified @NotNull
-
-
- | 参数 | 说明 | 
- | - | - |
- | max |  | 
- | min |  | 
-
-
-### @MinSize
-Check if the array,map, or collection has the given size. For objects of other types thelength of their String representation will be checked. 
-
-检查array、map或集合的大小；其他类型的对象检查对应字符串的长度；建议字符长度使用@Length验证。
-
-### @MaxSize
-Check if the array,map, or collection has the given size. For objects of other types thelength of their String representation will be checked. 
-
-检查array、map或集合的大小；其他类型的对象检查对应字符串的长度；建议字符长度使用@Length验证。
-
-
-### @MemberOf, @NotMemberOf
-Check if the string representation iscontained in the given string array.
-
-检查值是否包含在给定的数组中；@NotMemberOf实现相反效果；
-
-Note: This constraint is also satisfied when the value to validate is null, therefore you might also need to specified @NotNull
-
- | 参数 | 说明 | 
- | - | - |
- | value 字符串数组 |  | 
- | ignoreCase | 默认值false | 
-
-### @NotBlank, @NotNull, @NotEmpty
-
- | 参数 | 说明 | 
- | - | - |
- | NotBlank | Check if the string representation is not empty and does not only contain white spaces. | 
- | NotNull | Check if not null. | 
- | NotEmpty | Check if the string representation is not empty(""). | 
-
-### @NotNegative
-Check if the number is greater or equalzero. 
-
-检查值是否为非负数
-
-Note: This constraint is also satisfied when the value to validate is null, therefore you might also need to specified @NotNull
- 
-
-### @Range
-Check if the number is in the given range.
-
-@Range 有max和min 属性，检查数值类型的范围；
-
-### @Min
-Check if the number is greater than orequal to X.
-
-### @Max
-Check if the number is smaller than orequal to X.
-
-### @Digits
-Check if the String representation has thegiven max/min number of integral and fractional digits.
-
-检查字符串形式的数字范围，对应属性如下
-
-maxFraction = Integer.MAX_VALUE;
-maxInteger = Integer.MAX_VALUE;
-minFraction = 0;
-minInteger = 0;
-
-### @NotMatchPatternCheck, @MatchPatternCheck
-Check if the specified regular expressionpattern is or not matched. 
-
-正则表达式验证
-
- | 参数 | 说明 | 
- | pattern | The regular expression(s) that must match or not match | 
-
-### @ValidateWithMethod
-Check the value by a method of the sameclass that takes the value as argument and returns true if valid and false ifinvalid.
-
-验证值作为参数，使用同一个类的某个方法返回值的布尔值进行验证；
-
-方法必须是和验证值在同一类中。 
-
- | 参数 | 说明 | 
- | - | - | 
- | methodName String | name a the single parameter method to use for validation | 
- | Class<?> parameterType | type of the method parameter 方法的参数，及被验证值的类型 | 
-
-### @CheckWith
-Check the value by a method of the sameclass that takes the value as argument and returns true if valid and false ifinvalid.
-
-使用net.sf.oval.constraint.CheckWithCheck.SimpleCheck实现该接口的类中isSatisfied方法来判断，返回true有效，false无效；如果实现类是内部的，必须为静态类。
-
-
- | 参数 | 说明 | 
- | - | - | 
- | Class<? extendsCheckWithCheck.SimpleCheck> | value -- Check class to use for validation.<br/>指明验证类 | 
- | ignoreIfNull | this constraint will be ignored if the value to check is null | 
-
-
-`````
-示例：验证User类中的age字段
-@CheckWith(value=CheckAge.class,message="agemust in (18~65)")
-private int age;
-`````
-验证类如下：
-`````
-public class CheckAge implements CheckWithCheck.SimpleCheck {
-
-    private static final long serialVersionUID =1L;
-
-    @Override
-    public boolean isSatisfied(Object validatedObject, Object value) {
-        User user = (User)validatedObject;
-        int age = user.getAge();
-        if(age <18 || age > 65)
-            return false;
-        else
-            return true;
-    }
+package java.lang.annotation;
+public enum RetentionPolicy {
+    SOURCE,            /* Annotation信息仅存在于编译器处理期间，编译器处理完之后就没有该Annotation信息了  */
+    CLASS,             /* 编译器将Annotation存储于类对应的.class文件中。默认行为  */
+    RUNTIME            /* 编译器将Annotation存储于class文件中，并且可由JVM读入 */
 }
 `````
 
-## 自定义注解
-@Past和@Future不能验证字符串类型的日期；自定义@CPast和@CFuture，都提供要给参数指定日期格式，默认为：yyyy-MM-dd;
-
-### 定义注解
+## 注解的简单实现
 `````
+//类和方法的 Annotation 在缺省情况下是不出现在 javadoc 中的。
+//如果使用 @Documented 修饰该 Annotation，则表示它可以出现在 javadoc 中。
+//定义 Annotation 时，@Documented 可有可无；若没有定义，则 Annotation 不会出现在 javadoc 中。
+@Documented
+
+//前面我们说过，ElementType 是 Annotation 的类型属性。而 @Target 的作用，就是来指定 Annotation 的类型属性。
+//@Target(ElementType.TYPE) 的意思就是指定该 Annotation 的类型是 ElementType.TYPE。
+//这就意味着，MyAnnotation1 是来修饰"类、接口（包括注释类型）或枚举声明"的注解。
+//定义 Annotation 时，@Target 可有可无。
+//若有 @Target，则该 Annotation 只能用于它所指定的地方；若没有 @Target，则该 Annotation 可以用于任何地方。
+@Target(ElementType.TYPE)
+
+//前面我们说过，RetentionPolicy 是 Annotation 的策略属性，而 @Retention 的作用，就是指定 Annotation 的策略属性。
+//@Retention(RetentionPolicy.RUNTIME) 的意思就是指定该 Annotation 的策略是 RetentionPolicy.RUNTIME。
+//这就意味着，编译器会将该 Annotation 信息保留在 .class 文件中，并且能被虚拟机读取。
+//定义 Annotation 时，@Retention 可有可无。
+//若没有 @Retention，则默认是 RetentionPolicy.CLASS。
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.FIELD,ElementType.PARAMETER,ElementType.METHOD})
-@Constraint(checkWith = CPastCheck.class)
-public @interface CPast {
-    Stringmessage() default "日期必须小于现在.";
-    StringdateFormat() default "yyyy-MM-dd";
-} 
-`````
 
-### 定义实现
-`````
-public class CPastCheck extends AbstractAnnotationCheck<CPast> {
-    private static final longserialVersionUID = 1L;
-    private StringdateFormat;
-
-    public voidconfigure(final CPast constraintAnnotation) {
-        super.configure(constraintAnnotation);
-        setDateFormat(constraintAnnotation.dateFormat());
-    }
-
-    public booleanisSatisfied(Object validatedObject, 
-            Object valueToValidate,
-            OValContextcontext, 
-            Validator validator) throws OValException {
-        SimpleDateFormatsdf = new SimpleDateFormat(dateFormat);
-        
-        if(valueToValidate instanceof String) {
-            try {
-                Datedate = sdf.parse((String) valueToValidate);
-                returndate.before(new Date());
-            } catch (ParseException e) {
-                e.printStackTrace();
-                super.setMessage("日期格式错误,无法验证,请修改成正确格式.");
-                return false;
-            }
-        }
-        return false;
-    }
-
-    public StringgetDateFormat() {
-        returndateFormat;
-    }
-
-    public voidsetDateFormat(String dateFormat) {
-        this.dateFormat= dateFormat;
-    }
+//使用 @interface 定义注解时，意味着它实现了 java.lang.annotation.Annotation 接口，即该注解就是一个Annotation。
+public @interface MyAnnotation1 {
 }
 `````
 
-## Referencd
-[java开源验证框架OVAL帮助文档](https://blog.csdn.net/neweastsun/article/details/49154337/)

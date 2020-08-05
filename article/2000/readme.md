@@ -1,79 +1,85 @@
-# MySQL 数据操纵语言DML
+# MySQL 数据定义语言DDL
  
 
 
-## 简单查询
 
+## 创建表
 `````
-SELECT <列表> FROM <表名或视图名> WHERE <条件表达式>
-`````
-
-**运算符**
-1. 算数运算符: +,—,*,/
-1. 比较运算符: \>,>=,<,<=,=,!=\
-1. 逻辑运算符: and,or,not
-1. 集合成员预算符: in,not in
-1. 字符串匹配预算符: like
-1. 空值比较预算符: is null,is not null
-
-
-**查询时，列更名操作 --- as**
-例子：
-`````
-select nickname as name from user;
+CREATE TABLE <表名>（
+    <列名> <数据类型> [列级完整性约束条件],
+    [表级完整性约束条件]
+);
 `````
 
-## 子查询与聚集函数
+**常见列级约束条件**
+1. not null
+1. null
+1. default
+1. unique
+1. check
+
+**主键**
+primary key
+
+**外键**
+foreign key
 `````
-SELECT <列表>
-FROM <表名或视图名>
-WHERE <列表> IN (SELECT <列表> FROM <表名或视图名>
-WHERE <条件表达式>)
+foreign key(列名) references 表名(列名)
 `````
 
-## 连接查询
+**自增长**
+auto_increament
 
-### 左连接 (left join)
-返回包括左表中的所有记录和右表中连接字段相等的记录。
+## 修改表和删除表
+1. 添加列
+    `````
+    ALTER TABLE <表名> ADD <新列名> <数据类型> [完整性约束条件];
+    `````
 
-### 右连接 (right join) 
-返回包括右表中的所有记录和左表中连接字段相等的记录。
+1. 删除列
+    `````
+    ALTER TABLE <表名> DROP <完整性约束名>;
+    `````
 
-### 等值连接 内连接 (inner join)
-只返回两个表中连接字段相等的行。
+1. 修改列属性
+    `````
+    ALTER TABLE <表名> MODIFY <列名> <数据类型> [完整性约束条件];
+    `````
 
-### 全外连接 (full join)
-返回左右表中所有的记录和左右表中连接字段相等的记录。
+1. 修改列名
+    `````
+    ALTER TABLE <表名> CHANGE <列名> <新列名> <数据类型> [完整性约束条件]; --- MySQL
+    exec sp_rename '<表名>.<列名>‘,’<表名>.<新列名>' --- sql server
+    ALTER TABLE <表名> RENAME COLUMN <列名> TO <新列名> --- oracle
+    `````
 
-**聚集函数**
-1. 平均值: AVG
-1. 最小值: MIN
-1. 最大值: MAX
-1. 求和: SUM
-1. 计数: COUNT
+1. 删除表
+    `````
+    DROP TABLE <表名>
+    `````
 
-**any,all**
+## 创建和删除索引
+1. 建立索引
+    `````
+    CREATE UNIQUE INDEX <索引名> ON <表名> (<列名> <次序>, ... <列名><次序>);
 
-## 分组查询
+    //例子:
+    CREATE UNIQUE INDEX J-JNO ON J(Jno);
+    CREATE UNIQUE INDEX SPJ-NO ON SPJ(Sno ASC, Pno DESC,JNO ASC)
+    `````
 
-1. group by: 用于结合聚合函数，根据一个或多个列对结果集进行分组
-1. having: 在GROUP BY子句后面加一个HAVING子句，对分组设置过滤条件，(可以使用聚集函数) 
+1. 删除索引
+    `````
+    DROP INDEX <索引名>
+    `````
 
+## 视图的创建和删除
+1. 创建视图
+    `````
+    CREATE VIEW <视图名> AS SELECT <查询子句> WITH CHECK OPTION;
+    `````
 
-## 字符串操作
-
-对于字符串进行的最通常的操作是使用操作符like的模式匹配,使用两个特殊的字符来描述模式：
-1. "%" 匹配任意字符串
-1. "_" 匹配任意一个字符
-模式是大小写敏感的。
-
-## 集合操作
-
-UNION 并, INTSECT 交, EXCEPT 差
-
-使用说明:
-`````
-(查询语句)
-UNION
-(查询语句)
-`````
+1. 删除视图
+    `````
+    DROP VIEW <视图名>;
+    `````

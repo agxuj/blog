@@ -1,63 +1,33 @@
-# Spring Boot 集成使用JSP
+# Spring Boot 注解说明
  
 
+## Controller
+@Controller
 
-## 在pro.xml中添加依赖
-``````
-<dependency>
-    <groupId>org.apache.tomcat.embed</groupId>
-    <artifactId>tomcat-embed-jasper</artifactId>
-    <scope>provided</scope>
-</dependency>
-<dependency>
-    <groupId>javax.servlet</groupId>
-    <artifactId>javax.servlet-api</artifactId>
-</dependency>
-<dependency>
-    <groupId>javax.servlet.jsp</groupId>
-    <artifactId>javax.servlet.jsp-api</artifactId>
-    <version>2.3.1</version>
-</dependency>
-<dependency>
-    <groupId>javax.servlet</groupId>
-    <artifactId>jstl</artifactId>
-    <scope>provided</scope>
-</dependency>
-``````
+@RestController : Spring4 后新增注解, 是 @Controller 和 @ResponseBody 的组合注解, 用于**返回字符串或者json数据**.
 
-## 在appliction.properties文件配置Spring mvc的视图展示为jsp
-``````
-spring.mvc.view.prefix=/WEB-INF/jsp/
-spring.mvc.view.suffix=.jsp
-``````
+@RequestMapping : 配置请求信息
 
-## 建立web文件存放点
+@GetMapping : @RequestMapping 和 method = RequestMethod.GET 请求方法的组合.
 
-在src/main目录中新建webapp文件夹，在webapp目录中新建/WEB-INF/jsp/文件夹用于存放jsp文件，其他类型的文件直接存放在webapp文件夹中。
+@PostMapping : @RequestMapping 和 method = RequestMethod.POST 请求方法的组合
 
-## 在pro.xml的build标签中添加配置
-``````
-<resources>
-    <resource>
-        <directory>src/main/java</directory>
-        <includes>
-            <include>**/*.xml</include>
-        </includes>
-    </resource>
+@PutMapping : @RequestMapping 和 method = RequestMethod.PUT 请求方法的组合
 
-    <resource>
-        <directory>src/main/resources</directory>
-        <includes>
-            <include>**/*.*</include>
-        </includes>
-    </resource>
+@DeleteMapping : @RequestMapping 和 method = RequestMethod.DELETE 请求方法的组合
 
-    <resource>
-        <directory>src/main/webapp</directory>
-        <targetPath>META-INF/resources</targetPath>
-        <includes>
-            <include>**/*.*</include>
-        </includes>
-    </resource>
-</resources>
-``````
+@ResponseBody : 确定返回字符串
+
+@PathVariable : RestFull参数设定
+
+## Service
+@Service
+
+## 其他
+@Autowired : (声明读取properties的实体类)
+
+@Component : 是所有受Spring 管理组件的通用形式，@Component注解可以放在类的头上，@Component不推荐使用
+
+@ConfigurationProperties : (读取properties参数时设置前缀)
+
+@Configuration : (拦截器配置)

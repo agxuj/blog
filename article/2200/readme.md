@@ -1,28 +1,76 @@
-# MySQL 备份与还原
+# MySQL 用户管理和权限管理
  
 
-
-## 备份
-
+## 用户管理
+### 创建用户
 
 `````
-// 备份整个数据库
-mysqldump -u root -h host -p dbname > backdb.sql
+create user <用户名> identified by <密码>;
 
-//备份数据库中的某个表
-mysqldump -u root -h host -p dbname tbname1, tbname2 > backdb.sql
-
-//备份多个数据库
-mysqldump -u root -h host -p --databases dbname1, dbname2 > backdb.sql
-
-//备份系统中所有数据库
-mysqldump -u root -h host -p --all-databases > backdb.sql
+//例子
+create user "faddenyin"identified by "pass123";
 `````
 
-## 还原
-`````
-mysql -u <用户名> -p <数据库名> < <备份文件名>
 
-//例子:
-mysql -u root -p dbname < backdb.sql
+### 删除用户
+`````
+drop user '<用户名>;
+
+//例子
+drop user "faddenyin"@"%";
+`````
+
+### 修改密码
+`````
+alter user <用户名> identified by <密码>;
+
+//例子
+alter user "root"@"localhost" identified by "password123";
+`````
+
+### 查看授权
+
+`````
+show grants for <用户名>;
+
+//例子
+show grants for "fadden";
+`````
+
+## 权限管理
+
+### 授权(GRANT)
+`````
+grant <权限>, ... <权限> on <对象类型> <对象名> to <用户>, ... <用户> [WITH GRANT OPTION];
+
+//例子
+grant all on `database`.* to 'faddenyin'@'%';
+
+grant all privileges on table S,P,J to User1, User2
+
+//允许将此权限赋给其他用户
+grant insert on table S to User1 WITH GRANT OPTION;
+
+//每当调整权限后，通常需要执行以下语句刷新权限
+flush privileges;
+`````
+ 
+| 对象 | 对象类型 | 操作权限 |
+| --- | --- | --- |
+| 属性列 | table | select, insert, update, delete, all privileges (5种权限综合，MySQL 中同 all) |
+| 视图 | table | select, insert, update, delete, all privileges (5种权限综合，MySQL 中同 all) |
+| 基本表 | table | select, insert, update, delete, all privileges (5种权限综合，MySQL 中同 all) |
+| 数据库 | database | create table 建立表的权限，可由DBA授予普通用户 |
+  
+
+### 销权(REVOKE)
+
+`````
+revoke <权限>, ... <权限> on <对象类型> <对象名> from <用户>, ... <用户>；
+
+//例子
+REVOKE ALL PRIVILEGES ON TABLE S,P,J FROM User1, User2;
+
+REVOKE SELECT ON TABLE S FROM PUBLIC;
+
 `````

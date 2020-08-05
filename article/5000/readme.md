@@ -1,29 +1,45 @@
-# J2ee JSP 页面中引入文件
+# J2ee JSP
  
 
 
- 
-
-## 静态包含
- 
+## JSP表达式
+JSP表达式的语法格式:
 `````
-<%@ include file="inlayingJsp.jsp" %>
+<%= 表达式 %>
 `````
-## 动态包含
+等价的XML语句:
 `````
-<jsp:include page="inlayingJsp.jsp" flush="true"/>
-`````
-## jstl import 
-
-<c:import>标签提供了所有<jsp:include>行为标签所具有的功能，同时也允许包含绝对URL。
-
-`````
-<c:import url="inlayingJsp.jsp"></c:import> 
+<jsp:expression>
+   表达式
+</jsp:expression>
 `````
 
-References:
+## JSP 标准标签库（JSTL）
 
-[JSP中include的动态引入和静态引入](https://baijiahao.baidu.com/s?id=1590373998823758796&wfr=spider&for=pc)
+### 核心标签 
+引用核心标签库的语法如下:
+`````
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+`````
 
-[一个jsp页面引入另一个jsp页面的三种方式 及静态引入和动态引入的区别](https://blog.csdn.net/fn_2015/article/details/70311495)
+### 格式化标签
+JSTL格式化标签用来格式化并输出文本、日期、时间、数字。引用格式化标签库的语法如下:
+`````
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+`````
 
+### JSTL函数
+JSTL包含一系列标准函数，大部分是通用的字符串处理函数。引用JSTL函数库的语法如下:
+`````
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+`````
+
+## JSP 表达式语言（EL）
+JSP EL允许您指定一个表达式来表示属性值。一个简单的表达式语法如下:
+`````
+${expr}
+`````
+
+
+## 参考
+[JSP 教程](https://www.runoob.com/jsp/jsp-tutorial.html)

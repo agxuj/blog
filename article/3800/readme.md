@@ -1,37 +1,55 @@
-# Git 本地账号设置
+# Spring Boot 打包
  
 
-## 配置全局的 name 和 email
+
+
+## 打成 jar 包
+
+### 在 pom.xml 中配置
 `````
-git config --global user.name  "username"  
-git config --global user.email  "email"
+<project>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>1.4.2.RELEASE</version> //注意
+            </plugin>   
+        </plugins>
+    </build>
+</project>
 `````
 
-## 配置项目内的 name 和 email
+### 打包
+maven --> install
+
+
+## 打成 war 包
+
+### 修改 Application.java
+1. 继承 SpringBootServletInitializer
+1. 实现 configure 方法
+
+代码如下:
 `````
-git config user.name "username"
-git config user.email "email"
+@SpringBootApplication
+public class Application extends SpringBootServletInitializer {
+
+    @Override
+    protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
+        return super.configure(builder);
+    }
+
+    public static void main(String[] args) {
+        SpringApplication.run(Application.class, args);
+    }
+
+}
 `````
 
-## 修改已配置的信息
+### 修改 pom.xml
 `````
-git config --replace-all user.name "username"
-git config --replace-all user.email "email"
+<project>
+    <packaging>war</packaging>
+</project>
 `````
-
-## 删除 GitHub 密钥
-密钥所处位置(mac) : 应用 --> 钥匙串访问 --> github.com
-
-## 在一台设备内使用多个 Github 账户及 SSH
-
-
-
-
-
-## 参考
-
-[Git配置用户名和密码](https://blog.csdn.net/weixin_41287260/article/details/90111027)
-
-[mac 下自动记录git密码，如何删除？](https://www.updateweb.cn/zwfec/item-80.html)
-
-[Git 当前项目设置 用户名、邮箱](https://blog.csdn.net/pintu274111451/article/details/79767970)

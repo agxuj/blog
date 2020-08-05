@@ -1,44 +1,40 @@
-# J2ee Servlet
+# J2ee XML
  
 
 
-## 生命周期
-Servlet 生命周期可被定义为从创建直到毁灭的整个过程。以下是 Servlet 遵循的过程：
+解析XML文件一般有两种方式:<span style="color:red">DOM</span>解析和<span style="color:red">SAX</span>解析，首先看一下两者的概念和基础知识：
 
-* Servlet 通过调用 init() 方法进行初始化。
-* Servlet 调用 service() 方法来处理客户端的请求。
-* Servlet 通过调用 destroy() 方法终止（结束）。
-* 最后，Servlet 是由 JVM 的垃圾回收器进行垃圾回收的。
 
-现在让我们详细讨论生命周期的方法。
+## 原理：
 
-### init() 
-    init 方法被设计成只调用一次。它在第一次创建 Servlet 时被调用，在后续每次用户请求时不再调用。Servlet 创建于用户第一次调用对应于该 Servlet 的 URL 时，但是您也可以指定 Servlet 在服务器第一次启动时被加载。
+DOM解析：在程序开始执行的时候，先将整个XML文件加载到内存中，在内存中形成一棵DOM树，然后通过某种编程语言对这颗树上的任意节点进行增删改查操作。
 
-### service() 
-    service() 方法是执行实际任务的主要方法。每次服务器接收到一个 Servlet 请求时，服务器会产生一个新的线程并调用服务。service() 方法检查 HTTP 请求类型（GET、POST、PUT、DELETE 等），并在适当的时候调用 doGet、doPost、doPut，doDelete 等方法。
+SAX解析：基于事件驱动型的解析方式。解析是有顺序的，顺序遵守：从左到右，从上到下。基于事件驱动型的解析方式不需要将XML文件全部加载到内存中，所以这种方式不会耗费大量的内存，只不过解析过去的节点不能再次解析，不够灵活，如果还想解析，只能再次从XML文件头开始。
 
-### destroy() 
-    destroy() 方法只会被调用一次，在 Servlet 生命周期结束时被调用。destroy() 方法可以让您的 Servlet 关闭数据库连接、停止后台线程、把 Cookie 列表或点击计数器写入到磁盘，并执行其他类似的清理活动。
+## 两者的优缺点：
 
-### 架构图
-<img src="image/1.jpg"/>
+DOM解析：
+    
+    优点：灵活。因为整个树都在内存中，我们随时随地都可以对某个节点操作，解析过去的节点还可以再次解析，比较灵活。
+    缺点：如果XML文件很大，则会耗费大量的内存，因为这个XML文件很大，而需要访问的节点又很少。
+    总结：所以XML文件较小、需要解析的节点较多，这样才值得使用DOM解析。
 
-## 过滤器
+SAX解析：
 
-### doFilter (ServletRequest, ServletResponse, FilterChain)
+    优点：不会耗费大量的内存。
+    缺点：不灵活（我们可以使用另外一个技术XPATH，使用它可以在XML文件中快速定位要解析的节点）。
+    总结：有了XPath技术，SAX解析方式成为我们常用的。
 
-    该方法完成实际的过滤操作，当客户端请求方法与过滤器设置匹配的URL时，Servlet容器将先调用过滤器的doFilter方法。FilterChain用户访问后续过滤器。
 
-### init(FilterConfig filterConfig)
+## JDK中的XML的解析
 
-    web 应用程序启动时，web 服务器将创建Filter 的实例对象，并调用其init方法，读取web.xml配置，完成对象的初始化功能，从而为后续的用户请求作好拦截的准备工作（filter对象只会创建一次，init方法也只会执行一次）。开发人员通过init方法的参数，可获得代表当前filter配置信息的FilterConfig对象。
+[Java Dom解析](https://www.iteye.com/topic/763926)
 
-### destroy()
+[Java Sax解析](https://www.iteye.com/blog/sinye-763895)
 
-    Servlet容器在销毁过滤器实例前调用该方法，在该方法中释放Servlet过滤器占用的资源。
 
-## 参考
 
-[Servlet 教程](https://www.runoob.com/servlet/servlet-tutorial.html)
+
+
+
 

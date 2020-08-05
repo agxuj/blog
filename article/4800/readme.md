@@ -1,221 +1,71 @@
-# J2ee JDBC
+# Java Web 服务端搭建
  
 
 
-## 简单使用
+## 亚马逊免费服务器申请
 
+[亚马逊一年免费VPS申请及SSH安全代理搭建 ](http://blog.sina.com.cn/s/blog_67de9c540102uxk3.html)
+
+[PuTTYGen生成的key与openSSH的ssh-keygen生成的key互换](http://blog.chinaunix.net/uid-22785603-id-3888819.html)
+
+[亚马逊云VPS AWS更改LINUX为root权限密码登陆](http://www.mamicode.com/info-detail-493861.html)
+
+[亚马逊云](https://aws.amazon.com/)
+
+[其他服务器提供商选择 - 搬瓦工](https://bandwagonhost.com/)
+
+## Java Download Install
+[Linux安装jdk1.8和配置环境变量](https://www.cnblogs.com/zs-notes/p/8535275.html)
+
+[在CentOS上安装Java环境：[1]使用yum安装java](https://jingyan.baidu.com/article/4853e1e51d0c101909f72607.html)
+
+## MySql Install
+[mysql 官方 yum repo](http://zongming.net/read-668)
+
+[启动和停止MySQL服务](http://www.cnblogs.com/jdonson/archive/2009/07/03/1516289.html)
+
+[linux下mysql的root密码忘记解决方](http://www.cnblogs.com/allenblogs/archive/2010/08/12/1798247.html)
+
+[Mysql数据备份与恢复](http://www.cnblogs.com/wenanry/archive/2010/05/18/1737939.html)
+
+install cmd
 `````
-public static void main(String[] args) throws Exception {
-    //1.加载驱动程序
-    Class.forName("com.mysql.jdbc.Driver");
-    //2. 获得数据库连接
-    Connection conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/imooc", "root", "root");
-    //3.操作数据库，实现增删改查
-    Statement stmt = conn.createStatement();
-    ResultSet rs = stmt.executeQuery("SELECT user_name, age FROM imooc_goddess");
-    //如果有数据，rs.next()返回true
-    while(rs.next()){
-        System.out.println(rs.getString("user_name")+" 年龄："+rs.getInt("age"));
-    }
-}
-`````
-
-## 增删改查
-`````
-
-public class GoddessDao {
-    //增加
-    public void addGoddess(Goddess g) throws SQLException {
-        Connection conn = getConnection();
-        String sql = "INSERT INTO imooc_goddess(user_name, sex, age, birthday, email, mobile,"+
-                "create_user, create_date, update_user, update_date, isdel)"+
-                "values(?,?,?,?,?,?,?,CURRENT_DATE(),?,CURRENT_DATE(),?)";
-        //预编译
-        PreparedStatement ptmt = conn.prepareStatement(sql); //预编译SQL，减少sql执行
-
-        //传参
-        ptmt.setString(1, g.getUser_name());
-        ptmt.setInt(2, g.getSex());
-        ptmt.setInt(3, g.getAge());
-        ptmt.setDate(4, new Date(g.getBirthday().getTime()));
-        ptmt.setString(5, g.getEmail());
-        ptmt.setString(6, g.getMobile());
-        ptmt.setString(7, g.getCreate_user());
-        ptmt.setString(8, g.getUpdate_user());
-        ptmt.setInt(9, g.getIsDel());
-
-        //执行
-        ptmt.execute();
-    }
-
-    //修改
-    public void updateGoddess() {
-        Connection conn = getConnection();
-        String sql = "UPDATE imooc_goddess" +
-                " set user_name=?, sex=?, age=?, birthday=?, email=?, mobile=?,"+
-                " update_user=?, update_date=CURRENT_DATE(), isdel=? "+
-                " where id=?";
-        PreparedStatement ptmt = conn.prepareStatement(sql);
-
-        ptmt.setString(1, g.getUser_name());
-        ptmt.setInt(2, g.getSex());
-        ptmt.setInt(3, g.getAge());
-        ptmt.setDate(4, new Date(g.getBirthday().getTime()));
-        ptmt.setString(5, g.getEmail());
-        ptmt.setString(6, g.getMobile());
-        ptmt.setString(7, g.getUpdate_user());
-        ptmt.setInt(8, g.getIsDel());
-        ptmt.setInt(9, g.getId());
-
-        ptmt.execute();
-    }
-
-    //删除
-    public void delGoddess(){
-        Connection conn = getConnection();
-        String sql = "delete from imooc_goddess where id=?";
-        PreparedStatement ptmt = conn.prepareStatement(sql);
-
-        ptmt.setInt(1, id);
-
-        ptmt.execute();
-    }
-
-    //查询 多行
-    public List<Goddess> query() throws SQLException {
-        Connection conn = getConnection();
-        Statement stmt = conn.createStatement();
-        ResultSet rs = stmt.executeQuery("SELECT user_name, age FROM imooc_goddess");
-
-        List<Goddess> gs = new ArrayList<Goddess>();
-        Goddess g = null;
-        while(rs.next()){
-            g = new Goddess();
-            g.setUser_name(rs.getString("user_name"));
-            g.setAge(rs.getInt("age"));
-
-            gs.add(g);
-        }
-        return gs;
-    }
-
-    //查询 单行
-    public Goddess get(){
-        Goddess g = null;
-        Connection conn = getConnection();
-        String sql = "select * from  imooc_goddess where id=?";
-        PreparedStatement ptmt = conn.prepareStatement(sql);
-        ptmt.setInt(1, id);
-        ResultSet rs = ptmt.executeQuery();
-        while(rs.next()){
-            g = new Goddess();
-            g.setId(rs.getInt("id"));
-            g.setUser_name(rs.getString("user_name"));
-            g.setAge(rs.getInt("age"));
-            g.setSex(rs.getInt("sex"));
-            g.setBirthday(rs.getDate("birthday"));
-            g.setEmail(rs.getString("email"));
-            g.setMobile(rs.getString("mobile"));
-            g.setCreate_date(rs.getDate("create_date"));
-            g.setCreate_user(rs.getString("create_user"));
-            g.setUpdate_date(rs.getDate("update_date"));
-            g.setUpdate_user(rs.getString("update_user"));
-            g.setIsDel(rs.getInt("isdel"));
-        }
-        return g;
-    }
-
-    public void getConnection() throws Exception {
-        Class.forName("com.mysql.jdbc.Driver");
-        Connection conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/imooc", "root", "root");
-        return conn;
-    }
-}
+yum install mysql
 `````
 
-## 常见接口
+## Tomcat Install
+[amazon ec2 安装tomcat](http://blog.sina.com.cn/s/blog_3d37a56901011os7.html)
 
-### Driver接口
-Driver接口由数据库厂家提供，作为java开发人员，只需要使用Driver接口就可以了。在编程中要连接数据库，必须先装载特定厂商的数据库驱动程序，不同的数据库有不同的装载方法。如：
+[Linux下Tomcat的安装配置](https://blog.csdn.net/zhuying_linux/article/details/6583096)
 
-    装载MySql驱动：Class.forName("com.mysql.jdbc.Driver");
-    装载Oracle驱动：Class.forName("oracle.jdbc.driver.OracleDriver");
+[linux环境下安装tomcat6](http://www.cnblogs.com/wenqiangwu/p/3288339.html)
 
-### Connection接口
+[CentOS6.4下Yum安装Mysql和JDK和tomcat](https://blog.csdn.net/renfufei/article/details/9733367)
 
-Connection与特定数据库的连接（会话），在连接上下文中执行sql语句并返回结果。DriverManager.getConnection(url, user, password)方法建立在JDBC URL中定义的数据库Connection连接上。
+## 文件管理
+[史上最简单的上传文件到linux系统方法](https://jingyan.baidu.com/article/219f4bf7d28185de442d38d2.html)
 
-    连接MySql数据库：Connection conn = DriverManager.getConnection("jdbc:mysql://host:port/database", "user", "password");
+## Linux 命令 
+[Linux常用命令大全](http://www.php100.com/html/webkaifa/Linux/2009/1106/3485.html)
 
-    连接Oracle数据库：Connection conn = DriverManager.getConnection("jdbc:oracle:thin:@host:port:database", "user", "password");
+[linux文件创建、查看、编辑命令](http://blog.163.com/fan_yishan/blog/static/4769221320095148164649/)
 
-    连接SqlServer数据库：Connection conn = DriverManager.getConnection("jdbc:microsoft:sqlserver://host:port; DatabaseName=database", "user", "password");
+[Linux下*.tar.gz文件解压缩命令](http://www.cnblogs.com/xiehy/archive/2010/09/13/1824776.html)
 
-常用方法：
+## VPS 域名绑定
+1. 将域名解析到VPS的IP地址
+1. 如果绑定多个域名对于多个web应用，需要配置Tomcat的server.xml文件
 
-    createStatement()：创建向数据库发送sql的statement对象。
-    prepareStatement(sql) ：创建向数据库发送预编译sql的PrepareSatement对象。
-    prepareCall(sql)：创建执行存储过程的callableStatement对象。
-    setAutoCommit(boolean autoCommit)：设置事务是否自动提交。
-    commit() ：在链接上提交事务。
-    rollback() ：在此链接上回滚事务。
-### Statement接口
+## 防火墙
+[Linux防火墙的关闭和开启](https://kiddwyl.iteye.com/blog/67708)
 
-用于执行静态SQL语句并返回它所生成结果的对象。
+[RedHat Linux下iptables防火墙设置](https://www.linuxidc.com/Linux/2012-08/67186.htm)
 
-三种Statement类：
+[Redhat Linux 7 命令关闭防火墙](https://jingyan.baidu.com/article/e52e3615a9009440c70c5162.html)
 
-    Statement：由createStatement创建，用于发送简单的SQL语句（不带参数）。
-    PreparedStatement ：继承自Statement接口，由preparedStatement创建，用于发送含有一个或多个参数的SQL语句。PreparedStatement对象比Statement对象的效率更高，并且可以防止SQL注入，所以我们一般都使用PreparedStatement。
-    CallableStatement：继承自PreparedStatement接口，由方法prepareCall创建，用于调用存储过程。
+## Tools
+[Win7下如何使用Telnet命令](https://jingyan.baidu.com/article/95c9d20d96ba4aec4f756154.html)
 
-常用Statement方法：
+[linux下怎么退出telnet](http://www.cnblogs.com/hnrainll/archive/2012/02/04/2337928.html)
 
-    execute(String sql):运行语句，返回是否有结果集
-    executeQuery(String sql)：运行select语句，返回ResultSet结果集。
-    executeUpdate(String sql)：运行insert/update/delete操作，返回更新的行数。
-    addBatch(String sql) ：把多条sql语句放到一个批处理中。
-    executeBatch()：向数据库发送一批sql语句执行。
-### ResultSet接口
-
-ResultSet提供检索不同类型字段的方法，常用的有：
-
-    getString(int index)、getString(String columnName)：获得在数据库里是varchar、char等类型的数据对象。
-    getFloat(int index)、getFloat(String columnName)：获得在数据库里是Float类型的数据对象。
-    getDate(int index)、getDate(String columnName)：获得在数据库里是Date类型的数据。
-    getBoolean(int index)、getBoolean(String columnName)：获得在数据库里是Boolean类型的数据。
-    getObject(int index)、getObject(String columnName)：获取在数据库里任意类型的数据。
-
-ResultSet还提供了对结果集进行滚动的方法：
-
-    next()：移动到下一行
-    Previous()：移动到前一行
-    absolute(int row)：移动到指定行
-    beforeFirst()：移动resultSet的最前面。
-    afterLast() ：移动到resultSet的最后面。
-    
-使用后依次关闭对象及连接：ResultSet → Statement → Connection
-
-## 事务
-
-开启事务：
-
-    setAutoCommit(boolean) 设置是否为自动提交事务，如果true（默认值为true）表示自动提交，也就是每条执行的SQL语句都是一个单独的事务，如果设置为false，那么相当于开启了事务了；con.setAutoCommit(false) 表示开启事务。
-
-结束事务：
-
-    commit 提交结束事务。
-    rollback 回滚结束事务。
-
-设置隔离级别：
-    setTransactionIsolation(int level)
-
-    Connection.TRANSACTION_READ_UNCOMMITTED；可能出现任何事物并发问题，什么都不处理；性能最好。
-    Connection.TRANSACTION_READ_COMMITTED；防止脏读，不能处理不可重复读和幻读；性能比REPEATABLE READ好。
-    Connection.TRANSACTION_REPEATABLE_READ；防止脏读和不可重复读，不能处理幻读；性能比SERIALIZABLE好。
-    Connection.TRANSACTION_READ_SERIALIZABLE；不会出现任何并发问题，因为它是对同一数据的访问是串行的，非并发访问的；性能最差。
-
-## 参考
-[JDBC 使用说明](https://www.runoob.com/w3cnote/jdbc-use-guide.html)
-[JDBC详解](https://www.cnblogs.com/erbing/p/5805727.html)
-[JDBC处理事务](https://www.cnblogs.com/gdwkong/p/7633016.html)
+[初用 VPS，感到 putty 反应迟钝](https://www.v2ex.com/t/102990)

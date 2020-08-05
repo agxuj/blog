@@ -1,71 +1,340 @@
-# Java Web 服务端搭建
+# Java Oval说明文档
  
 
 
-## 亚马逊免费服务器申请
+## 注解说明
 
-[亚马逊一年免费VPS申请及SSH安全代理搭建 ](http://blog.sina.com.cn/s/blog_67de9c540102uxk3.html)
+### @Assert
 
-[PuTTYGen生成的key与openSSH的ssh-keygen生成的key互换](http://blog.chinaunix.net/uid-22785603-id-3888819.html)
+Check if evaluating the expression in thespecified expression language returns true.
 
-[亚马逊云VPS AWS更改LINUX为root权限密码登陆](http://www.mamicode.com/info-detail-493861.html)
+检查指定语言的表达式返回值是否为true；这里表达式是groovy。
+ 
+ | 参数 | 说明|
+ | - | - |
+ | expr | 表达式 |
+ | lang | 指明脚本语言 | 
+ | errorCode | 错误编码（共有属性）<br/>（可以修改成自己的异常编码串）<br/>net.sf.oval.constraint.Assert（默认值）
+ | message | 错误描述（共有属性） | 
+ | when | 前置条件（共有属性） |  
 
-[亚马逊云](https://aws.amazon.com/)
+### @AssertFalse
+Check if the value is false. 
+    
+检查值是否为假或真
+    
+Note: This constraint is also satisfied when the value to validate is null, therefore you might also need to specified @NotNull
 
-[其他服务器提供商选择 - 搬瓦工](https://bandwagonhost.com/)
+主要参数when,errorCode,message
 
-## Java Download Install
-[Linux安装jdk1.8和配置环境变量](https://www.cnblogs.com/zs-notes/p/8535275.html)
+### @AssertTrue
+Check if the value is true.
+    
+### @AssertNull
+Check if null. 
 
-[在CentOS上安装Java环境：[1]使用yum安装java](https://jingyan.baidu.com/article/4853e1e51d0c101909f72607.html)
+与@NotNull相反;
 
-## MySql Install
-[mysql 官方 yum repo](http://zongming.net/read-668)
+### @AssertURL
+Check if the value is a valid URL. 
 
-[启动和停止MySQL服务](http://www.cnblogs.com/jdonson/archive/2009/07/03/1516289.html)
+检查值是否为有效的URL
 
-[linux下mysql的root密码忘记解决方](http://www.cnblogs.com/allenblogs/archive/2010/08/12/1798247.html)
+Note: This constraint is also satisfied when the value to validate is null, therefore you might also need to specified @NotNull
 
-[Mysql数据备份与恢复](http://www.cnblogs.com/wenanry/archive/2010/05/18/1737939.html)
+| 参数 | 说明 | 
+| - | - |
+| connect(boolean) | Specifies if a connection to the URL should be attempted to verify its validity.<br/>是否发起连接进行尝试. | 
 
-install cmd
+
+### @DateRange
+Check if the date is within the a daterange. 
+
+Note: This constraint is also satisfied when the value to validate is null, therefore you might also need to specified @NotNull
+
+@DateRange可以验证字符串类型，请查看源码验证
 `````
-yum install mysql
+示例：
+@DateRange(min="2010-10-01",max="now",message="dateis error.")
+private String birthday;
 `````
 
-## Tomcat Install
-[amazon ec2 安装tomcat](http://blog.sina.com.cn/s/blog_3d37a56901011os7.html)
+ | 参数 | 说明 |
+ | - | - |
+ | min | The upper date compared against in the format specified with the dateFormat parameter.If not specified then no upper boundary check is performed.<br>Special values are:<br/>1. now<br/>2. today<br/>3. yesterday<br/>4. tomorrow | 
+ | max | The lower date compared against in the format specified with the dateFormat parameter.if not specified then no lower boundary check is performed.<br>Special values are:<br/>1. now<br/>2. today<br/>3. yesterday<br/>4. tomorrow | 
 
-[Linux下Tomcat的安装配置](https://blog.csdn.net/zhuying_linux/article/details/6583096)
+### @Future
+`````
+示例：
+@Future(message="date isfuture.") //不能验证字符串
+`````
+### @Past
+`````
+示例：
+@Past(message="date is past.") //不能验证字符串
+`````
+### @Email
+Check if the value is a valid e-mailaddress. The check is performed based on a regular expression.
 
-[linux环境下安装tomcat6](http://www.cnblogs.com/wenqiangwu/p/3288339.html)
+Note: This constraint is also satisfied when the value to validate is null, therefore you might also need to specified @NotNull
 
-[CentOS6.4下Yum安装Mysql和JDK和tomcat](https://blog.csdn.net/renfufei/article/details/9733367)
+    
+`````
+示例：
+@Email(message="email is error.")
+private String email;
+`````
 
-## 文件管理
-[史上最简单的上传文件到linux系统方法](https://jingyan.baidu.com/article/219f4bf7d28185de442d38d2.html)
+### @EqualToField
+Check if value equals the value of thereferenced field.
 
-## Linux 命令 
-[Linux常用命令大全](http://www.php100.com/html/webkaifa/Linux/2009/1106/3485.html)
+Note: This constraint is also satisfied when the value to validate is null, therefore you might also need to specified @NotNull
 
-[linux文件创建、查看、编辑命令](http://blog.163.com/fan_yishan/blog/static/4769221320095148164649/)
+`````
+示例：
+//检查userCode是否和userName相等；使用get方法。
+@EqualToField(value="userName" message="mustequals userName",useGetter=true)
+private String userCode;
+`````
+@NotEqualToField
+`````
+示例；
+与@EqualToField相反
+@NotNull(message="not null")
+@NotEqualToField(value="userCode" message="can'tequals userCode")
+private String userName;
+`````
 
-[Linux下*.tar.gz文件解压缩命令](http://www.cnblogs.com/xiehy/archive/2010/09/13/1824776.html)
+### @HasSubstring
+Check if the string contains a certainsubstring.
+    
+Note: This constraint is also satisfied when the value to validate is null, therefore you might also need to specified @NotNull
 
-## VPS 域名绑定
-1. 将域名解析到VPS的IP地址
-1. 如果绑定多个域名对于多个web应用，需要配置Tomcat的server.xml文件
 
-## 防火墙
-[Linux防火墙的关闭和开启](https://kiddwyl.iteye.com/blog/67708)
+ | 参数 | 说明 | 
+ | - | - |
+ | value | 需要给的子串 | 
+ | ignoreCase（boolean） | ignoreCase default false | 
 
-[RedHat Linux下iptables防火墙设置](https://www.linuxidc.com/Linux/2012-08/67186.htm)
+`````
+示例：
+@HasSubstring(value="san",ignoreCase=true,message="mustcontains 'san'")
+private String userCode;
+`````
+### @Length
+Check if the string representation has certain length. 
 
-[Redhat Linux 7 命令关闭防火墙](https://jingyan.baidu.com/article/e52e3615a9009440c70c5162.html)
+检查字符串的长度
 
-## Tools
-[Win7下如何使用Telnet命令](https://jingyan.baidu.com/article/95c9d20d96ba4aec4f756154.html)
+Note: This constraint is also satisfied when the value to validate is null, therefore you might also need to specified @NotNull
 
-[linux下怎么退出telnet](http://www.cnblogs.com/hnrainll/archive/2012/02/04/2337928.html)
+ | 参数 | 说明 | 
+ | - | - |
+ | max | 最大长度，默认为：Integer.MAX_VALUE | 
+ | min | 默认值为0 | 
 
-[初用 VPS，感到 putty 反应迟钝](https://www.v2ex.com/t/102990)
+### @MaxLength
+Check if the string representation has certain length. 
+
+检查字符串的长度
+
+Note: This constraint is also satisfied when the value to validate is null, therefore you might also need to specified @NotNull
+
+有value属性；表示和value进行比较
+
+### @MinLength
+Check if the string representation has certain length. 
+
+检查字符串的长度
+
+Note: This constraint is also satisfied when the value to validate is null, therefore you might also need to specified @NotNull
+    
+有value属性；表示和value进行比较
+    
+
+### @Size
+Check if the array,map, or collection has the given size. For objects of other types thelength of their String representation will be checked. 
+
+检查array、map或集合的大小；其他类型的对象检查对应字符串的长度；建议字符长度使用@Length验证。
+
+Note: This constraint is also satisfied when the value to validate is null, therefore you might also need to specified @NotNull
+
+
+ | 参数 | 说明 | 
+ | - | - |
+ | max |  | 
+ | min |  | 
+
+
+### @MinSize
+Check if the array,map, or collection has the given size. For objects of other types thelength of their String representation will be checked. 
+
+检查array、map或集合的大小；其他类型的对象检查对应字符串的长度；建议字符长度使用@Length验证。
+
+### @MaxSize
+Check if the array,map, or collection has the given size. For objects of other types thelength of their String representation will be checked. 
+
+检查array、map或集合的大小；其他类型的对象检查对应字符串的长度；建议字符长度使用@Length验证。
+
+
+### @MemberOf, @NotMemberOf
+Check if the string representation iscontained in the given string array.
+
+检查值是否包含在给定的数组中；@NotMemberOf实现相反效果；
+
+Note: This constraint is also satisfied when the value to validate is null, therefore you might also need to specified @NotNull
+
+ | 参数 | 说明 | 
+ | - | - |
+ | value 字符串数组 |  | 
+ | ignoreCase | 默认值false | 
+
+### @NotBlank, @NotNull, @NotEmpty
+
+ | 参数 | 说明 | 
+ | - | - |
+ | NotBlank | Check if the string representation is not empty and does not only contain white spaces. | 
+ | NotNull | Check if not null. | 
+ | NotEmpty | Check if the string representation is not empty(""). | 
+
+### @NotNegative
+Check if the number is greater or equalzero. 
+
+检查值是否为非负数
+
+Note: This constraint is also satisfied when the value to validate is null, therefore you might also need to specified @NotNull
+ 
+
+### @Range
+Check if the number is in the given range.
+
+@Range 有max和min 属性，检查数值类型的范围；
+
+### @Min
+Check if the number is greater than orequal to X.
+
+### @Max
+Check if the number is smaller than orequal to X.
+
+### @Digits
+Check if the String representation has thegiven max/min number of integral and fractional digits.
+
+检查字符串形式的数字范围，对应属性如下
+
+maxFraction = Integer.MAX_VALUE;
+maxInteger = Integer.MAX_VALUE;
+minFraction = 0;
+minInteger = 0;
+
+### @NotMatchPatternCheck, @MatchPatternCheck
+Check if the specified regular expressionpattern is or not matched. 
+
+正则表达式验证
+
+ | 参数 | 说明 | 
+ | pattern | The regular expression(s) that must match or not match | 
+
+### @ValidateWithMethod
+Check the value by a method of the sameclass that takes the value as argument and returns true if valid and false ifinvalid.
+
+验证值作为参数，使用同一个类的某个方法返回值的布尔值进行验证；
+
+方法必须是和验证值在同一类中。 
+
+ | 参数 | 说明 | 
+ | - | - | 
+ | methodName String | name a the single parameter method to use for validation | 
+ | Class<?> parameterType | type of the method parameter 方法的参数，及被验证值的类型 | 
+
+### @CheckWith
+Check the value by a method of the sameclass that takes the value as argument and returns true if valid and false ifinvalid.
+
+使用net.sf.oval.constraint.CheckWithCheck.SimpleCheck实现该接口的类中isSatisfied方法来判断，返回true有效，false无效；如果实现类是内部的，必须为静态类。
+
+
+ | 参数 | 说明 | 
+ | - | - | 
+ | Class<? extendsCheckWithCheck.SimpleCheck> | value -- Check class to use for validation.<br/>指明验证类 | 
+ | ignoreIfNull | this constraint will be ignored if the value to check is null | 
+
+
+`````
+示例：验证User类中的age字段
+@CheckWith(value=CheckAge.class,message="agemust in (18~65)")
+private int age;
+`````
+验证类如下：
+`````
+public class CheckAge implements CheckWithCheck.SimpleCheck {
+
+    private static final long serialVersionUID =1L;
+
+    @Override
+    public boolean isSatisfied(Object validatedObject, Object value) {
+        User user = (User)validatedObject;
+        int age = user.getAge();
+        if(age <18 || age > 65)
+            return false;
+        else
+            return true;
+    }
+}
+`````
+
+## 自定义注解
+@Past和@Future不能验证字符串类型的日期；自定义@CPast和@CFuture，都提供要给参数指定日期格式，默认为：yyyy-MM-dd;
+
+### 定义注解
+`````
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.FIELD,ElementType.PARAMETER,ElementType.METHOD})
+@Constraint(checkWith = CPastCheck.class)
+public @interface CPast {
+    Stringmessage() default "日期必须小于现在.";
+    StringdateFormat() default "yyyy-MM-dd";
+} 
+`````
+
+### 定义实现
+`````
+public class CPastCheck extends AbstractAnnotationCheck<CPast> {
+    private static final longserialVersionUID = 1L;
+    private StringdateFormat;
+
+    public voidconfigure(final CPast constraintAnnotation) {
+        super.configure(constraintAnnotation);
+        setDateFormat(constraintAnnotation.dateFormat());
+    }
+
+    public booleanisSatisfied(Object validatedObject, 
+            Object valueToValidate,
+            OValContextcontext, 
+            Validator validator) throws OValException {
+        SimpleDateFormatsdf = new SimpleDateFormat(dateFormat);
+        
+        if(valueToValidate instanceof String) {
+            try {
+                Datedate = sdf.parse((String) valueToValidate);
+                returndate.before(new Date());
+            } catch (ParseException e) {
+                e.printStackTrace();
+                super.setMessage("日期格式错误,无法验证,请修改成正确格式.");
+                return false;
+            }
+        }
+        return false;
+    }
+
+    public StringgetDateFormat() {
+        returndateFormat;
+    }
+
+    public voidsetDateFormat(String dateFormat) {
+        this.dateFormat= dateFormat;
+    }
+}
+`````
+
+## Referencd
+[java开源验证框架OVAL帮助文档](https://blog.csdn.net/neweastsun/article/details/49154337/)
