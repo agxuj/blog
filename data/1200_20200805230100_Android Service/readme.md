@@ -1,6 +1,3 @@
-# Android Service
- 
-
 **参考**
 
 [Android Service最全面的解析](https://blog.csdn.net/scott2017/article/details/51505801)
@@ -292,7 +289,7 @@ startForeground(0NG0ING_N0TIFICATI0N_ID, notification);
 * A bound service：可自动停止
 
 如下图所示：
-<img src="1.jpg">
+<img src="image/1.jpg">
  
 
 这两条路径并不是毫不相干的：当调用startService() start一个Service后，您仍可以bind该Service。比如，当播放音乐时，需调用startService()启动指定播放的音乐，当需要获取该音乐的播放进度时，有需要调用bindService()，在这种情况下，直到Service被unbind ，调用stopService() 或stopSelf()都不能停止该Service。
