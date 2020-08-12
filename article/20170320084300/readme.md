@@ -1,4 +1,4 @@
-# Android Dialog 全屏设置
+<h1 style="font-size: 2.5em;"> Android Dialog 全屏设置</h1>
  
 
 

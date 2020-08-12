@@ -1,4 +1,4 @@
-# Nginx 的安装(Linux)
+<h1 style="font-size: 2.5em;"> Nginx 的安装(Linux)</h1>
  
 
 

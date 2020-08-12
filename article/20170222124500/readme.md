@@ -1,4 +1,4 @@
-# Android 屏幕适配的策略，方案和备注
+<h1 style="font-size: 2.5em;"> Android 屏幕适配的策略，方案和备注</h1>
  
 
 

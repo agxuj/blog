@@ -1,4 +1,4 @@
-# MySQL 的安装(Linux)
+<h1 style="font-size: 2.5em;"> MySQL 的安装(Linux)</h1>
  
 
 

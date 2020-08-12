@@ -1,4 +1,4 @@
-# Git Rebase
+<h1 style="font-size: 2.5em;"> Git Rebase</h1>
  
 
 

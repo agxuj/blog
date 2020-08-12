@@ -1,4 +1,4 @@
-# Git 本地账号设置
+<h1 style="font-size: 2.5em;"> Git 本地账号设置</h1>
  
 
 ## 配置全局的 name 和 email
