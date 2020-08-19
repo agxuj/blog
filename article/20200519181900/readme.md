@@ -1,79 +1,76 @@
-<h1 style="font-size: 2.5em;"> MySQL 数据操纵语言DML</h1>
+<h1 style="font-size: 2.5em;"> MySQL 用户管理和权限管理</h1>
  
 
-
-## 简单查询
+## 用户管理
+### 创建用户
 
 `````
-SELECT <列表> FROM <表名或视图名> WHERE <条件表达式>
+create user <用户名> identified by <密码>;
+
+//例子
+create user "faddenyin"identified by "pass123";
 `````
 
-**运算符**
-1. 算数运算符: +,—,*,/
-1. 比较运算符: \>,>=,<,<=,=,!=\
-1. 逻辑运算符: and,or,not
-1. 集合成员预算符: in,not in
-1. 字符串匹配预算符: like
-1. 空值比较预算符: is null,is not null
 
-
-**查询时，列更名操作 --- as**
-例子：
+### 删除用户
 `````
-select nickname as name from user;
+drop user '<用户名>;
+
+//例子
+drop user "faddenyin"@"%";
 `````
 
-## 子查询与聚集函数
+### 修改密码
 `````
-SELECT <列表>
-FROM <表名或视图名>
-WHERE <列表> IN (SELECT <列表> FROM <表名或视图名>
-WHERE <条件表达式>)
+alter user <用户名> identified by <密码>;
+
+//例子
+alter user "root"@"localhost" identified by "password123";
 `````
 
-## 连接查询
+### 查看授权
 
-### 左连接 (left join)
-返回包括左表中的所有记录和右表中连接字段相等的记录。
-
-### 右连接 (right join) 
-返回包括右表中的所有记录和左表中连接字段相等的记录。
-
-### 等值连接 内连接 (inner join)
-只返回两个表中连接字段相等的行。
-
-### 全外连接 (full join)
-返回左右表中所有的记录和左右表中连接字段相等的记录。
-
-**聚集函数**
-1. 平均值: AVG
-1. 最小值: MIN
-1. 最大值: MAX
-1. 求和: SUM
-1. 计数: COUNT
-
-**any,all**
-
-## 分组查询
-
-1. group by: 用于结合聚合函数，根据一个或多个列对结果集进行分组
-1. having: 在GROUP BY子句后面加一个HAVING子句，对分组设置过滤条件，(可以使用聚集函数) 
-
-
-## 字符串操作
-
-对于字符串进行的最通常的操作是使用操作符like的模式匹配,使用两个特殊的字符来描述模式：
-1. "%" 匹配任意字符串
-1. "_" 匹配任意一个字符
-模式是大小写敏感的。
-
-## 集合操作
-
-UNION 并, INTSECT 交, EXCEPT 差
-
-使用说明:
 `````
-(查询语句)
-UNION
-(查询语句)
+show grants for <用户名>;
+
+//例子
+show grants for "fadden";
+`````
+
+## 权限管理
+
+### 授权(GRANT)
+`````
+grant <权限>, ... <权限> on <对象类型> <对象名> to <用户>, ... <用户> [WITH GRANT OPTION];
+
+//例子
+grant all on `database`.* to 'faddenyin'@'%';
+
+grant all privileges on table S,P,J to User1, User2
+
+//允许将此权限赋给其他用户
+grant insert on table S to User1 WITH GRANT OPTION;
+
+//每当调整权限后，通常需要执行以下语句刷新权限
+flush privileges;
+`````
+ 
+| 对象 | 对象类型 | 操作权限 |
+| --- | --- | --- |
+| 属性列 | table | select, insert, update, delete, all privileges (5种权限综合，MySQL 中同 all) |
+| 视图 | table | select, insert, update, delete, all privileges (5种权限综合，MySQL 中同 all) |
+| 基本表 | table | select, insert, update, delete, all privileges (5种权限综合，MySQL 中同 all) |
+| 数据库 | database | create table 建立表的权限，可由DBA授予普通用户 |
+  
+
+### 销权(REVOKE)
+
+`````
+revoke <权限>, ... <权限> on <对象类型> <对象名> from <用户>, ... <用户>；
+
+//例子
+REVOKE ALL PRIVILEGES ON TABLE S,P,J FROM User1, User2;
+
+REVOKE SELECT ON TABLE S FROM PUBLIC;
+
 `````
