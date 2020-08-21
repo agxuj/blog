@@ -4,8 +4,8 @@
 ## 配置全局的 name 和 email
 `````
 git config --global user.name  "username"  
-git config --global user.email "email"
-````` 
+git config --global user.email  "email"
+`````
 
 ## 配置项目内的 name 和 email
 `````
@@ -15,14 +15,8 @@ git config user.email "email"
 
 ## 修改已配置的信息
 `````
-git config --global --replace-all user.name "username"
-git config --global --replace-all user.email "email"
-`````
-
-## .gitconfig文件位置
-`````
-全局:   ~/.gitconfig
-项目内: /.git/config
+git config --replace-all user.name "username"
+git config --replace-all user.email "email"
 `````
 
 ## 删除 GitHub 密钥
@@ -32,8 +26,12 @@ git config --global --replace-all user.email "email"
 
 
 
+
+
 ## 参考
 
-[Git配置用户名和密码](https://blog.csdn.et/weixin_41287260/article/details/90111027)
+[Git配置用户名和密码](https://blog.csdn.net/weixin_41287260/article/details/90111027)
+
 [mac 下自动记录git密码，如何删除？](https://www.updateweb.cn/zwfec/item-80.html)
+
 [Git 当前项目设置 用户名、邮箱](https://blog.csdn.net/pintu274111451/article/details/79767970)
