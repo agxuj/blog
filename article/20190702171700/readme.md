@@ -1,15 +1,15 @@
-<h1 style="font-size: 2.5em;"> Nginx �İ�װ(Linux)</h1>
+<h1 style="font-size: 2.5em;"> Nginx 的安装(Linux)</h1>
  
 
 
-建议安装�?新版�?
+建议安装最新版本
 ## 安装编译工具及库文件
 `````
 [root]# yum -y install make zlib zlib-devel gcc-c++ libtool  openssl openssl-devel
 `````
 
 ## 安装 PCRE
-PCRE 作用是让 Nginx 支持 Rewrite 功能�?
+PCRE 作用是让 Nginx 支持 Rewrite 功能。
 
 ### 下载
 `````
@@ -64,8 +64,8 @@ PCRE 作用是让 Nginx 支持 Rewrite 功能�?
 
 `````
 user www www;
-worker_processes 1; #设置值和CPU核心数一�?
-error_log /usr/local/webserver/nginx/logs/nginx_error.log crit; #日志位置和日志级�?
+worker_processes 1; #设置值和CPU核心数一致
+error_log /usr/local/webserver/nginx/logs/nginx_error.log crit; #日志位置和日志级别
 pid /usr/local/webserver/nginx/nginx.pid;
 #Specifies the value for maximum file descriptors that can be opened by this process.
 worker_rlimit_nofile 65535;
@@ -123,7 +123,7 @@ http
 }
 
 `````
-### �?查配置文件nginx.conf的正确�??
+### 检查配置文件nginx.conf的正确性
 `````
 [root]# /usr/local/webserver/nginx/sbin/nginx -t
 `````
@@ -142,7 +142,7 @@ http
 [root]# /etc/init.d/idea
 [root]# chmod a+wrx /etc/init.d/idea
 `````
-内容�?
+内容：
 `````
 #!/bin/sh
 # chkconfig: 2345 80 90
@@ -185,7 +185,7 @@ esac
 
 关闭自启：chkconfig idea off
 
-## 参�??
+## 参考
 [Nginx 安装配置](https://www.runoob.com/linux/nginx-install-setup.html)
  
 [nginx配置ssl证书实现https访问](https://www.cnblogs.com/tianhei/p/7726505.html)

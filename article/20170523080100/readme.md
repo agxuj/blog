@@ -10,20 +10,20 @@
     
     git rebase 187f869c9d54c9297d6b0b1b4ff47d2ec781a55e^ -i origin/master
     
-    这里�?  －i �? --interactive 
+    这里的  －i ＝ --interactive 
 
 
 ## 2.操作
 
-    pick : git会应用这个补丁，以同样的提交信息（commit message）保存提交�??
+    pick : git会应用这个补丁，以同样的提交信息（commit message）保存提交。
 
-    squash : git会把这个提交和前�?个提交合并成为一个新的提交�??
+    squash : git会把这个提交和前一个提交合并成为一个新的提交。
     
-        这会再次调用编辑器，你在里面合并这两个提交的提交信息�?
+        这会再次调用编辑器，你在里面合并这两个提交的提交信息。
 
-    edit : 暂时没有，先不写�?
+    edit : 暂时没有，先不写了
 
-    丢弃提交 : 如果把一行删除�?�不是指�?'pick'�?'squash'和�?�edit''中的任何�?个，git会从历史中移除该提交�?
+    丢弃提交 : 如果把一行删除而不是指定'pick'、'squash'和‘edit''中的任何一个，git会从历史中移除该提交。
     
 
 ## 3.提交
@@ -48,5 +48,5 @@
 
 [在git 中修改之前的提交内容](https://blog.csdn.net/wangbole/article/details/8552808)
 
-[git rebase�?�?(高级�?)](https://blog.csdn.net/hudashi/article/details/7664651)
+[git rebase简介(高级篇)](https://blog.csdn.net/hudashi/article/details/7664651)
 

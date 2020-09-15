@@ -1,9 +1,9 @@
-<h1 style="font-size: 2.5em;"> Android ֡����</h1>
+<h1 style="font-size: 2.5em;"> Android 帧动画</h1>
  
 
 # 介绍
 
-逐帧动画(Frame-by-frame Animations),就是通过�?个接�?个的加载�?系列的Drawble资源来创建动画，实际上就是类似于放电影一样，按顺序播放一系列的图像，以达到动画效果�?�其中，AnimationDrawable是绘制动画的基础�?
+逐帧动画(Frame-by-frame Animations),就是通过一个接一个的加载一系列的Drawble资源来创建动画，实际上就是类似于放电影一样，按顺序播放一系列的图像，以达到动画效果。其中，AnimationDrawable是绘制动画的基础。
 
 # API
 
@@ -18,7 +18,7 @@
 ``````
 
 * animation-list : 根节点，里面有一个或者多个item节点组成
-* android:oneshot="true" : 表示是否只播放一次，true表示只会播放�?次，false表示�?直循环播�?
+* android:oneshot="true" : 表示是否只播放一次，true表示只会播放一次，false表示一直循环播放
 * item : 声明动画中每帧，其排序即为每帧的播放先后顺序
 * android:drawable="@drawable/XX" : 动画每帧资源
 * android:duration="200" : 每帧持续时间
@@ -26,12 +26,12 @@
 ## AnimationDrawable
 
 * isOneShot() : 是否循环播放
-* isRunning() : 动画是否在播�?
-* addFrame(Drawable frame, int duration) : 添加�?帧，并设置该帧显示的持续时间
-* inflate(Resources r, XmlPullParser parser, AttributeSet attrs, Resources.Theme theme) : 通过xml资源添加动画，并设置相关属�?�和Stle
+* isRunning() : 动画是否在播放
+* addFrame(Drawable frame, int duration) : 添加一帧，并设置该帧显示的持续时间
+* inflate(Resources r, XmlPullParser parser, AttributeSet attrs, Resources.Theme theme) : 通过xml资源添加动画，并设置相关属性和Stle
 * setOneShot(boolean oneShot) : 设置是否循环播放
 * setVisible(boolean visible, boolean restart) : 设置是否可见
-* start() : �?始动�?
+* start() : 开始动画
 * stop() : 暂停动画
 
 # 动画实例
@@ -85,7 +85,7 @@
             android:duration="200" />
     </animation-list>
     ```````
-1. 用ImageView控件作为动画载体来显示动�?
+1. 用ImageView控件作为动画载体来显示动画
     ```````
     <ImageView
         android:id="@+id/iv_frame"
@@ -95,7 +95,7 @@
         android:src="@drawable/anim_loading"/>
     ```````
 
-1. 控制动画�?始结�?
+1. 控制动画开始结束
     ```````
     private void doXmlStart() {
         AnimationDrawable animationDrawable = (AnimationDrawable) ivFrame.getDrawable();
@@ -144,9 +144,9 @@ private void doCodeStop() {
 }
 ```````
 
-# 结束�?
+# 结束语
 
-Frame Animation（�?�帧动画）相对来说比较简单，但是在实际开发中使用的频率还是比较高的�?�实际开发过程中，如果复杂�?�且帧数比较多的动画不太建议使用逐帧动画，一方面是因为会造成OOM，另�?方面会显得很卡�??
+Frame Animation（逐帧动画）相对来说比较简单，但是在实际开发中使用的频率还是比较高的。实际开发过程中，如果复杂而且帧数比较多的动画不太建议使用逐帧动画，一方面是因为会造成OOM，另一方面会显得很卡。
 
-# 参�??
+# 参考
 [Android 动画之帧动画](https://blog.csdn.net/IO_Field/article/details/52984329)

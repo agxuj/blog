@@ -1,4 +1,4 @@
-<h1 style="font-size: 2.5em;"> Linux Զ�̹���</h1>
+<h1 style="font-size: 2.5em;"> Linux 远程工具</h1>
  
 
 
@@ -27,10 +27,10 @@ ssh -l root 192.168.110.34 "/home/tomcat/startup.sh"
 `````
 vim /etc/ssh/sshd_config
 
-修改�?
-ClientAliveInterval 0   // 客户端每隔多少秒向服务发送一个心跳数�?
+修改：
+ClientAliveInterval 0   // 客户端每隔多少秒向服务发送一个心跳数据
 ClientAliveCountMax 3   // 客户端多少秒没有相应，服务器自动断掉连接
-改成�?
+改成：
 ClientAliveInterval 30 
 ClientAliveCountMax 86400
 
@@ -47,7 +47,7 @@ usage: scp [-346BCpqrv] [-c cipher] [-F ssh_config] [-i identity_file]
 `````
 scp /path/filename username@servername:/path/
 `````
-### 从服务器上下载文�?
+### 从服务器上下载文件
 `````
 scp username@servername:/path/filename /var/www/local_dir（本地目录）
 `````
