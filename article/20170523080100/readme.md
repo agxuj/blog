@@ -9,6 +9,8 @@
     git rebase -i origin/master
     
     git rebase 187f869c9d54c9297d6b0b1b4ff47d2ec781a55e^ -i origin/master
+
+    git rebase -i HEAD~4
     
     这里的  －i ＝ --interactive 
 
