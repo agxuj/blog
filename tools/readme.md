@@ -1,8 +1,10 @@
 ## Markdown tools
  
 ### How to use?
-
-Run in Terminal
+ 
 ````````````
-java  -jar  MdTools.jar  help
+java -jar -Dfile.encoding=UTF-8 tools/tools.jar sort
+
+java -jar -Dfile.encoding=UTF-8 tools/tools.jar build
+
 ````````````
