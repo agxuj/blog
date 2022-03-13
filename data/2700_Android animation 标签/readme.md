@@ -1,6 +1,3 @@
-<h1 style="font-size: 2.5em;"> Android animation 标签</h1>
- 
-
 目的：知道有什么属性，了解这些属性，以后遇到需要用这些属性的场景时，知道有这些属性可以使用。
 
 动画xml文件放在 anim 或者 animation 标签中。
