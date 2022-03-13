@@ -1,4 +1,4 @@
-<h1 style="font-size: 2.5em;"> Java Web ����˴</h1>
+<h1 style="font-size: 2.5em;"> Java Web 服务端搭建</h1>
  
 
 
@@ -43,20 +43,20 @@ yum install mysql
 [CentOS6.4下Yum安装Mysql和JDK和tomcat](https://blog.csdn.net/renfufei/article/details/9733367)
 
 ## 文件管理
-[史上�?�?单的上传文件到linux系统方法](https://jingyan.baidu.com/article/219f4bf7d28185de442d38d2.html)
+[史上最简单的上传文件到linux系统方法](https://jingyan.baidu.com/article/219f4bf7d28185de442d38d2.html)
 
 ## Linux 命令 
 [Linux常用命令大全](http://www.php100.com/html/webkaifa/Linux/2009/1106/3485.html)
 
-[linux文件创建、查看�?�编辑命令](http://blog.163.com/fan_yishan/blog/static/4769221320095148164649/)
+[linux文件创建、查看、编辑命令](http://blog.163.com/fan_yishan/blog/static/4769221320095148164649/)
 
-[Linux�?*.tar.gz文件解压缩命令](http://www.cnblogs.com/xiehy/archive/2010/09/13/1824776.html)
+[Linux下*.tar.gz文件解压缩命令](http://www.cnblogs.com/xiehy/archive/2010/09/13/1824776.html)
 
 ## VPS 域名绑定
 1. 将域名解析到VPS的IP地址
 1. 如果绑定多个域名对于多个web应用，需要配置Tomcat的server.xml文件
 
-## 防火�?
+## 防火墙
 [Linux防火墙的关闭和开启](https://kiddwyl.iteye.com/blog/67708)
 
 [RedHat Linux下iptables防火墙设置](https://www.linuxidc.com/Linux/2012-08/67186.htm)
@@ -66,6 +66,6 @@ yum install mysql
 ## Tools
 [Win7下如何使用Telnet命令](https://jingyan.baidu.com/article/95c9d20d96ba4aec4f756154.html)
 
-[linux下�?�么�?出telnet](http://www.cnblogs.com/hnrainll/archive/2012/02/04/2337928.html)
+[linux下怎么退出telnet](http://www.cnblogs.com/hnrainll/archive/2012/02/04/2337928.html)
 
-[初用 VPS，感�? putty 反应迟钝](https://www.v2ex.com/t/102990)
+[初用 VPS，感到 putty 反应迟钝](https://www.v2ex.com/t/102990)

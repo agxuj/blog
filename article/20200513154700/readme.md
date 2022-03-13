@@ -1,8 +1,8 @@
-<h1 style="font-size: 2.5em;"> Spring Boot ������</h1>
+<h1 style="font-size: 2.5em;"> Spring Boot 初体验</h1>
  
 
 
-参�??:[Java视频教程-SpringBoot教程免费分享](https://zhuanlan.zhihu.com/p/47908153)
+参考:[Java视频教程-SpringBoot教程免费分享](https://zhuanlan.zhihu.com/p/47908153)
 
 ## 新建项目
 
@@ -29,7 +29,7 @@ public class AppController {
 }
 `````
 
-## 运行 Application �? main 方法
+## 运行 Application 的 main 方法
 
 **运行结果**
 

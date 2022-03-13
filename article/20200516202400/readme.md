@@ -1,4 +1,4 @@
-<h1 style="font-size: 2.5em;"> ��ͼ������¼</h1>
+<h1 style="font-size: 2.5em;"> 地图开发记录</h1>
  
 
 ## 百度地图
@@ -10,7 +10,7 @@
 
 http://lbsyun.baidu.com/index.php?title=webapi/guide/webservice-geocoding
 
-http://api.map.baidu.com/geocoder/v2/?address=北京市海�?区上地十�?10�?&output=json&ak=您的ak&output=json
+http://api.map.baidu.com/geocoder/v2/?address=北京市海淀区上地十街10号&output=json&ak=您的ak&output=json
 
 ### 根据坐标获取地址
 

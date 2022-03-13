@@ -1,4 +1,4 @@
-<h1 style="font-size: 2.5em;"> WEBǰ�� gulp ��ʹ��</h1>
+<h1 style="font-size: 2.5em;"> WEB前端 gulp 简单使用</h1>
  
 
 
@@ -11,7 +11,7 @@ var concat = require('gulp-concat');//合并
 var uglify = require('gulp-uglify');//压缩
 var rev = require('gulp-rev');//对文件名加MD5后缀
 var revCollector = require('gulp-rev-collector');//替换路径
-var htmlmin = require('gulp-htmlmin'); //压缩html里面的js，css，去除空�?
+var htmlmin = require('gulp-htmlmin'); //压缩html里面的js，css，去除空格
 var del = require('del');//删除文件
 var connect = require('gulp-connect');
 var open = require('open');
@@ -22,8 +22,8 @@ let port = 8088;
 
 var app = {
   srcPath: 'src/',
-  devPath: 'build/',  //打包后的原始数据存放�?
-  prdPath: 'dist/'    //打包后的压缩数据存放�?
+  devPath: 'build/',  //打包后的原始数据存放处
+  prdPath: 'dist/'    //打包后的压缩数据存放处
 };
 
 
@@ -62,8 +62,8 @@ gulp.task('image', function () {
     app.srcPath + '/**/*.svg'])
     .pipe(rev())//文件名加MD5后缀
     .pipe(gulp.dest(app.devPath))
-    .pipe(rev.manifest('image-map.json'))//生成�?个rev-manifest.json
-    .pipe(gulp.dest(app.devPath));//�? rev-manifest.json 保存�? rev 目录�?
+    .pipe(rev.manifest('image-map.json'))//生成一个rev-manifest.json
+    .pipe(gulp.dest(app.devPath));//将 rev-manifest.json 保存到 rev 目录内
 });
 
 
@@ -73,8 +73,8 @@ gulp.task('audio', function () {
     app.srcPath + '/**/*.ogg'])
     .pipe(rev())//文件名加MD5后缀
     .pipe(gulp.dest(app.devPath))
-    .pipe(rev.manifest('audio-map.json'))//生成�?个rev-manifest.json
-    .pipe(gulp.dest(app.devPath));//�? rev-manifest.json 保存�? rev 目录�?
+    .pipe(rev.manifest('audio-map.json'))//生成一个rev-manifest.json
+    .pipe(gulp.dest(app.devPath));//将 rev-manifest.json 保存到 rev 目录内
 });
 
 gulp.task('other', function () {
@@ -87,10 +87,10 @@ gulp.task('zip-html', function () {
   var options = {
     removeComments: true,//清除HTML注释
     collapseWhitespace: true,//压缩HTML
-    //collapseBooleanAttributes: true,//省略布尔属�?�的�? <input checked="true"/> ==> <input />
-    //removeEmptyAttributes: true,//删除�?有空格作属�?��?? <input id="" /> ==> <input />
+    //collapseBooleanAttributes: true,//省略布尔属性的值 <input checked="true"/> ==> <input />
+    //removeEmptyAttributes: true,//删除所有空格作属性值 <input id="" /> ==> <input />
     //removeScriptTypeAttributes: true,//删除<script>的type="text/javascript"
-    //removeStyleLinkTypeAttributes: true,//删除<style>�?<link>的type="text/css"
+    //removeStyleLinkTypeAttributes: true,//删除<style>和<link>的type="text/css"
     minifyJS: true,//压缩页面JS
     minifyCSS: true,//压缩页面CSS
     babel: true
@@ -147,18 +147,18 @@ gulp.task('generate', gulp.series('clean', 'build', function () {
 }))
 
 
-//自动化构建项目，启动服务�?
+//自动化构建项目，启动服务器
 gulp.task('start', function () {
   connect.server({
     root: [app.srcPath],
     livereload: true,// 保存修改后自动刷新（针对高级浏览器）
-    port: port,// 端口�?
+    port: port,// 端口号
     debug: true,
-    host: host  // 添加这个host配置，写上本地开发电脑的ip地址，那么在其他�?域网上的�?有设备都能访问了
+    host: host  // 添加这个host配置，写上本地开发电脑的ip地址，那么在其他局域网上的所有设备都能访问了
   });
-  // 自启动项�? 
-  open('http://' + host + ':' + port); // �?起局域网都能访问的项目地�?
-  // 监控资源文件，实时刷�?
+  // 自启动项目 
+  open('http://' + host + ':' + port); // 开起局域网都能访问的项目地址
+  // 监控资源文件，实时刷新
   gulp.watch(app.srcPath + "**/*", function () {
     return gulp.src(app.devPath)
       .pipe(connect.reload())
@@ -169,13 +169,13 @@ gulp.task('default', gulp.series('start'))
 
 `````
 
-## 参�??
+## 参考
 
 [gulp-babel使用报错：Cannot find module '@babel/core'](https://blog.csdn.net/bxl0218/article/details/82352777)
 
 [gulp文档](https://www.gulpjs.com.cn/)
 
-[使用gulp打包普�?�项目](https://www.cnblogs.com/flyingzeng/p/10536690.html)
+[使用gulp打包普通项目](https://www.cnblogs.com/flyingzeng/p/10536690.html)
 
 [-bash: gulp: command not found in Mac](https://stackoverflow.com/questions/35884163/bash-gulp-command-not-found-in-mac?r=SearchResults)
 
