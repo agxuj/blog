@@ -184,6 +184,8 @@ IStatusBarService(StatusBarManager){
 IStatusBarService 的实现者是 StatusBarManagerService
 与消息中心相关的方法最终调用的是 NotificationManagerService
 
+从NotificationManagerService发现，消息是保存在内存中，并没有持久化存储。
+
 # 参考
 [Android通知栏(Notification)介绍及使用](https://blog.csdn.net/qq_34163551/article/details/79851542)
 

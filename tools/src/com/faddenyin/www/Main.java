@@ -6,6 +6,8 @@ import com.faddenyin.www.command.*;
 /**
  * <a href="https://blog.csdn.net/fesdgasdgasdg/article/details/73556109">intellij idea 导出可执行jar</a>
  * <a href="https://www.cnblogs.com/chenchen-tester/p/7992357.html">idea打包含第三方依赖的jar包</a>
+ *
+ * -Dfile.encoding=UTF-8
  */
 
 public class Main {
