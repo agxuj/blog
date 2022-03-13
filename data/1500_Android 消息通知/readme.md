@@ -133,13 +133,9 @@ statusBarService.onClearAllNotifications(ActivityManager.getCurrentUser());
 `````
 
 
-
-
- 
-
 # 源码分析
 
-
+`````
 NotificationListenerService {
     registerAsSystemService()
     unregisterAsSystemService()
@@ -159,12 +155,14 @@ NotificationListenerService {
     /** 设置消息已被查看 **/
     setNotificationsShown(String[] keys)
 }
-
+`````
 这个监听器注册在 NotificationManagerService 里。
 
 SystemUI 中的 NotificationListenerWithPlugins extends NotificationListenerService 
 SystemUI 中的 NotificationListener extends NotificationListenerWithPlugins 
-------------------
+
+``````
+//IStatusBarService中关于消息中心的方法
 IStatusBarService(StatusBarManager){
     clearNotificationEffects()
     onNotificationClick()
@@ -179,29 +177,9 @@ IStatusBarService(StatusBarManager){
     onNotificationSmartReplySent()
     onNotificationSettingsViewed()
 }
-
+``````
 IStatusBarService 的实现者是 StatusBarManagerService
 与消息中心相关的方法最终调用的是 NotificationManagerService
-------------------
-/** 表示通知的事物的抽象，例如状态栏。包含查询系统状态的方法（一些模块化功能可能希望根据用户是否可以看到演示者而采取不同的行动），以及影响系统状态的方法（例如启动意图，假设演示者可能希望在这样做之前执行某些操作）。 **/
-NotificationPresenter 
-NotificationPresenter实现在statubar中
-使用到的类如下列表
-AppOpsListener
-NotificationGutsManager
-NotificationLockscreenUserManager
-NotificationMediaManager
-NotificationRemoteInputManager
-NotificationViewHierarchyManager
-------------------
-NotificationEntryManager
-------------------
-
-
-NotificationInflater
-
-
-RemoteViews解析
 
 # 参考
 [Android通知栏(Notification)介绍及使用](https://blog.csdn.net/qq_34163551/article/details/79851542)
