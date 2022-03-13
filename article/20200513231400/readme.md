@@ -1,14 +1,14 @@
-<h1 style="font-size: 2.5em;"> Spring Boot 编码配置</h1>
+<h1 style="font-size: 2.5em;"> Spring Boot ��������</h1>
  
 
 
 
-## 在 intellij IDEA 中配置
-    设置的是项目文本文件的编码
+## �? intellij IDEA 中配�?
+    设置的是项目文本文件的编�?
     preferences --> Editor --> File Encoding
 
 
-## 在 application.properties 中配置
+## �? application.properties 中配�?
     设置的是请求和回复时字符串的编码
     `````
     spring.http.encoding.charset=UTF-8
@@ -16,8 +16,8 @@
     spring.http.encoding.force=true
     `````
 
-## 在 pom.xml 中配置
-    设置的是构建打包时字符串的编码
+## �? pom.xml 中配�?
+    设置的是构建打包时字符串的编�?
     `````
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

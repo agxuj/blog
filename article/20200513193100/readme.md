@@ -1,7 +1,7 @@
-<h1 style="font-size: 2.5em;"> Spring Boot 集成 MyBatis</h1>
+<h1 style="font-size: 2.5em;"> Spring Boot ���� MyBatis</h1>
  
 
-## 在 pom.xml 中添加 dependency
+## �? pom.xml 中添�? dependency
 `````
 <dependencies>
     <dependency>
@@ -16,7 +16,7 @@
     </dependency>
 </dependencies>
 `````
-## 在 pom.xml 中添加对 xml 文件的引用
+## �? pom.xml 中添加对 xml 文件的引�?
 
 `````
 <build>
@@ -81,7 +81,7 @@ spring.datasource.password=
 </configuration>
 `````
 
-## 新建 DAL 类
+## 新建 DAL �?
 `````
 public interface TestDAL {
 

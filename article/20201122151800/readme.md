@@ -1,35 +1,35 @@
-<h1 style="font-size: 2.5em;"> Android 消息通知</h1>
+<h1 style="font-size: 2.5em;"> Android ��Ϣ֪ͨ</h1>
  
 
 
-# 简单使用
-构建一个通知栏一般分为这几个步骤：
+# �?单使�?
+构建�?个�?�知栏一般分为这几个步骤�?
 
-1.创建通知栏管理工具
+1.创建通知栏管理工�?
 2.构建通知栏构造器
 3.给构造器设置参数
-4.发送请求
+4.发�?�请�?
 
-具体代码如下：
+具体代码如下�?
 `````
-//创建通知栏管理工具
+//创建通知栏管理工�?
 NotificationManager notificationManager = (NotificationManager) getSystemService (NOTIFICATION_SERVICE);
-//实例化通知栏构造器
+//实例化�?�知栏构造器
 NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
 //设置Builder
 mBuilder.setContentTitle("我是标题")                                     //设置标题
                 .setContentText("我是内容")                              //设置内容 
-                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))       //设置大图标 
-                .setSmallIcon(R.mipmap.ic_launcher_round)               //设置小图标 
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))       //设置大图�? 
+                .setSmallIcon(R.mipmap.ic_launcher_round)               //设置小图�? 
                 .setWhen(System.currentTimeMillis())                    //设置通知时间
-                .setTicker("我是测试内容")                               //首次进入时显示效果
-                .setDefaults(Notification.DEFAULT_SOUND);               //设置通知方式，声音，震动，呼吸灯等效果，这里通知方式为声音
+                .setTicker("我是测试内容")                               //首次进入时显示效�?
+                .setDefaults(Notification.DEFAULT_SOUND);               //设置通知方式，声音，震动，呼吸灯等效果，这里通知方式为声�?
 
 `````
 
 
-# 自定义通知栏
-自定义通知栏和使用原生的通知栏区别不大，最主要就是增加了自定义的布局，使用RemoteViews承接，并放入构造器中显示，具体代码如下:
+# 自定义�?�知�?
+自定义�?�知栏和使用原生的�?�知栏区别不大，�?主要就是增加了自定义的布�?，使用RemoteViews承接，并放入构�?�器中显示，具体代码如下:
 
 `````
 
@@ -54,15 +54,15 @@ notificationManager.notify(10, mBuilder.build());
 
 `````
 
-# 点击跳转到其他页面
+# 点击跳转到其他页�?
 `````
 Intent intent = new Intent(this, SecondeActivity.class);
 PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
 mBuilder.setContentIntent(pendingIntent);
 `````
 
-# Android O (8.0) 以上的使用
-Android O 8.0以上需要增加渠道名称和渠道ID，具体代码如下：
+# Android O (8.0) 以上的使�?
+Android O 8.0以上�?要增加渠道名称和渠道ID，具体代码如下：
 ``````
 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
     NotificationChannel channel = new NotificationChannel(id, name, NotificationManager.IMPORTANCE_DEFAULT);
@@ -85,7 +85,7 @@ if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
 # SystemUI中的Notification
 
-在SystemUI中注册，就能收到推送的消息，取得消息后，在消息中心中显示，核心代码如下：
+在SystemUI中注册，就能收到推�?�的消息，取得消息后，在消息中心中显示，核心代码如下�?
 ``````
 NotificationListenerService listener = new NotificationListenerService(){
     @Override
@@ -116,5 +116,5 @@ listener.registerAsSystemService(Context context, ComponentName componentName,in
 ``````
 
 
-# 参考
-[Android通知栏(Notification)介绍及使用](https://blog.csdn.net/qq_34163551/article/details/79851542)
+# 参�??
+[Android通知�?(Notification)介绍及使用](https://blog.csdn.net/qq_34163551/article/details/79851542)

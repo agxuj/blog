@@ -1,4 +1,4 @@
-<h1 style="font-size: 2.5em;"> Java 下载安装(Linux)</h1>
+<h1 style="font-size: 2.5em;"> Java ���ذ�װ(Linux)</h1>
  
 
 
@@ -6,7 +6,7 @@
 ### 查看jdk相关路径
 `````
 [root]# whereis java
-[root]# which java （java执行路径）
+[root]# which java （java执行路径�?
 [root]# echo $JAVA_HOME
 [root]# echo $PATH
 `````
@@ -26,7 +26,7 @@
 [root]# tar -zxvf jdk_12_0_1.tar.gz
 `````
 
-### 修改/etc/profile文件中java的配置
+### 修改/etc/profile文件中java的配�?
 `````
 export JAVA_HOME=/faddenyin/jdk_12_0_1
 export CLASSPATH=.:$JAVA_HOME/jre/lib/rt.jar:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar
