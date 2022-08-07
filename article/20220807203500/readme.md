@@ -1,8 +1,8 @@
-<h1 style="font-size: 2.5em;"> Android ����㲥</h1>
+<h1 style="font-size: 2.5em;"> Android 定向广播</h1>
  
 
-# 指定某一个应用允许接�?
-intent 指定包名Intent.setPackage设置广播仅对相同包名的有�?
+# 指定某一个应用允许接收
+intent 指定包名Intent.setPackage设置广播仅对相同包名的有效
 
 `````
 Intent intent = new Intent();             
@@ -28,7 +28,7 @@ sendBroadcast(intent);
 <permission android:description="@string/XXX" 
 	android:label="XXXX" 
 	android:name="com.test.permission" 
-	android:protectionLevel="signature" />//如果发�?�和接收都在同一应用内，�?要去掉�??
+	android:protectionLevel="signature" />//如果发送和接收都在同一应用内，需要去掉。
 `````
 
 `````
@@ -41,7 +41,7 @@ sendBroadcast("com.android.XXX_ACTION","com.test.permission");
 //AndroidManifest.xml
 <uses-permission android:name="com.test.permission" />
 `````
-静�?�注�?
+静态注册
 `````
 <receiver android:name=".XXXReceiver" android:permission="com.test.permission">
     <intent-filter>
@@ -49,17 +49,17 @@ sendBroadcast("com.android.XXX_ACTION","com.test.permission");
     </intent-filter>
 </receiver>
 `````
-动�?�注�?
+动态注册
 `````
 registerReceiver(receiver, "com.test.permission", null);
 `````
 
-如果在AndroidManifest中声明了权限，在使用registerReceiver方法时，可以不传入权限名称�??
+如果在AndroidManifest中声明了权限，在使用registerReceiver方法时，可以不传入权限名称。
 
 # ssp匹配
-接收或发送定向广播需要用到android:ssp属�?�用于匹配URI，ssp代码“scheme-specific part”，意�?�是代表的东西都在scheme之后出现，如URI是�?�http://example.com.a”，可以分成scheme部分"http"和ssp部分"//example.com.a"。这里需要特别注意例子中的ssp部分是包�?"//"的�?? 
+接收或发送定向广播需要用到android:ssp属性用于匹配URI，ssp代码“scheme-specific part”，意思是代表的东西都在scheme之后出现，如URI是“http://example.com.a”，可以分成scheme部分"http"和ssp部分"//example.com.a"。这里需要特别注意例子中的ssp部分是包含"//"的。 
 
-1. android:ssp全匹�?
+1. android:ssp全匹配
 1. android:sspPrefix前缀匹配
 1. android:sspPattern模式匹配
 
@@ -96,7 +96,7 @@ filter.addDataSchemeSpecificPart("com.tencent.mm", PatternMatcher.PATTERN_LITERA
 `````
 
 
-# 参�??
+# 参考
 
 [Android之定向广播](https://blog.csdn.net/zhangyongfeiyong/article/details/51853521)
 
@@ -110,13 +110,13 @@ filter.addDataSchemeSpecificPart("com.tencent.mm", PatternMatcher.PATTERN_LITERA
 
 [Calling a method in the system process without a qualified user: android解决方案](https://blog.csdn.net/love_xsq/article/details/50392093)
 
-[Android无法收到指定广播的问题�?�结](https://www.cnblogs.com/scarecrow-blog/p/6080884.html)
+[Android无法收到指定广播的问题总结](https://www.cnblogs.com/scarecrow-blog/p/6080884.html)
 
-[Android 8.0的平台上，应用不能对大部分的广播进行静�?�注册](https://www.cnblogs.com/endv/p/11695262.html)
+[Android 8.0的平台上，应用不能对大部分的广播进行静态注册](https://www.cnblogs.com/endv/p/11695262.html)
 
-[Android 9.0静�?�广播收不到](https://blog.csdn.net/wkathy/article/details/103380081)
+[Android 9.0静态广播收不到](https://blog.csdn.net/wkathy/article/details/103380081)
 
-[Android 8.0以上无法收到静�?�广播消息](https://www.jianshu.com/p/8dda5df736c7)
+[Android 8.0以上无法收到静态广播消息](https://www.jianshu.com/p/8dda5df736c7)
 
 [在Android8.0上突破隐式广播的限制](https://www.jianshu.com/p/5283ebc225d5?utm_source=oschina-app)
 

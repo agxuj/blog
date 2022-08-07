@@ -1,22 +1,22 @@
-<h1 style="font-size: 2.5em;"> Spring Boot ע��˵��</h1>
+<h1 style="font-size: 2.5em;"> Spring Boot 注解说明</h1>
  
 
 ## Controller
 @Controller
 
-@RestController : Spring4 后新增注�?, �? @Controller �? @ResponseBody 的组合注�?, 用于**返回字符串或者json数据**.
+@RestController : Spring4 后新增注解, 是 @Controller 和 @ResponseBody 的组合注解, 用于**返回字符串或者json数据**.
 
 @RequestMapping : 配置请求信息
 
-@GetMapping : @RequestMapping �? method = RequestMethod.GET 请求方法的组�?.
+@GetMapping : @RequestMapping 和 method = RequestMethod.GET 请求方法的组合.
 
-@PostMapping : @RequestMapping �? method = RequestMethod.POST 请求方法的组�?
+@PostMapping : @RequestMapping 和 method = RequestMethod.POST 请求方法的组合
 
-@PutMapping : @RequestMapping �? method = RequestMethod.PUT 请求方法的组�?
+@PutMapping : @RequestMapping 和 method = RequestMethod.PUT 请求方法的组合
 
-@DeleteMapping : @RequestMapping �? method = RequestMethod.DELETE 请求方法的组�?
+@DeleteMapping : @RequestMapping 和 method = RequestMethod.DELETE 请求方法的组合
 
-@ResponseBody : 确定返回字符�?
+@ResponseBody : 确定返回字符串
 
 @PathVariable : RestFull参数设定
 
@@ -26,8 +26,8 @@
 ## 其他
 @Autowired : (声明读取properties的实体类)
 
-@Component : 是所有受Spring 管理组件的�?�用形式，@Component注解可以放在类的头上，@Component不推荐使�?
+@Component : 是所有受Spring 管理组件的通用形式，@Component注解可以放在类的头上，@Component不推荐使用
 
-@ConfigurationProperties : (读取properties参数时设置前�?)
+@ConfigurationProperties : (读取properties参数时设置前缀)
 
-@Configuration : (拦截器配�?)
+@Configuration : (拦截器配置)

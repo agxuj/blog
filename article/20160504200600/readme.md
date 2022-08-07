@@ -1,9 +1,9 @@
-<h1 style="font-size: 2.5em;"> Android ����Ƶ�����ο�����</h1>
+<h1 style="font-size: 2.5em;"> Android 音视频开发参考资料</h1>
  
 
 
 
-[[总结]视音频编解码�?术零基础学习方法](http://blog.csdn.net/leixiaohua1020/article/details/18893769)
+[[总结]视音频编解码技术零基础学习方法](http://blog.csdn.net/leixiaohua1020/article/details/18893769)
 
 [MP4文件格式解析](http://eastnapoleon.blog.163.com/blog/static/366216692010101911255809/)
 

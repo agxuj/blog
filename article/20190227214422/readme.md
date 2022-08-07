@@ -1,4 +1,4 @@
-<h1 style="font-size: 2.5em;"> Tomcat �İ�װ����ʹ��(Linux)</h1>
+<h1 style="font-size: 2.5em;"> Tomcat 的安装配置使用(Linux)</h1>
  
 
 
@@ -21,20 +21,20 @@ References: [Linux下Tomcat的安装配置](https://blog.csdn.net/zhuying_linux/
 6. 启动tomcat   
     ./catalina.sh start
     ./startup.sh
-7. 配置�?机启�?
+7. 配置开机启动
     vi /etc/rc.d/rc.local
 
     export JAVA_HOME=/feddenyin/jdk_11_0_1
     /faddenyin/tomcat9/bin/startup.sh
 `````
-**注意配置阿里云，亚马逊云防火�?**
+**注意配置阿里云，亚马逊云防火墙**
 
 
 ## 绑定域名和根域名
 
 Reference:[Tomcat绑定域名和根域名](https://blog.csdn.net/kucoll/article/details/50783493)
 
-在server.xml中配�?
+在server.xml中配置
 `````
 <Connector port="80" protocol="HTTP/1.1"
     connectionTimeout="20000"
@@ -46,9 +46,9 @@ Reference:[Tomcat绑定域名和根域名](https://blog.csdn.net/kucoll/article/
 `````
 <Host name="www.yddsj.com"  appBase="webapps"
     unpackWARs="true" autoDeploy="true">
-    <!-- 省略的默认配�? ... -->
+    <!-- 省略的默认配置 ... -->
 
-    <!-- 绑定顶级域名时要配置的，提前放出�? -->
+    <!-- 绑定顶级域名时要配置的，提前放出来 -->
     <Alias>yddsj.com</Alias>
 
     <Context path="" 
@@ -60,10 +60,10 @@ Reference:[Tomcat绑定域名和根域名](https://blog.csdn.net/kucoll/article/
 
 
 ## HTTPS配置
-References:[TOMCAT9.0 阿里云免�? SSL证书签发配置全过程（支持多证书，多虚拟主机）](https://blog.csdn.net/gzj0078/article/details/79419007)
+References:[TOMCAT9.0 阿里云免费 SSL证书签发配置全过程（支持多证书，多虚拟主机）](https://blog.csdn.net/gzj0078/article/details/79419007)
 ### 证书配置    
 
-�?定不要把�?有的Connector标签都写hostName属�?�，我的建议是留�?条，也仅留一条不写hostName，系统会认定这条为default，如果没有这�?条，tomcat对应ssl的那个自带的servlet会抛出异常，大致意�?�是没有找到[_default_]主机对用的SSLHostConfig，即使你有一条与后面的Host里配置的默认主机�?致�??    
+一定不要把所有的Connector标签都写hostName属性，我的建议是留一条，也仅留一条不写hostName，系统会认定这条为default，如果没有这一条，tomcat对应ssl的那个自带的servlet会抛出异常，大致意思是没有找到[_default_]主机对用的SSLHostConfig，即使你有一条与后面的Host里配置的默认主机一致。    
 `````
 <Connector port="443"
 protocol="org.apache.coyote.http11.Http11Nio2Protocol"
@@ -83,7 +83,7 @@ SSLEnabled="true">
     </SSLHostConfig>
 
     <!--
-        注意：这里是没有配置域名�?
+        注意：这里是没有配置域名的
     -->
     <SSLHostConfig>
         <Certificate 
@@ -110,8 +110,8 @@ SSLEnabled="true">
         appBase="webapps" unpackWARs="true" 
         autoDeploy="true">
         <!--
-        标签中的是别名，也就是比如你配置了www.和was.两条解析（或者更多）�?
-        但是他们的证书文件，访问文件夹都是一样的，就可以在Host上配置一�?
+        标签中的是别名，也就是比如你配置了www.和was.两条解析（或者更多），
+        但是他们的证书文件，访问文件夹都是一样的，就可以在Host上配置一个
         -->
         <Alias>moyuge.net.cn</Alias>
         <Alias>www.moyuge.net.cn</Alias>
@@ -128,7 +128,7 @@ SSLEnabled="true">
 ## Http自动跳转Https
 Reference:[Tomcat的Https设置及Http自动跳转Https](https://blog.csdn.net/zhangxing52077/article/details/72827770)
 
-编辑conf/web.xml 在末尾加�?
+编辑conf/web.xml 在末尾加上
 `````
 <security-constraint>
     <web-resource-collection >
@@ -141,8 +141,8 @@ Reference:[Tomcat的Https设置及Http自动跳转Https](https://blog.csdn.net/z
 </security-constraint> 
 `````
 
-## 添加常用jar�?
-添加常用 jar 包到 tomcat/lib �?
+## 添加常用jar包
+添加常用 jar 包到 tomcat/lib 中
 1. dom4j-2.1.1.jar
 1. commons-logging-1.2.jar
 1. mysql-connector-java-8.0.13.jar

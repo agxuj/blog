@@ -1,4 +1,4 @@
-<h1 style="font-size: 2.5em;"> Android ��������</h1>
+<h1 style="font-size: 2.5em;"> Android 蓝牙代理</h1>
  
 
 # 获取配置代理
@@ -20,17 +20,17 @@ mBtAdapter.getProfileProxy(getContext(), new BluetoothProfile.ServiceListener() 
 ``````````
 
 
-# BluetoothProfile 包含的方�?
+# BluetoothProfile 包含的方法
 
 ``````````
 
-// 获取连接设备�?
+// 获取连接设备。
 public List<BluetoothDevice> getConnectedDevices();
 
-// 获取特定状�?�的设备�?
+// 获取特定状态的设备。
 public List<BluetoothDevice> getDevicesMatchingConnectionStates(int[] states);
 
-// 获取设备的连接状态�??
+// 获取设备的连接状态。
 public int getConnectionState(BluetoothDevice device);
 
 ``````````
@@ -96,7 +96,7 @@ int OPP = 20;
 int HEARING_AID = 21;
 ``````````
 
-# 参�??
+# 参考
 
 [A2DP -- 百度百科](https://baike.baidu.com/item/A2DP/9819331?fr=aladdin)
 
@@ -104,6 +104,6 @@ int HEARING_AID = 21;
 
 [蓝牙协议 HFP,HSP,A2DP,AVRCP,OPP,PBAP](https://blog.csdn.net/peng825223208/article/details/52072680/)
 
-[蓝牙 HID 剖析 (�?) ](https://blog.csdn.net/xiaoxiaopengbo/article/details/51658396)
+[蓝牙 HID 剖析 (一) ](https://blog.csdn.net/xiaoxiaopengbo/article/details/51658396)
 
 [蓝牙PAN](https://blog.csdn.net/hh20161314/article/details/104531424)
