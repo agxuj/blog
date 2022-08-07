@@ -1,4 +1,4 @@
-<h1 style="font-size: 2.5em;"> Android 网络调试 OkHttp+Stetho+Chrome</h1>
+<h1 style="font-size: 2.5em;"> Android ������� OkHttp+Stetho+Chrome</h1>
  
 
 
@@ -32,13 +32,13 @@ static {
 }
 `````
 
-## Chrome 中打开调试
+## Chrome 中打�?调试
 
     在chrome中的网址栏输入：chrome://inspect/
 
     点击inspect
     
     
-# 参考
+# 参�??
 
 [OkHttp+Stetho+Chrome调试android网络部分（原创）](http://www.itboth.com/d/63If6n/android)

@@ -1,4 +1,4 @@
-<h1 style="font-size: 2.5em;"> Android Dialog Е┘╗Е╠▐Х╝╬Г╫╝</h1>
+<h1 style="font-size: 2.5em;"> Android Dialog х╚фаиХжц</h1>
  
 
 

@@ -1,4 +1,4 @@
-<h1 style="font-size: 2.5em;"> Redis 简单使用</h1>
+<h1 style="font-size: 2.5em;"> Redis ��ʹ��</h1>
  
 
 
@@ -13,14 +13,14 @@ vi /usr/local/redis/etc/redis.conf
 设置 requirepass ${password}
 `````
 ### 重启
-### 防火墙端口开启
+### 防火墙端口开�?
 
-## 客户端使用
+## 客户端使�?
 `````
 ./redis-cli
 auth ${password}
 `````
-## Java简单使用
+## Java�?单使�?
 导入 [jedis.jar](https://mvnrepository.com/artifact/redis.clients/jedis)
 `````
 
@@ -29,7 +29,7 @@ import redis.clients.jedis.*;
 public class Main {
 
     public static void main(String[] args) {
-        //连接本地的 Redis 服务
+        //连接本地�? Redis 服务
         String host  = "39.106.114.110";
         int port = 6379;
         Jedis jedis = null;
@@ -63,7 +63,7 @@ public class Main {
 [Redis 教程 -- 菜鸟教程](https://www.runoob.com/redis/redis-tutorial.html)
 
 ## Reference
-[redis开启远程访问](https://www.cnblogs.com/liusxg/p/5712493.html)
+[redis�?启远程访问](https://www.cnblogs.com/liusxg/p/5712493.html)
 
 [Linux Redis启用远程连接](https://liuyanzhao.com/8349.html)
 

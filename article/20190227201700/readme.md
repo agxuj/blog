@@ -1,8 +1,8 @@
-<h1 style="font-size: 2.5em;"> Spring mvc 初体验</h1>
+<h1 style="font-size: 2.5em;"> Spring mvc ������</h1>
  
 
 
-## 导jar包
+## 导jar�?
 `````
 spring-aop-4.1.6.RELEASE.jar
 spring-beans-4.1.6.RELEASE.jar
@@ -36,9 +36,9 @@ commons-logging-1.2.jar
 `````
 ## 创建src/mvc.xml
 
-配置 controller 所在的包名
+配置 controller �?在的包名
 
-配置 view (jsp) 所在的目录
+配置 view (jsp) �?在的目录
 `````
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
@@ -52,14 +52,14 @@ commons-logging-1.2.jar
         http://www.springframework.org/schema/context/spring-context.xsd">
 
 
-    <!-- 配置渲染器 -->
+    <!-- 配置渲染�? -->
     <bean id="jspViewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
-        <!-- 配置 view (jsp) 所在的目录 -->
+        <!-- 配置 view (jsp) �?在的目录 -->
         <property name="prefix" value="/WEB-INF/manager/"/>
         <property name="suffix" value=".jsp"/>
     </bean>
-    <!-- 配置 controller 所在的包名 -->
+    <!-- 配置 controller �?在的包名 -->
     <context:component-scan base-package="top.knxy"/>
 </beans>
 `````
@@ -72,7 +72,7 @@ public class ManagerController {
     public ModelAndView login(HttpServletRequest request, HttpServletResponse response) {
         ModelAndView mv = new ModelAndView();
         mv.addObject("msg","hello Spring MVC");
-        mv.setViewName("login");//指向jsp的页面
+        mv.setViewName("login");//指向jsp的页�?
         return mv;
     }
 }

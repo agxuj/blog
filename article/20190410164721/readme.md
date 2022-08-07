@@ -1,4 +1,4 @@
-<h1 style="font-size: 2.5em;"> MySQL 的安装(Linux)</h1>
+<h1 style="font-size: 2.5em;"> MySQL �İ�װ(Linux)</h1>
  
 
 
@@ -20,7 +20,7 @@ mv mysql-8.0.15-linux-glibc2.12-x86_64 /faddenyin/mysql8
 `````
 ### 4.添加用户
 `````
-groupadd mysql //创建 mysql 用户组
+groupadd mysql //创建 mysql 用户�?
 useradd -g mysql mysql //创建 mysql 用户
 `````
 ### 5.设置权限
@@ -56,12 +56,12 @@ port=3306
 default-character-set=utf8 
 `````
 ### 7.初始化数据库
-**这里会生成一个随机密码,注意保留**
+**这里会生成一个随机密�?,注意保留**
 `````
 cd /faddenyin/mysql8/bin
 ./mysqld --initialize --user=mysql
 `````
-如果出现错误：
+如果出现错误�?
 `````
 error while loading shared libraries: libaio.so.1: cannot open shared object file: No such file or directory
 //安装libaio
@@ -76,14 +76,14 @@ cp -a ./support-files/mysql.server /etc/init.d/mysqld
 chmod +x /etc/rc.d/init.d/mysqld    
 chkconfig --add mysqld
 
-//检查服务是否生效  
+//�?查服务是否生�?  
 chkconfig  --list mysqld
 `````
 ### 9.配置全局环境变量
 `````
 vi /etc/profile
 `````
-在 profile 文件底部添加如下两行配置，保存后退出
+�? profile 文件底部添加如下两行配置，保存后�?�?
 `````
 PATH=/faddenyin/mysql8/bin:/faddenyin/mysql8/lib:$PATH
 export PATH
@@ -98,12 +98,12 @@ service mysql start
 `````
 ## yum命令安装
 ### 下载repo源并导入
-mysql 官网下载 repo。 
+mysql 官网下载 repo�? 
 [Repo List](https://dev.mysql.com/downloads/repo/yum/), 选择Red Hat
 ``````
 https://dev.mysql.com/get/mysql80-community-release-el7-3.noarch.rpm
 ``````
-安装 yum repo文件并更新 yum 缓存
+安装 yum repo文件并更�? yum 缓存
 ``````
 rpm -ivh mysql80-community-release-el7-3.noarch.rpm
 //更新 yum 命令
@@ -114,7 +114,7 @@ yum makecache
 ``````
 yum install mysql-community-server
 ``````
-### 开启mysql 服务
+### �?启mysql 服务
 ``````
 systemctl start mysqld.service
 ``````
@@ -167,26 +167,26 @@ rm -rf /etc/my.cnf
 
 ## 备注
 
-添加防火墙开放端口
+添加防火墙开放端�?
 
 ## Reference
-[Linux下如何彻底删除(卸载)MySQL?](https://jingyan.baidu.com/article/4b52d702db8a82fc5c774b92.html)
+[Linux下如何彻底删�?(卸载)MySQL?](https://jingyan.baidu.com/article/4b52d702db8a82fc5c774b92.html)
 
 [Linux下卸载MySQL8.0版本](https://blog.csdn.net/eric_wii/article/details/86300450)
 
-[如何在Ubuntu Linux上安装 MySQL 8.0.11](https://blog.51cto.com/13804472/2134479)
+[如何在Ubuntu Linux上安�? MySQL 8.0.11](https://blog.51cto.com/13804472/2134479)
 
 [Linux安装mysql8](https://blog.csdn.net/cacalili/article/details/80805855)
 
 [MySQL 8.0给数据库添加用户和赋权](https://www.cnblogs.com/testway/p/9289827.html)
 
-[MySQL中用户权限、库权限、表权限的控制](https://blog.csdn.net/u010735147/article/details/81744002)
+[MySQL中用户权限�?�库权限、表权限的控制](https://blog.csdn.net/u010735147/article/details/81744002)
 
-[MySQL时间和本地时间相差13个小时](https://blog.csdn.net/xgs736214763/article/details/78814072)
+[MySQL时间和本地时间相�?13个小时](https://blog.csdn.net/xgs736214763/article/details/78814072)
 
 [MySQL修改时区的几种方法](https://www.cnblogs.com/shiqiangqiang/p/8393662.html)
 
-[MySQL用户及权限管理 小结](https://www.cnblogs.com/SQL888/p/5748824.html)
+[MySQL用户及权限管�? 小结](https://www.cnblogs.com/SQL888/p/5748824.html)
 
 [libaio install](https://help.directadmin.com/item.php?id=368)
 
