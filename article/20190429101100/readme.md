@@ -1,9 +1,9 @@
-<h1 style="font-size: 2.5em;"> Redis ��װ�벿��(Linux)</h1>
+<h1 style="font-size: 2.5em;"> Redis 安装与部署(Linux)</h1>
  
 
 
 
-## 下载与安�?
+## 下载与安装
 `````
 [root]# wget http://download.redis.io/releases/redis-5.0.4.tar.gz
 [root]# tar xzf redis-5.0.4.tar.gz
@@ -30,7 +30,7 @@
 `````
 bind 127.0.0.1
 protected-mode yes
-//更改�?,注意注释127.0.0.1
+//更改为,注意注释127.0.0.1
 #bind 127.0.0.1
 protected-mode no
 
@@ -63,12 +63,12 @@ daemonize yes
 `````
 [root]# redis-cli -h 127.0.0.1 -p 6379 -a ${password} shutdown
 `````
-## 启动客户�?
+## 启动客户端
 `````
 [root]# cd /usr/local/redis/bin
 [root]# ./redis-cli
 `````
-## 关闭客户�?
+## 关闭客户端
 `````
 [root]# ./redis-cli shutdown 
 `````
@@ -79,7 +79,7 @@ daemonize yes
 export PATH=$PATH:/usr/local/redis/bin
 `````
 ### 配置内核参数
-**否则Redis脚本在重启或停止redis时，将会报错，并且不能自动在停止服务前同步数据到磁盘�?/etc/sysctl.conf加上**
+**否则Redis脚本在重启或停止redis时，将会报错，并且不能自动在停止服务前同步数据到磁盘上/etc/sysctl.conf加上**
 `````
 [root]# vi /etc/sysctl.conf
 vm.overcommit_memory = 1 
@@ -168,7 +168,7 @@ chkconfig --add redis
 
 
 ## Reference 
-[理解Linux系统/etc/init.d目录�?/etc/rc.local脚本](https://blog.csdn.net/acs713/article/details/7322082)
+[理解Linux系统/etc/init.d目录和/etc/rc.local脚本](https://blog.csdn.net/acs713/article/details/7322082)
 
 [linux命令sysctl使用](https://www.cnblogs.com/codeblock/p/5207431.html)
 

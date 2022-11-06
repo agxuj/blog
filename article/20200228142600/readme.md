@@ -1,8 +1,8 @@
-<h1 style="font-size: 2.5em;"> Spring Boot ����ʹ��JSP</h1>
+<h1 style="font-size: 2.5em;"> Spring Boot 集成使用JSP</h1>
  
 
 
-## 在pro.xml中添加依�?
+## 在pro.xml中添加依赖
 ``````
 <dependency>
     <groupId>org.apache.tomcat.embed</groupId>
@@ -31,11 +31,11 @@ spring.mvc.view.prefix=/WEB-INF/jsp/
 spring.mvc.view.suffix=.jsp
 ``````
 
-## 建立web文件存放�?
+## 建立web文件存放点
 
-在src/main目录中新建webapp文件夹，在webapp目录中新�?/WEB-INF/jsp/文件夹用于存放jsp文件，其他类型的文件直接存放在webapp文件夹中�?
+在src/main目录中新建webapp文件夹，在webapp目录中新建/WEB-INF/jsp/文件夹用于存放jsp文件，其他类型的文件直接存放在webapp文件夹中。
 
-## 在pro.xml的build标签中添加配�?
+## 在pro.xml的build标签中添加配置
 ``````
 <resources>
     <resource>

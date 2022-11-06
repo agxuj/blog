@@ -1,17 +1,17 @@
-<h1 style="font-size: 2.5em;"> Spring ����������</h1>
+<h1 style="font-size: 2.5em;"> Spring 面向切面编程</h1>
  
 
-## �?么是面向切面编程
+## 什么是面向切面编程
 
-传统编程模式如下图所�?
+传统编程模式如下图所示
 
 <img src="image/2.png">
 
-横向切面编程模式如下图所�?
+横向切面编程模式如下图所示
 
 <img src="image/1.png">
 
-结论：如图所示，service 在某些情况下�?要登陆才能执行下去，此时�?<span style="color:red">面向切面编程</span>作为的指导�?�想，就可以在service前插进login流程�?
+结论：如图所示，service 在某些情况下需要登陆才能执行下去，此时以<span style="color:red">面向切面编程</span>作为的指导思想，就可以在service前插进login流程。
 
 
 ## spring 实现 面向切面编程
@@ -80,4 +80,4 @@ beans.xml文件
 </beans>
 `````
 
-以上是在执行 Service.action **之前**添加登陆�?查�?�如果需要在 Service.action **之后**执行，则实现 AfterReturningAdvice 接口�?
+以上是在执行 Service.action **之前**添加登陆检查。如果需要在 Service.action **之后**执行，则实现 AfterReturningAdvice 接口。

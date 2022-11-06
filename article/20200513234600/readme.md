@@ -1,11 +1,11 @@
-<h1 style="font-size: 2.5em;"> Spring Boot ���</h1>
+<h1 style="font-size: 2.5em;"> Spring Boot 打包</h1>
  
 
 
 
-## 打成 jar �?
+## 打成 jar 包
 
-### �? pom.xml 中配�?
+### 在 pom.xml 中配置
 `````
 <project>
     <build>
@@ -24,7 +24,7 @@
 maven --> install
 
 
-## 打成 war �?
+## 打成 war 包
 
 ### 修改 Application.java
 1. 继承 SpringBootServletInitializer

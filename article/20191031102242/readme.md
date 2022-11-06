@@ -1,4 +1,4 @@
-<h1 style="font-size: 2.5em;"> WEBǰ�� gulp �Զ�����</h1>
+<h1 style="font-size: 2.5em;"> WEB前端 gulp 自定义插件</h1>
  
 
 
@@ -19,8 +19,8 @@ module.exports = function(opt) {
             return callback(createError(file, 'Streaming not supported'));
         }
 
-�?�?�?�?�?//do something
-        file.contents = new Buffer("this is my stream");//这里我们只是�?单的改变了内容，实际上你可以你的自定义�?�辑部分就在这里执行
+　　　　　//do something
+        file.contents = new Buffer("this is my stream");//这里我们只是简单的改变了内容，实际上你可以你的自定义逻辑部分就在这里执行
  
         callback(null, file);
     }
@@ -32,13 +32,13 @@ module.exports = function(opt) {
 
 ## 使用示例
 `````
-var doSomething = require('./doSomething.js');//假设模块存放路径在当前文件夹�?
+var doSomething = require('./doSomething.js');//假设模块存放路径在当前文件夹下
 gulp.src("./app.js")
-�?�?.pipe(uglify())//调用其它插件
-�?�?.pipe(doSomething())//调用我们刚刚定义的插�?
-�?�?.pipe(gulp.dest('./myStream.js'));//持久化到磁盘
+　　.pipe(uglify())//调用其它插件
+　　.pipe(doSomething())//调用我们刚刚定义的插件
+　　.pipe(gulp.dest('./myStream.js'));//持久化到磁盘
 `````
 
-## 参�??
+## 参考
 
 [gulp如何自定义插件](https://www.cnblogs.com/Raoh/p/4169426.html)

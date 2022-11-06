@@ -1,11 +1,11 @@
-<h1 style="font-size: 2.5em;"> Git �����</h1>
+<h1 style="font-size: 2.5em;"> Git 命令集合</h1>
  
 
 
  
 Server，Local，缓存区
 
-#### 恢复到上�?个版�?
+#### 恢复到上一个版本
 ``````````
 git reset –hard HEAD^ 
 git checkout -- <file>
