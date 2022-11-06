@@ -1,4 +1,4 @@
-package com.faddenyin.www.bean;
+package fun.yinwj.www.bean;
 
 import java.util.Date;
 

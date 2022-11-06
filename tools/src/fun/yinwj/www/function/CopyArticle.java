@@ -1,9 +1,9 @@
-package com.faddenyin.www.function;
+package fun.yinwj.www.function;
 
-import com.faddenyin.www.bean.Article;
-import com.faddenyin.www.config.C;
-import com.faddenyin.www.utils.DateUtils;
-import com.faddenyin.www.utils.FileUtils;
+import fun.yinwj.www.bean.Article;
+import fun.yinwj.www.config.C;
+import fun.yinwj.www.utils.DateUtils;
+import fun.yinwj.www.utils.FileUtils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 

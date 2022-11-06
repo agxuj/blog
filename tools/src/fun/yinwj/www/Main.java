@@ -1,7 +1,9 @@
-package com.faddenyin.www;
+package fun.yinwj.www;
 
-import com.faddenyin.www.bean.Parameter;
-import com.faddenyin.www.command.*;
+import fun.yinwj.www.bean.Parameter;
+import fun.yinwj.www.command.Build;
+import fun.yinwj.www.command.Help;
+import fun.yinwj.www.command.Sort;
 
 /**
  * <a href="https://blog.csdn.net/fesdgasdgasdg/article/details/73556109">intellij idea 导出可执行jar</a>

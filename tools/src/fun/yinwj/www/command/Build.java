@@ -1,8 +1,10 @@
-package com.faddenyin.www.command;
+package fun.yinwj.www.command;
 
-import com.faddenyin.www.config.C;
 import com.faddenyin.www.function.*;
-import com.faddenyin.www.utils.FileUtils;
+import fun.yinwj.www.function.CopyArticle;
+import fun.yinwj.www.function.CopyStaticFile;
+import fun.yinwj.www.function.DeleteOut;
+import fun.yinwj.www.function.ReadmeGenerator;
 
 
 public class Build {

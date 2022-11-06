@@ -1,6 +1,6 @@
-package com.faddenyin.www.config;
+package fun.yinwj.www.config;
 
-import com.faddenyin.www.utils.FileUtils;
+import fun.yinwj.www.utils.FileUtils;
 
 import java.io.File;
 

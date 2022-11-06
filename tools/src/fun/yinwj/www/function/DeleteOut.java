@@ -1,9 +1,7 @@
-package com.faddenyin.www.function;
+package fun.yinwj.www.function;
 
-import com.faddenyin.www.config.C;
-import com.faddenyin.www.utils.FileUtils;
-
-import java.io.File;
+import fun.yinwj.www.config.C;
+import fun.yinwj.www.utils.FileUtils;
 
 public class DeleteOut {
 

@@ -1,7 +1,7 @@
-package com.faddenyin.www.bean;
+package fun.yinwj.www.bean;
 
-import com.faddenyin.www.utils.DateUtils;
-import com.faddenyin.www.utils.TextUtils;
+import fun.yinwj.www.utils.DateUtils;
+import fun.yinwj.www.utils.TextUtils;
 
 import java.util.HashMap;
 import java.util.Map;

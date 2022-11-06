@@ -1,4 +1,4 @@
-package com.faddenyin.www.utils;
+package fun.yinwj.www.utils;
 
 import java.io.*;
 
