@@ -1,10 +1,10 @@
-<h1 style="font-size: 2.5em;"> 支付开发记录</h1>
+<h1 style="font-size: 2.5em;"> ֧��������¼</h1>
  
 
 
 ## 微信支付，支付宝支付相关信息获取途径
 
-### 微信小程序支付
+### 微信小程序支�?
 [微信支付商户](https://pay.weixin.qq.com)
 
     mchId,apiKey,apiv3Key,p12File
@@ -18,15 +18,15 @@
 
     mchId,apiKey,apiv3Key,p12File
 
-[微信开放平台](https://open.weixin.qq.com)
+[微信�?放平台](https://open.weixin.qq.com)
 
     appId,appSecret
 
 
-### IOS，Android应用支付宝支付
-[支付宝 商家中心](https://mrchportalweb.alipay.com)
+### IOS，Android应用支付宝支�?
+[支付�? 商家中心](https://mrchportalweb.alipay.com)
 
-[支付宝 开发者中心](https://developers.alipay.com/)
+[支付�? �?发�?�中心](https://developers.alipay.com/)
 
     appId,privateKey,publicKey,serverPublicKey
 

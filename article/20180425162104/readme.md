@@ -1,4 +1,4 @@
-<h1 style="font-size: 2.5em;"> Android 运行时权限申请</h1>
+<h1 style="font-size: 2.5em;"> Android ����ʱȨ������</h1>
  
 
 
@@ -51,8 +51,8 @@ public void onRequestPermissionsResult(int requestCode, String permissions[], in
 
 #### Thinking: maybe we can create dialog by ourselves
 
-## Reference：
+## Reference�?
 
-[Android权限检查API checkSelfPermission失效问题](https://juejin.im/post/59e01ece51882578c6736db7)
+[Android权限�?查API checkSelfPermission失效问题](https://juejin.im/post/59e01ece51882578c6736db7)
 
-[Android M动态申请获取权限android.permission.READ_PHONE_STATE](https://blog.csdn.net/fenggering/article/details/53432401)
+[Android M动�?�申请获取权限android.permission.READ_PHONE_STATE](https://blog.csdn.net/fenggering/article/details/53432401)
