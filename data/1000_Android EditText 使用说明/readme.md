@@ -1,6 +1,3 @@
-<h1 style="font-size: 2.5em;"> Android EditText 使用说明</h1>
- 
-
 
 `````````````
 
