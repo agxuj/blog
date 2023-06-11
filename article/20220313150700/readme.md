@@ -159,9 +159,9 @@ EditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 
 # setTransformationMethod
 
-setTransformationMethod是TextView的一个方法，EditText继承于TextView自然可以使用
-这个方法是用来设置其中text的转换显示
-接收的参数是TransformationMethod接口，系统给了我们几个默认实现
+setTransformationMethod是TextView的一个方法，EditText继承于TextView自然可以使用。
+这个方法是用来设置其中text的转换显示。
+接收的参数是TransformationMethod接口，系统给了我们几个默认实现：
 
 1. HideReturnsTransformationMethod --- 隐藏回车
 1. SingleLineTransformationMethod --- 不能用换行回车
