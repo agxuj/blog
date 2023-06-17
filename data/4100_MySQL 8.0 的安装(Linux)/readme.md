@@ -13,7 +13,7 @@ tar -xvf mysql-8.0.15-linux-glibc2.12-x86_64.tar.xz
 `````
 ### 3.移动目录
 `````
-mv mysql-8.0.15-linux-glibc2.12-x86_64 /faddenyin/mysql8
+mv mysql-8.0.15-linux-glibc2.12-x86_64 /yin/program/mysql-8.0.15-linux-glibc2.12-x86_64
 `````
 ### 4.添加用户
 `````
@@ -22,7 +22,7 @@ useradd -g mysql mysql //创建 mysql 用户
 `````
 ### 5.设置权限
 `````
-chown -R mysql.mysql /faddenyin/mysql8/
+chown -R mysql.mysql /yin/program/mysql-8.0.15-linux-glibc2.12-x86_64
 //or
 chown -R mysql .
 chgrp -R mysql .
@@ -35,18 +35,18 @@ vi /etc/my.cnf
 `````
 [mysqld]
 port=3306
-basedir = /faddenyin/mysql8
-datadir = /faddenyin/mysql8/data
+basedir=/yin/program/mysql-8.0.15-linux-glibc2.12-x86_64
+datadir=/yin/program/mysql-8.0.15-linux-glibc2.12-x86_64/data
 socket=/tmp/mysql.sock
-log-error=/faddenyin/mysql8/data/error.log
-pid-file=/faddenyin/mysql8/data/mysql.pid
+log-error=/yin/program/mysql-8.0.15-linux-glibc2.12-x86_64/data/error.log
+pid-file=/yin/program/mysql-8.0.15-linux-glibc2.12-x86_64/data/mysql.pid
 user=mysql
 tmpdir=/tmp
 character_set_server=utf8
 default-storage-engine=INNODB
 init_connect='SET NAMES utf8'
 default_authentication_plugin=mysql_native_password
-default-time_zone = '+8:00'//设置时区
+default-time_zone='+8:00'#设置时区
 
 [client]
 port=3306
@@ -55,7 +55,7 @@ default-character-set=utf8
 ### 7.初始化数据库
 **这里会生成一个随机密码,注意保留**
 `````
-cd /faddenyin/mysql8/bin
+cd /yin/program/mysql-8.0.15-linux-glibc2.12-x86_64/bin
 ./mysqld --initialize --user=mysql
 `````
 如果出现错误：
@@ -65,9 +65,14 @@ error while loading shared libraries: libaio.so.1: cannot open shared object fil
 yum install libaio
 `````
 
+查看mysql 密码
+``````
+cat /yin/program/mysql-5.7.42-linux-glibc2.12-x86_64/data/error.log
+``````
+
 ### 8.配置mysql服务
 `````
-cd /faddenyin/mysql8
+cd /yin/program/mysql-8.0.15-linux-glibc2.12-x86_64
 cp -a ./support-files/mysql.server /etc/init.d/mysqld
 
 chmod +x /etc/rc.d/init.d/mysqld    
@@ -82,7 +87,7 @@ vi /etc/profile
 `````
 在 profile 文件底部添加如下两行配置，保存后退出
 `````
-PATH=/faddenyin/mysql8/bin:/faddenyin/mysql8/lib:$PATH
+PATH=/yin/program/mysql-8.0.15-linux-glibc2.12-x86_64/lib:$PATH
 export PATH
 `````
 设置环境变量立即生效
