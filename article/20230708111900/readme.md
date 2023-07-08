@@ -1,4 +1,4 @@
-<h1 style="font-size: 2.5em;"> Android bind service -- AIDL 简介</h1>
+<h1 style="font-size: 2.5em;"> Android Bind Service -- AIDL 简介</h1>
  
 
 ## AIDL（Android 接口定义语言）
