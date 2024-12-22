@@ -1,4 +1,4 @@
-<h1 style="font-size: 2.5em;"> Android Bind Service -- 例子</h1>
+<h1 style="font-size: 2.5em;"> Android bind service -- 例子</h1>
  
 
 # 创建AIDL文件
