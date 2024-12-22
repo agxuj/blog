@@ -1,6 +1,6 @@
-## Markdown tools
+# Markdown tools
  
-### How to use?
+## How to use?
  
 ````````````
 java -jar -Dfile.encoding=UTF-8 tools/tools.jar sort
